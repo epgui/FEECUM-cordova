@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- For more guidance, see: https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; script-src 'self' http://localhost:8000 'unsafe-inline' 'unsafe-eval';">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <script src="js/jquery.js"></script>     <!--  2.2.3 -->
+        <script src="js/react.js"></script>      <!-- 15.0.2 -->
+        <script src="js/react-dom.js"></script>  <!-- 15.0.2 -->
+        <script src="js/calendar-functions.js"></script>
+        <script src="js/renderCalendar.js"></script>
+        <title>Hello World</title>
+    </head>
+    <body>
+
+        <div class="app">
+
+            <h1>Calendrier de la FÉÉCUM</h1>
+
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+
+            <div id="calendarView">
+
+            <!--<time datetime="2016" class="year">
+                <time datetime="2016-05" class="month">
+                    <span class="month-label">Mai</span>
+                    <time datetime="2016-W19" class="week">
+                        <time datetime="2016-05-01" class="day">
+                            <span class="day-label">1</span>
+                        </time>
+                        <time datetime="2016-05-02" class="day">
+                            <span class="day-label">2</span>
+                        </time>
+                        <time datetime="2016-05-03" class="day">
+                            <span class="day-label">3</span>
+                        </time>
+                        <time datetime="2016-05-04" class="day">
+                            <span class="day-label">4</span>
+                        </time>
+                        <time datetime="2016-05-05" class="day">
+                            <span class="day-label">5</span>
+                        </time>
+                        <time datetime="2016-05-06" class="day">
+                            <span class="day-label">6</span>
+                        </time>
+                        <time datetime="2016-05-07" class="day">
+                            <span class="day-label">7</span>
+                        </time>
+                    </time>
+                    <time datetime="2016-W20" class="week">
+                        <time datetime="2016-05-08" class="day">
+                            <span class="day-label">8</span>
+                        </time>
+                        <time datetime="2016-05-09" class="day">
+                            <span class="day-label">9</span>
+                        </time>
+                        <time datetime="2016-05-10" class="day">
+                            <span class="day-label">10</span>
+                        </time>
+                        <time datetime="2016-05-11" class="day">
+                            <span class="day-label">11</span>
+                        </time>
+                        <time datetime="2016-05-12" class="day">
+                            <span class="day-label">12</span>
+                        </time>
+                        <time datetime="2016-05-13" class="day">
+                            <span class="day-label">13</span>
+                        </time>
+                        <time datetime="2016-05-14" class="day">
+                            <span class="day-label">14</span>
+                        </time>
+                    </time>
+                    <time datetime="2016-W21" class="week">
+                        <time datetime="2016-05-15" class="day">
+                            <span class="day-label">15</span>
+                        </time>
+                        <time datetime="2016-05-16" class="day">
+                            <span class="day-label">16</span>
+                        </time>
+                        <time datetime="2016-05-17" class="day">
+                            <span class="day-label">17</span>
+                        </time>
+                        <time datetime="2016-05-18" class="day">
+                            <span class="day-label">18</span>
+                        </time>
+                        <time datetime="2016-05-19" class="day">
+                            <span class="day-label">19</span>
+                        </time>
+                        <time datetime="2016-05-20" class="day">
+                            <span class="day-label">20</span>
+                        </time>
+                        <time datetime="2016-05-21" class="day">
+                            <span class="day-label">21</span>
+                        </time>
+                    </time>
+                    <time datetime="2016-W22" class="week">
+                        <time datetime="2016-05-22" class="day">
+                            <span class="day-label">22</span>
+                        </time>
+                        <time datetime="2016-05-23" class="day">
+                            <span class="day-label">23</span>
+                        </time>
+                        <time datetime="2016-05-24" class="day">
+                            <span class="day-label">24</span>
+                        </time>
+                        <time datetime="2016-05-25" class="day">
+                            <span class="day-label">25</span>
+                        </time>
+                        <time datetime="2016-05-26" class="day">
+                            <span class="day-label">26</span>
+                        </time>
+                        <time datetime="2016-05-27" class="day">
+                            <span class="day-label">27</span>
+                        </time>
+                        <time datetime="2016-05-28" class="day">
+                            <span class="day-label">28</span>
+                        </time>
+                    </time>
+                    <time datetime="2016-W23" class="week">
+                        <time datetime="2016-05-29" class="day">
+                            <span class="day-label">29</span>
+                        </time>
+                        <time datetime="2016-05-30" class="day">
+                            <span class="day-label">30</span>
+                        </time>
+                        <time datetime="2016-05-31" class="day">
+                            <span class="day-label">31</span>
+                        </time>
+                        <time datetime="2016-06-01" class="day next-month">
+                            <span class="day-label">1</span>
+                        </time>
+                        <time datetime="2016-06-02" class="day next-month">
+                            <span class="day-label">2</span>
+                        </time>
+                        <time datetime="2016-06-03" class="day next-month">
+                            <span class="day-label">3</span>
+                        </time>
+                        <time datetime="2016-06-04" class="day next-month">
+                            <span class="day-label">4</span>
+                        </time>
+                    </time>
+                </time>
+            </time>-->
+
+            </div>
+        </div>
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+
+    </body>
+</html>

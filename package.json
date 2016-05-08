@@ -1,0 +1,15 @@
+{
+  "name": "feecum-cordova",
+  "version": "1.0.0",
+  "description": "Calendar application for FÉÉCUM",
+  "main": "index.html",
+  "dependencies": {
+    "babel-preset-react": "^6.5.0",
+    "babel-cli": "^6.8.0"
+  },
+  "scripts": {
+    "build": "babel src/js -d www/js"
+  },
+  "author": "",
+  "license": "ISC"
+}
