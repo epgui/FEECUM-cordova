@@ -21,7 +21,7 @@ var CalendarMonth = React.createClass({
     var indexOfFirstWeek = firstDay.getWeekNumber();
     var calendarWeeks = [];
 
-    for (let i = 0; i < weeksInMonth; i++) {
+    for (var i = 0; i < weeksInMonth; i++) {
       calendarWeeks.push(React.createElement(CalendarWeek, { year: this.props.year, month: this.props.month, week: indexOfFirstWeek + i }));
     }
     return React.createElement(
@@ -51,7 +51,7 @@ var CalendarWeek = React.createClass({
     var weekDays = [];
     var dayNumber = 0;
 
-    for (let i = 0; i <= 6; i++) {
+    for (var i = 0; i <= 6; i++) {
       if (this.props.week - indexOfFirstWeek == 0 && i < indexOfFirstDay) {
         dayNumber = lastMonthStart + i;
         weekDays.push(React.createElement(CalendarDay, { year: this.props.year, month: this.props.month - 1, day: dayNumber, "class": "day previous-month" }));

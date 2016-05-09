@@ -47,35 +47,82 @@ body {
 
 /* Portrait layout (default) */
 .app {
-    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
-    position:absolute;             /* position in the center of the screen */
-    left:50%;
-    top:50%;
-    height:50px;                   /* text area height */
-    width:225px;                   /* text area width */
-    text-align:center;
-    padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
-    margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
+  height: 700px;
+  text-align:center;
+  position: relative;
 }
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
     .app {
         background-position:left center;
-        padding:75px 0px 75px 170px;  /* padding-top + padding-bottom + text area = image height */
-        margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
-                                      /* offset horizontal: half of image width and text area width */
+        padding: 0;
+        margin: 0;
     }
 }
 
 h1 {
-    font-size:24px;
-    font-weight:normal;
-    margin:0px;
-    overflow:visible;
-    padding:0px;
-    text-align:center;
+  background: #FDFDFD;
+  border-bottom: 1px solid #EEE;
+  display: block;
+  font-size:24px;
+  font-weight:normal;
+  margin:0px;
+  overflow:visible;
+  padding:8px 0;
+  text-align:center;
+}
+
+#calendarView {
+  left: 50%;
+  margin: -200px 0 0 -200px;
+  padding: 40px 0;
+  position: absolute;
+  top: 50%;
+  width: 400px;
+}
+
+#calendarView time.year {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#calendarView time.month {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#calendarView time.month .month-label {
+  background: #FFF;
+  display: block;
+  height: 55px;
+  line-height: 55px;
+  margin: 0 0 2px 0;
+  width: 397px;
+}
+
+#calendarView time.week {
+  display: block;
+  width: 100%;
+}
+
+#calendarView time.day {
+  background: #FFF;
+  display: block;
+  float: left;
+  height: 55px;
+  line-height: 55px;
+  margin: 0 2px 2px 0;
+  width: 55px;
+}
+
+#calendarView time.day.next-month, #calendarView time.day.previous-month {
+  background: #EEE;
+  color: #AAA;
 }
 
 .event {
@@ -102,13 +149,13 @@ h1 {
     50% { opacity: 0.4; }
     to { opacity: 1.0; }
 }
- 
+
 @-webkit-keyframes fade {
     from { opacity: 1.0; }
     50% { opacity: 0.4; }
     to { opacity: 1.0; }
 }
- 
+
 .blink {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
