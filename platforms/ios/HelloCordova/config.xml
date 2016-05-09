@@ -17,11 +17,11 @@
     </feature>
     <name>HelloCordova</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
-    </description>
+    A sample Apache Cordova application that responds to the deviceready event.
+  </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
-    </author>
+    Apache Cordova Team
+  </author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -45,4 +45,6 @@
     <preference name="PageLength" value="0" />
     <preference name="PaginationBreakingMode" value="page" />
     <preference name="PaginationMode" value="unpaginated" />
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="AndroidLaunchMode" value="singleTop" />
 </widget>
