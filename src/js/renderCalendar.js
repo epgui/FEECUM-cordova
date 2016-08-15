@@ -1,8 +1,23 @@
 var CalendarYear = React.createClass({
   render: function() {
+
+    var calendarMonths = [];
+
+    for (var i = 0; i < parseInt(this.props.month); i++ )
+    {
+      if (i + 1 == parseInt(this.props.month))
+      {
+        calendarMonths.push(<CalendarMonth year={this.props.year} month={i + 1} />);
+      }
+      else
+      {
+        calendarMonths.push(<CalendarMonth year={this.props.year} month={i + 1} isElementHidden={1} />);
+      }
+    }
+
     return (
       <time dateTime={this.props.year} className="year">
-        <CalendarMonth year={this.props.year} month={this.props.month} />
+        {calendarMonths}
       </time>
     );
   }
@@ -16,13 +31,20 @@ var CalendarMonth = React.createClass({
     var weeksInMonth     = firstDay.countWeeksOfMonth();
     var indexOfFirstWeek = firstDay.getWeekNumber();
     var calendarWeeks    = [];
+    var displayClass     = "";
 
     for (var i = 0; i < weeksInMonth; i++)
     {
       calendarWeeks.push(<CalendarWeek year={this.props.year} month={this.props.month} week={indexOfFirstWeek + i} />);
     }
+
+    if (this.props.isElementHidden == 1)
+    {
+      displayClass += "hidden";
+    }
+
     return (
-      <time dateTime="{this.props.year}-{this.props.month}" className="month">
+      <time dateTime={this.props.year + "-" + leadingZeros(this.props.month)} className={"month " + displayClass}>
         <span className="month-label">{monthName}</span>
         {calendarWeeks}
       </time>
@@ -47,22 +69,22 @@ var CalendarWeek = React.createClass({
       if (((this.props.week - indexOfFirstWeek) == 0) && (i < (indexOfFirstDay)))
       {
         dayNumber = lastMonthStart + i;
-        weekDays.push(<CalendarDay year={this.props.year} month={this.props.month - 1} day={dayNumber} class="day previous-month" />);
+        weekDays.push(<CalendarDay year={previousMonthYearNumber(this.props.year, this.props.month)} month={leadingZeros(previousMonthNumber(this.props.month))} day={leadingZeros(dayNumber)} class="day previous-month" />);
       }
       else if ((this.props.week - indexOfFirstWeek + 1) == weeksInMonth && i > indexOfLastDay)
       {
         dayNumber = i - indexOfLastDay;
-        weekDays.push(<CalendarDay year={this.props.year} month={this.props.month + 1} day={dayNumber} class="day next-month" />);
+        weekDays.push(<CalendarDay year={nextMonthYearNumber(this.props.year, this.props.month)} month={leadingZeros(nextMonthNumber(this.props.month))} day={leadingZeros(dayNumber)} class="day next-month" />);
       }
       else {
         dayNumber = ((this.props.week - indexOfFirstWeek) * 7) + (i + 1) - indexOfFirstDay;
-        weekDays.push(<CalendarDay year={this.props.year} month={this.props.month} day={dayNumber} class="day" />);
+        weekDays.push(<CalendarDay year={this.props.year} month={leadingZeros(this.props.month)} day={leadingZeros(dayNumber)} class="day" />);
       }
 
     }
 
     return (
-      <time dateTime={this.props.year + "-W" + this.props.week} className="week">
+      <time dateTime={this.props.year + "-W" + leadingZeros(this.props.week)} className="week">
         {weekDays}
       </time>
     );
@@ -72,7 +94,7 @@ var CalendarWeek = React.createClass({
 var CalendarDay = React.createClass({
   render: function() {
     return (
-      <time dateTime={this.props.year + "-" + this.props.month + "-" + this.props.day} className={this.props.class}>
+      <time dateTime={this.props.year + "-" + leadingZeros(this.props.month) + "-" + leadingZeros(this.props.day)} className={this.props.class}>
           <span className="day-label">{this.props.day}</span>
       </time>
     );

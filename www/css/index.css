@@ -96,6 +96,10 @@ h1 {
   width: 100%;
 }
 
+#calendarView time.month.hidden {
+  display: none;
+}
+
 #calendarView time.month .month-label {
   background: #FFF;
   display: block;
@@ -107,6 +111,7 @@ h1 {
 
 #calendarView time.week {
   display: block;
+  overflow: hidden;
   width: 100%;
 }
 

@@ -30,6 +30,16 @@ function monthNumber(month)
   }
 }
 
+function leadingZeros(number) { return ('0'  + parseInt(number)).slice(-2); }
+
+function previousMonthNumber(monthNumber) { if (monthNumber - 1 == 0) { return 12; } else { return monthNumber - 1; } }
+
+function nextMonthNumber(monthNumber) { if (monthNumber + 1 == 13) { return 1; } else { return monthNumber + 1; } }
+
+function previousMonthYearNumber(yearNumber, monthNumber) { if (previousMonthNumber(monthNumber) == 12) { return yearNumber - 1; } else { return yearNumber; } }
+
+function nextMonthYearNumber(yearNumber, monthNumber) { if (nextMonthNumber(monthNumber) == 1) { return yearNumber + 1; } else { return yearNumber; } }
+
 Date.prototype.countWeeksOfMonth = function() {
   var year         = this.getFullYear();
   var month_number = this.getMonth();
