@@ -113,8 +113,6 @@ var CalendarDay = React.createClass({
 
   render: function () {
 
-    console.log("1: Year " + this.props.year + "; Month " + this.props.month);
-
     var thisDate = new Date(this.props.year, this.props.month - 1, this.props.day);
     thisDate.setHours(0, 0, 0, 0);
 
@@ -123,13 +121,8 @@ var CalendarDay = React.createClass({
     if ("events" in this.props.data) {
       $.each(this.props.data.events, function (i, item) {
 
-        console.log("event ID: " + JSON.stringify(item.id) + "; t_start: " + JSON.stringify(item.t_start));
-
         var eventDate = new Date(item.t_start);
         eventDate.setHours(0, 0, 0, 0);
-
-        console.log("3: eventDate.getTime() = " + eventDate.getTime());
-        console.log("4: thisDate.getTime() = " + thisDate.getTime());
 
         if (eventDate.getTime() == thisDate.getTime()) {
           eventsForThisDate.push(item);
