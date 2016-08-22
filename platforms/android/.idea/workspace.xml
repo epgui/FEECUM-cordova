@@ -4,7 +4,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="614df69c-06da-4185-8c1d-8c5d27ee4b2a" name="Default" comment="" />
+    <list default="true" id="614df69c-06da-4185-8c1d-8c5d27ee4b2a" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../readme.md" afterPath="$PROJECT_DIR$/../../readme.md" />
+    </list>
     <ignored path="android.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
