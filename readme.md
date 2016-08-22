@@ -3,7 +3,10 @@ Dependencies
 
 Dependencies and their instructions are subject to change. These are provided as a rough guide.
 
-Basic environment setup:
+
+Basic environment setup
+-----------------------
+
 * [node.js](http://nodejs.org)
 * [Apache Cordova](https://cordova.apache.org/)
 * [Babel](https://babeljs.io/)
@@ -18,7 +21,10 @@ Installing Babel (requires npm):
 > npm install --global babel-cli
 ```
 
-For iOS:
+
+For iOS
+-----------------------
+
 * [Xcode](https://developer.apple.com/xcode/)
 * Xcode Command Line Tools
 * [ios-sim](https://www.npmjs.com/package/ios-sim)
@@ -40,7 +46,10 @@ If ios-deploy fails to install on El Capitan, try:
 > npm install --global --unsafe-perm ios-deploy
 ```
 
-For Android:
+
+For Android
+-----------------------
+
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](https://developer.android.com/studio/index.html)
 * [Gradle](https://gradle.org/)
