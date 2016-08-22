@@ -2,9 +2,9 @@ Dependencies
 =======================
 
 Basic environment setup:
-* node.js
-* Apache Cordova
-* Babel
+* [node.js](http://nodejs.org)
+* [Apache Cordova](https://cordova.apache.org/)
+* [Babel](https://babeljs.io/)
 
 Installing Apache Cordova (requires npm):
 ```
@@ -17,7 +17,7 @@ npm install --global babel-cli
 ```
 
 For iOS:
-* Xcode
+* [Xcode](https://developer.apple.com/xcode/)
 * Xcode Command Line Tools
 
 Installing Xcode Command Line Tools:
@@ -26,9 +26,9 @@ xcode-select --install
 ```
 
 For Android:
-* JDK
-* Android Studio
-* Gradle
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* [Android Studio](https://developer.android.com/studio/index.html)
+* [Gradle](https://gradle.org/)
 
 
 Updating
