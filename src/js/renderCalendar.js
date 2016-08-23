@@ -47,9 +47,6 @@ var CalendarMonth = React.createClass({
   },
   render: function(){
 
-    console.log("this.state.data = ");
-    console.log(this.state.data);
-
     var monthName        = monthNumber(parseInt(this.props.month) - 1)
     var firstDay         = new Date(this.props.year, this.props.month - 1, 1);
     var weeksInMonth     = firstDay.countWeeksOfMonth();
@@ -112,6 +109,7 @@ var CalendarWeek = React.createClass({
 var CalendarDay = React.createClass({
   render: function(){
 
+    // Don't forget month is zero-indexed for Date().
     var thisDate = new Date(this.props.year, this.props.month - 1, this.props.day);
     thisDate.setHours(0, 0, 0, 0);
 
@@ -121,7 +119,25 @@ var CalendarDay = React.createClass({
     {
       $.each(this.props.data.events, function(i, item) {
 
-        var eventDate = new Date(item.t_start);
+        // Regular expressions are the best way to parse the date.
+        // Otherwise, a different implementation of Date in Safari will
+        // cause everything to fail silently.
+
+        // For example, let's take the date string representation "2016-09-05 10:00:00".
+        // /\s/ will match any whitespace.
+        // Doing split(/\s/) results in this array: ["2016-09-05", "10:00:00"].
+        // We're not interested in the time of day, so let's just keep the first element [0].
+        var eventDateStr  = item.t_start.split(/\s/)[0];
+
+        // /\-/ will match the minus sign (used as a dash separator in "2016-09-05")
+        // Thus split(/\-/) results in this array: ["2016", "09", "05"], which is
+        // exactly what we're looking for! We use parseInt() with base 10 (decimal).
+        var eventYearInt  = parseInt(eventDateStr.split(/\-/)[0], 10);
+        var eventMonthInt = parseInt(eventDateStr.split(/\-/)[1], 10);
+        var eventDayInt   = parseInt(eventDateStr.split(/\-/)[2], 10);
+
+        // Don't forget month is zero-indexed for Date().
+        var eventDate = new Date(eventYearInt, eventMonthInt - 1, eventDayInt);
         eventDate.setHours(0, 0, 0, 0);
 
         if (eventDate.getTime() == thisDate.getTime())
