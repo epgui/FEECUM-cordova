@@ -7,7 +7,7 @@ Dependencies and their instructions are subject to change. These are provided as
 Basic environment setup
 -----------------------
 
-* [node.js](http://nodejs.org)
+* [node.js (includes npm)](http://nodejs.org)
 * [Apache Cordova](https://cordova.apache.org/)
 * [Babel](https://babeljs.io/)
 
