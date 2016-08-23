@@ -13,12 +13,12 @@ Basic environment setup
 
 Installing Apache Cordova (requires npm):
 ```
-> npm install -g cordova
+$ npm install -g cordova
 ```
 
 Installing Babel (requires npm):
 ```
-> npm install --global babel-cli
+$ npm install --global babel-cli
 ```
 
 
@@ -32,18 +32,18 @@ For iOS
 
 Installing Xcode Command Line Tools:
 ```
-> xcode-select --install
+$ xcode-select --install
 ```
 
 Installing ios-sim and ios-deploy (requires npm):
 ```
-> npm install -g ios-sim
-> npm install -g ios-deploy
+$ npm install -g ios-sim
+$ npm install -g ios-deploy
 ```
 
 If ios-deploy fails to install on El Capitan, try:
 ```
-> npm install --global --unsafe-perm ios-deploy
+$ npm install --global --unsafe-perm ios-deploy
 ```
 
 
@@ -62,18 +62,18 @@ Update instructions are subject to change, but should be relatively stable.
 
 Update Apache Cordova CLI:
 ```
-> sudo npm update -g cordova
+$ sudo npm update -g cordova
 ```
 
 Check for platform updates (note: this doesn't seem to behave properly on my setup):
 ```
-> cordova platform check
+$ cordova platform check
 ```
 
 Update platforms (example):
 ```
-> cordova platform update android
-> cordova platform update ios
+$ cordova platform update android
+$ cordova platform update ios
 ```
 
 
@@ -84,28 +84,28 @@ Deployment instructions are stable.
 
 To deploy and launch in Chrome (assuming Chrome is the default browser):
 ```
-> npm run build
-> cordova run browser
+$ npm run build
+$ cordova run browser
 ```
 
 To deploy and launch in Safari:
 ```
-> npm run build
-> cordova run browser --target=Safari
+$ npm run build
+$ cordova run browser --target=Safari
 ```
 
 To deploy and launch on Android simulator:
 
 ```
-> npm run build
-> cordova build android
-> cordova run android --emulator
+$ npm run build
+$ cordova build android
+$ cordova run android --emulator
 ```
 
 To deploy and launch on iOS simulator:
 
 ```
-> npm run build
-> cordova build ios
-> cordova run ios --emulator
+$ npm run build
+$ cordova build ios
+$ cordova run ios --emulator
 ```
