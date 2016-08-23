@@ -28,6 +28,7 @@ var CalendarMonth = React.createClass({
       url: this.props.url,
       dataType: 'json',
       cache: false,
+      async: true,
       success: function(data){
         this.setState({data: data});
       }.bind(this),
@@ -45,6 +46,10 @@ var CalendarMonth = React.createClass({
     //setInterval(this.loadEventsFromServer, 5000); // Check for new events every 5 seconds
   },
   render: function(){
+
+    console.log("this.state.data = ");
+    console.log(this.state.data);
+
     var monthName        = monthNumber(parseInt(this.props.month) - 1)
     var firstDay         = new Date(this.props.year, this.props.month - 1, 1);
     var weeksInMonth     = firstDay.countWeeksOfMonth();

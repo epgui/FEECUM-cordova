@@ -29,6 +29,7 @@ var CalendarMonth = React.createClass({
       url: this.props.url,
       dataType: 'json',
       cache: false,
+      async: true,
       success: function (data) {
         this.setState({ data: data });
       }.bind(this),

@@ -82,10 +82,16 @@ Deployment instructions
 
 Deployment instructions are stable.
 
-To deploy and launch in the browser:
+To deploy and launch in Chrome (assuming Chrome is the default browser):
 ```
 > npm run build
 > cordova run browser
+```
+
+To deploy and launch in Safari:
+```
+> npm run build
+> cordova run browser --target=Safari
 ```
 
 To deploy and launch on Android simulator:
