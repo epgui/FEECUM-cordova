@@ -117,3 +117,12 @@ $ npm run build
 $ cordova build ios
 $ cordova run ios --emulator
 ```
+
+
+Debugging
+=======================
+
+* Install the [React Developer Tools](https://github.com/facebook/react-devtools)
+* Enable [Remote Debugging with Safari Developer Tools](https://developer.apple.com/safari/tools/)
+* [Debugging with Xcode](https://developer.apple.com/support/debugging/)
+* [Debugging with Android Studio](https://developer.android.com/studio/debug/index.html)
