@@ -49,6 +49,8 @@ Table des matières
 </ol>
 
 
+![](readme-hr.png)
+
 TODO
 =======================
 * Implement [webpack](http://webpack.github.io)
@@ -57,6 +59,7 @@ TODO
 * Implement [React Performance Tools](https://facebook.github.io/react/docs/perf.html)
 
 
+![](readme-hr.png)
 
 Dependencies
 =======================
@@ -115,6 +118,8 @@ For Android
 * [Gradle](https://gradle.org/)
 
 
+![](readme-hr.png)
+
 Updating
 =======================
 
@@ -136,6 +141,8 @@ $ cordova platform update android
 $ cordova platform update ios
 ```
 
+
+![](readme-hr.png)
 
 Deployment
 =======================
@@ -171,6 +178,8 @@ $ cordova run ios --emulator
 ```
 
 
+![](readme-hr.png)
+
 Debugging
 =======================
 
@@ -178,3 +187,6 @@ Debugging
 * Enable [Remote Debugging with Safari Developer Tools](https://developer.apple.com/safari/tools/)
 * [Debugging with Xcode](https://developer.apple.com/support/debugging/)
 * [Debugging with Android Studio](https://developer.android.com/studio/debug/index.html)
+
+
+![](readme-hr.png)
