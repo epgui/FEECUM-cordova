@@ -5,44 +5,44 @@ Table des matières
 
 <ol style="background-color: #FCFCFC; padding: 20px;">
   <li>
-    <a href="#TODO">
+    <a href="#todo">
       TODO
     </a>
   </li>
   <li>
-    <a href="#Dependencies">
+    <a href="#dependencies">
       Dependencies
     </a>
     <ol>
       <li>
-        <a href="#Basic-environment-setup">
+        <a href="#basic-environment-setup">
           Basic environment setup
         </a>
       </li>
       <li>
-        <a href="#For-iOS">
+        <a href="#for-ios">
           For iOS
         </a>
       </li>
       <li>
-        <a href="#For-Android">
+        <a href="#for-android">
           For Android
         </a>
       </li>
     </ol>
   </li>
   <li>
-    <a href="#Updating">
+    <a href="#updating">
       Updating
     </a>
   </li>
   <li>
-    <a href="#Deployment">
+    <a href="#deployment">
       Deployment
     </a>
   </li>
   <li>
-    <a href="#Debugging">
+    <a href="#debugging">
       Debugging
     </a>
   </li>
