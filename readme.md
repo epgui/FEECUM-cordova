@@ -1,11 +1,30 @@
 ![FÉÉCUM: La Fédération des étudiantes et étudiants du Campus universitaire de Moncton](readme-header.png "FÉÉCUM: La Fédération des étudiantes et étudiants du Campus universitaire de Moncton")
 
+Table des matières
+=======================
+
+<ol style="background-color: #FCFCFC; padding: 20px;">
+  <li>[TODO](#TODO)</li>
+  <li>[Dependencies](#Dependencies)
+    <ol>
+      <li>[Basic environment setup](#Basic-environment-setup)</li>
+      <li>[For iOS](#For-iOS)</li>
+      <li>[For Android](#For-Android)</li>
+    </ol>
+  </li>
+  <li>[Updating](#Updating)</li>
+  <li>[Deployment](#Deployment)</li>
+  <li>[Debugging](#Debugging)</li>
+</ol>
+
+
 TODO
 =======================
 * Implement [webpack](http://webpack.github.io)
 * Implement [flow](https://flowtype.org)
 * Implement [Redux](http://redux.js.org)
 * Implement [React Performance Tools](https://facebook.github.io/react/docs/perf.html)
+
 
 
 Dependencies
@@ -87,7 +106,7 @@ $ cordova platform update ios
 ```
 
 
-Deployment instructions
+Deployment
 =======================
 
 Deployment instructions are stable.
