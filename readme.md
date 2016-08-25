@@ -1,3 +1,11 @@
+TODO
+=======================
+* Implement [webpack](http://webpack.github.io)
+* Implement [flow](https://flowtype.org)
+* Implement [Redux](http://redux.js.org)
+* Implement [React Performance Tools](https://facebook.github.io/react/docs/perf.html)
+
+
 Dependencies
 =======================
 
