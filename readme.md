@@ -4,17 +4,48 @@ Table des matières
 =======================
 
 <ol style="background-color: #FCFCFC; padding: 20px;">
-  <li>[TODO](#TODO)</li>
-  <li>[Dependencies](#Dependencies)
+  <li>
+    <a href="#TODO">
+      TODO
+    </a>
+  </li>
+  <li>
+    <a href="#Dependencies">
+      Dependencies
+    </a>
     <ol>
-      <li>[Basic environment setup](#Basic-environment-setup)</li>
-      <li>[For iOS](#For-iOS)</li>
-      <li>[For Android](#For-Android)</li>
+      <li>
+        <a href="#Basic-environment-setup">
+          Basic environment setup
+        </a>
+      </li>
+      <li>
+        <a href="#For-iOS">
+          For iOS
+        </a>
+      </li>
+      <li>
+        <a href="#For-Android">
+          For Android
+        </a>
+      </li>
     </ol>
   </li>
-  <li>[Updating](#Updating)</li>
-  <li>[Deployment](#Deployment)</li>
-  <li>[Debugging](#Debugging)</li>
+  <li>
+    <a href="#Updating">
+      Updating
+    </a>
+  </li>
+  <li>
+    <a href="#Deployment">
+      Deployment
+    </a>
+  </li>
+  <li>
+    <a href="#Debugging">
+      Debugging
+    </a>
+  </li>
 </ol>
 
 
