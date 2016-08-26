@@ -46,7 +46,7 @@ body {
 }
 
 /* Portrait layout (default) */
-.app {
+#app {
   height: 700px;
   text-align:center;
   position: relative;
@@ -73,7 +73,7 @@ h1 {
   text-align:center;
 }
 
-#calendarView {
+#views {
   left: 50%;
   margin: -200px 0 0 -200px;
   padding: 40px 0;
@@ -82,25 +82,25 @@ h1 {
   width: 400px;
 }
 
-#calendarView time.year {
+#views time.year {
   display: block;
   margin: 0;
   padding: 0;
   width: 100%;
 }
 
-#calendarView time.month {
+#views time.month {
   display: block;
   margin: 0;
   padding: 0;
   width: 100%;
 }
 
-#calendarView time.month.hidden {
+#views time.month.hidden {
   display: none;
 }
 
-#calendarView time.month .month-label {
+#views time.month .month-label {
   background: #FFF;
   display: block;
   height: 55px;
@@ -109,13 +109,13 @@ h1 {
   width: 397px;
 }
 
-#calendarView time.week {
+#views time.week {
   display: block;
   overflow: hidden;
   width: 100%;
 }
 
-#calendarView time.day {
+#views time.day {
   background: #FFF;
   display: block;
   float: left;
@@ -125,7 +125,7 @@ h1 {
   width: 55px;
 }
 
-#calendarView time.day.next-month, #calendarView time.day.previous-month {
+#views time.day.next-month, #views time.day.previous-month {
   background: #EEE;
   color: #AAA;
 }

@@ -46,7 +46,7 @@ body {
 }
 
 /* Portrait layout (default) */
-.app {
+#app {
   height: 700px;
   text-align:center;
   position: relative;

@@ -16,7 +16,7 @@ Pour plus d'information sur l'application mobile de la FÉÉCUM, veuillez lire
 Table des matières
 =======================
 
-<ol style="background-color: #FCFCFC; padding: 20px;">
+<ol>
   <li>
     <a href="#todo">
       TODO
@@ -66,9 +66,9 @@ Table des matières
 
 TODO
 =======================
-* Implement [webpack](http://webpack.github.io)
-* Implement [flow](https://flowtype.org)
-* Implement [Redux](http://redux.js.org)
+* Implement [webpack](http://webpack.github.io/)
+* Implement [flow](https://flowtype.org/)
+* Implement [Redux](http://redux.js.org/)
 * Implement [React Performance Tools](https://facebook.github.io/react/docs/perf.html)
 
 
@@ -83,9 +83,12 @@ Dependencies and their instructions are subject to change. These are provided as
 Basic environment setup
 -----------------------
 
-* [node.js (includes npm)](http://nodejs.org)
+* [node.js (includes npm)](http://nodejs.org/)
 * [Apache Cordova](https://cordova.apache.org/)
 * [Babel](https://babeljs.io/)
+* [webpack](https://webpack.github.io/)
+* [babel-loader](https://github.com/babel/babel-loader)
+* [React](https://facebook.github.io/react/)
 
 Installing Apache Cordova (requires npm):
 ```
@@ -95,6 +98,21 @@ $ npm install -g cordova
 Installing Babel (requires npm):
 ```
 $ npm install --global babel-cli
+```
+
+Installing webpack (requires npm):
+```
+$ npm install webpack -S
+```
+
+Installing the babel-loader plugin for webpack (requires npm):
+```
+$ npm install babel-loader babel-core babel-preset-es2015 --save-dev
+```
+
+Installing the react and react-dom plugins for webpack (requires npm):
+```
+$ npm install react react-dom -S
 ```
 
 
@@ -162,22 +180,23 @@ Deployment
 
 Deployment instructions are stable.
 
-To deploy and launch in Chrome (assuming Chrome is the default browser):
+To build the application:
 ```
-$ npm run build
-$ cordova run browser
+$ npm run build            // run webpack in production mode (minimize automatically)
+$ npm run dev              // run webpack in watch mode (auto-bundles whenever files change)
 ```
 
-To deploy and launch in Safari:
+To deploy and launch in the browser:
 ```
-$ npm run build
+$ cordova run browser      // will launch in default browser
+$ cordova run browser --target=Chrome
 $ cordova run browser --target=Safari
+$ cordova run browser --target=Firefox
 ```
 
 To deploy and launch on Android simulator:
 
 ```
-$ npm run build
 $ cordova build android
 $ cordova run android --emulator
 ```
@@ -185,7 +204,6 @@ $ cordova run android --emulator
 To deploy and launch on iOS simulator:
 
 ```
-$ npm run build
 $ cordova build ios
 $ cordova run ios --emulator
 ```

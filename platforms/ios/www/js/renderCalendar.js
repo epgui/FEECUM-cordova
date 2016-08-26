@@ -1,5 +1,71 @@
+var CalendarApplication = React.createClass({
+  displayName: 'CalendarApplication',
+
+  // Possible values for view: ['calendar-month', 'event-details', 'settings-panel']
+  getInitialState: function () {
+    return {
+      error: false,
+      view: 'calendar-month'
+    };
+  },
+  render: function () {
+    var views = [];
+    var controls = [];
+
+    views.push(React.createElement(CalendarYear, {
+      year: this.props.year,
+      month: this.props.month,
+      isElementHidden: this.state.view != 'calendar-month'
+    }));
+
+    views.push(React.createElement(EventDetails, {
+      eventData: null,
+      isElementHidden: this.state.view != 'event-details'
+    }));
+
+    views.push(React.createElement(SettingsPanel, {
+      isElementHidden: this.state.view != 'settings-panel'
+    }));
+
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(
+        'div',
+        { id: 'controls' },
+        React.createElement(
+          'h1',
+          null,
+          'Calendrier de la FÉÉCUM'
+        )
+      ),
+      React.createElement(
+        'div',
+        { id: 'calendarView' },
+        views
+      )
+    );
+  }
+});
+
+var EventDetails = React.createClass({
+  displayName: 'EventDetails',
+
+  render: function () {
+    return React.createElement('div', null);
+  }
+});
+
+var SettingsPanel = React.createClass({
+  displayName: 'SettingsPanel',
+
+  render: function () {
+    return React.createElement('div', null);
+  }
+});
+
 var CalendarYear = React.createClass({
-  displayName: "CalendarYear",
+  displayName: 'CalendarYear',
 
   render: function () {
     var calendarMonths = [];
@@ -7,25 +73,38 @@ var CalendarYear = React.createClass({
     for (var i = 0; i < parseInt(this.props.month); i++) {
       var monthNumber = i + 1;
       if (monthNumber == parseInt(this.props.month)) {
-        calendarMonths.push(React.createElement(CalendarMonth, { key: i, year: this.props.year, month: monthNumber, url: "http://feecum.ca/dev/backend.php?year=" + this.props.year + "&month=" + monthNumber }));
+        calendarMonths.push(React.createElement(CalendarMonth, {
+          key: i,
+          year: this.props.year,
+          month: monthNumber,
+          url: "http://feecum.ca/dev/backend.php?year=" + this.props.year + "&month=" + monthNumber
+        }));
       } else {
-        //calendarMonths.push(<CalendarMonth key={i} year={this.props.year} month={monthNumber} url={"http://feecum.ca/dev/backend.php?year=" + this.props.year + "&month=" + monthNumber} isElementHidden={1} />);
+        /*
+          calendarMonths.push(<CalendarMonth
+                                key={i}
+                                year={this.props.year}
+                                month={monthNumber}
+                                url={"http://feecum.ca/dev/backend.php?year=" + this.props.year + "&month=" + monthNumber}
+                                isElementHidden={1}
+                              />);
+        */
       }
     }
 
     return React.createElement(
-      "time",
-      { dateTime: this.props.year, className: "year" },
+      'time',
+      { dateTime: this.props.year, className: 'year' },
       calendarMonths
     );
   }
 });
 
 var CalendarMonth = React.createClass({
-  displayName: "CalendarMonth",
+  displayName: 'CalendarMonth',
 
   loadEventsFromServer: function () {
-    $.ajax({
+    this.serverRequest = $.ajax({
       url: this.props.url,
       dataType: 'json',
       cache: false,
@@ -43,14 +122,17 @@ var CalendarMonth = React.createClass({
     return { data: [] };
   },
   componentDidMount: function () {
+    // Fetch data from FÉÉCUM servers
     this.loadEventsFromServer();
-    //setInterval(this.loadEventsFromServer, 5000); // Check for new events every 5 seconds
+
+    // Check for new events every 10 seconds
+    setInterval(this.loadEventsFromServer, 10000);
+  },
+  componentWillUnmount: function () {
+    // Cancel any outstanding requests before the component is unmounted.
+    this.serverRequest.abort();
   },
   render: function () {
-
-    console.log("this.state.data = ");
-    console.log(this.state.data);
-
     var monthName = monthNumber(parseInt(this.props.month) - 1);
     var firstDay = new Date(this.props.year, this.props.month - 1, 1);
     var weeksInMonth = firstDay.countWeeksOfMonth();
@@ -59,7 +141,13 @@ var CalendarMonth = React.createClass({
     var displayClass = "";
 
     for (var i = 0; i < weeksInMonth; i++) {
-      calendarWeeks.push(React.createElement(CalendarWeek, { key: i, year: this.props.year, month: this.props.month, week: indexOfFirstWeek + i, data: this.state.data }));
+      calendarWeeks.push(React.createElement(CalendarWeek, {
+        key: i,
+        year: this.props.year,
+        month: this.props.month,
+        week: indexOfFirstWeek + i,
+        data: this.state.data
+      }));
     }
 
     if (this.props.isElementHidden == 1) {
@@ -67,11 +155,11 @@ var CalendarMonth = React.createClass({
     }
 
     return React.createElement(
-      "time",
+      'time',
       { dateTime: this.props.year + "-" + leadingZeros(this.props.month), className: "month " + displayClass },
       React.createElement(
-        "span",
-        { className: "month-label" },
+        'span',
+        { className: 'month-label' },
         monthName
       ),
       calendarWeeks
@@ -80,7 +168,7 @@ var CalendarMonth = React.createClass({
 });
 
 var CalendarWeek = React.createClass({
-  displayName: "CalendarWeek",
+  displayName: 'CalendarWeek',
 
   render: function () {
     var firstDay = new Date(this.props.year, this.props.month - 1, 1);
@@ -95,29 +183,53 @@ var CalendarWeek = React.createClass({
     for (var i = 0; i <= 6; i++) {
       if (this.props.week - indexOfFirstWeek == 0 && i < indexOfFirstDay) {
         dayNumber = lastMonthStart + i;
-        weekDays.push(React.createElement(CalendarDay, { key: i, year: previousMonthYearNumber(this.props.year, this.props.month), month: leadingZeros(previousMonthNumber(this.props.month)), day: leadingZeros(dayNumber), data: this.props.data, "class": "day previous-month" }));
+
+        weekDays.push(React.createElement(CalendarDay, {
+          key: i,
+          year: previousMonthYearNumber(this.props.year, this.props.month),
+          month: leadingZeros(previousMonthNumber(this.props.month)),
+          day: leadingZeros(dayNumber),
+          data: this.props.data,
+          'class': 'day previous-month'
+        }));
       } else if (this.props.week - indexOfFirstWeek + 1 == weeksInMonth && i > indexOfLastDay) {
         dayNumber = i - indexOfLastDay;
-        weekDays.push(React.createElement(CalendarDay, { key: i, year: nextMonthYearNumber(this.props.year, this.props.month), month: leadingZeros(nextMonthNumber(this.props.month)), day: leadingZeros(dayNumber), data: this.props.data, "class": "day next-month" }));
+
+        weekDays.push(React.createElement(CalendarDay, {
+          key: i,
+          year: nextMonthYearNumber(this.props.year, this.props.month),
+          month: leadingZeros(nextMonthNumber(this.props.month)),
+          day: leadingZeros(dayNumber),
+          data: this.props.data,
+          'class': 'day next-month'
+        }));
       } else {
         dayNumber = (this.props.week - indexOfFirstWeek) * 7 + (i + 1) - indexOfFirstDay;
-        weekDays.push(React.createElement(CalendarDay, { key: i, year: this.props.year, month: leadingZeros(this.props.month), day: leadingZeros(dayNumber), data: this.props.data, "class": "day" }));
+
+        weekDays.push(React.createElement(CalendarDay, {
+          key: i,
+          year: this.props.year,
+          month: leadingZeros(this.props.month),
+          day: leadingZeros(dayNumber),
+          data: this.props.data,
+          'class': 'day'
+        }));
       }
     }
 
     return React.createElement(
-      "time",
-      { dateTime: this.props.year + "-W" + leadingZeros(this.props.week), className: "week" },
+      'time',
+      { dateTime: this.props.year + "-W" + leadingZeros(this.props.week), className: 'week' },
       weekDays
     );
   }
 });
 
 var CalendarDay = React.createClass({
-  displayName: "CalendarDay",
+  displayName: 'CalendarDay',
 
   render: function () {
-
+    // Don't forget month is zero-indexed for Date().
     var thisDate = new Date(this.props.year, this.props.month - 1, this.props.day);
     thisDate.setHours(0, 0, 0, 0);
 
@@ -125,8 +237,13 @@ var CalendarDay = React.createClass({
 
     if ("events" in this.props.data) {
       $.each(this.props.data.events, function (i, item) {
+        // See calendar-functions.js
+        var eventYear = item.t_start.getYear();
+        var eventMonth = item.t_start.getMonth();
+        var eventDay = item.t_start.getDay();
 
-        var eventDate = new Date(item.t_start);
+        // Don't forget month is zero-indexed for Date().
+        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
         eventDate.setHours(0, 0, 0, 0);
 
         if (eventDate.getTime() == thisDate.getTime()) {
@@ -136,16 +253,16 @@ var CalendarDay = React.createClass({
     }
 
     return React.createElement(
-      "time",
+      'time',
       { dateTime: this.props.year + "-" + leadingZeros(this.props.month) + "-" + leadingZeros(this.props.day), className: this.props.class },
       React.createElement(
-        "span",
-        { className: "day-label" },
+        'span',
+        { className: 'day-label' },
         this.props.day
       ),
       React.createElement(
-        "span",
-        { className: "day-label" },
+        'span',
+        { className: 'day-label' },
         JSON.stringify(eventsForThisDate)
       )
     );
@@ -155,5 +272,5 @@ var CalendarDay = React.createClass({
 $(function () {
   var year = 2016;
   var month = 9;
-  ReactDOM.render(React.createElement(CalendarYear, { year: year, month: leadingZeros(month) }), document.getElementById('calendarView'));
+  ReactDOM.render(React.createElement(CalendarApplication, { year: year, month: leadingZeros(month) }), document.getElementById('app'));
 });
