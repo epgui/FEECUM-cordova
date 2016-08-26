@@ -8,7 +8,7 @@ L'application mobile de la FÉÉCUM sera bientôt disponible pour les plateforme
 ![Le calendrier de la FÉÉCUM... bientôt à portée de la main.](calendrier-bientot.png "Le calendrier de la FÉÉCUM... bientôt à portée de la main.")
 
 Pour plus d'information sur l'application mobile de la FÉÉCUM, veuillez lire
-[cet article paru dans Le Front le 29 mars 2016](http://lefront.ca/app-feecum-vie-etudiante-a-portee-de-main/)
+**[cet article paru dans Le Front le 29 mars 2016](http://lefront.ca/app-feecum-vie-etudiante-a-portee-de-main/)**.
 
 Table des matières
 =======================
