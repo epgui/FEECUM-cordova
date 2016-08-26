@@ -76,6 +76,8 @@ TODO
 Dependencies
 =======================
 
+![Solution stack](solution-stack.png "Solution stack")
+
 Dependencies and their instructions are subject to change. These are provided as a rough guide.
 
 
