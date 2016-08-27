@@ -67,7 +67,6 @@ Table des matières
 TODO
 =======================
 * Implement [flow](https://flowtype.org/)
-* Implement [Redux](http://redux.js.org/)
 * Implement [React Performance Tools](https://facebook.github.io/react/docs/perf.html)
 
 
@@ -84,36 +83,38 @@ Dependencies and their instructions are subject to change. These are provided as
 Basic environment setup
 -----------------------
 
-* [node.js (includes npm)](http://nodejs.org/)
-* [Apache Cordova](https://cordova.apache.org/)
-* [Babel](https://babeljs.io/)
-* [webpack](https://webpack.github.io/)
-* [babel-loader](https://github.com/babel/babel-loader)
-* [React](https://facebook.github.io/react/)
+The first step is to install [node.js](http://nodejs.org/) (it comes with npm, required for the rest of the setup).
 
-Installing Apache Cordova (requires npm):
+Installing [Apache Cordova](https://cordova.apache.org/):
 ```
 $ npm install -g cordova
 ```
 
-Installing Babel (requires npm):
+Installing [Babel](https://babeljs.io/):
 ```
 $ npm install --global babel-cli
 ```
 
-Installing webpack (requires npm):
+Installing [webpack](https://webpack.github.io/):
 ```
 $ npm install webpack -S
 ```
 
-Installing the babel-loader plugin for webpack (requires npm):
+Installing the [babel-loader plugin for webpack](https://github.com/babel/babel-loader):
 ```
 $ npm install babel-loader babel-core babel-preset-es2015 --save-dev
 ```
 
-Installing the react and react-dom plugins for webpack (requires npm):
+Installing the [react and react-dom plugins for webpack](https://facebook.github.io/react/):
 ```
 $ npm install react react-dom -S
+```
+
+Installing [Redux](http://redux.js.org/), the [React bindings](https://github.com/reactjs/react-redux) and the [Redux developer tools](https://github.com/gaearon/redux-devtools):
+```
+$ npm install --save redux
+$ npm install --save react-redux
+$ npm install --save-dev redux-devtools
 ```
 
 

@@ -1,9 +1,14 @@
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
+import { createStore } from 'redux';
 
+import { StateMachine } from './StateMachine.js';
 import ViewCalendar from './ViewCalendar.jsx';
 import ViewEvent from './ViewEvent.jsx';
 import ViewSettings from './ViewSettings.jsx';
+import ViewControls from './ViewControls.jsx';
+
+let store = createStore(StateMachine);
 
 class CalendarApplication extends React.Component
 {
@@ -12,7 +17,8 @@ class CalendarApplication extends React.Component
     super(props);
     this.state = {
       error: false,
-      view: 'calendar-month' // Possible values for view: ['calendar-month', 'event-details', 'settings-panel']
+      view: 'calendar-month', // Possible values for view: ['calendar-month', 'event-details', 'settings-panel']
+      data: {}
     };
   }
 
@@ -36,14 +42,14 @@ class CalendarApplication extends React.Component
                  isElementHidden={(this.state.view != 'settings-panel')}
                />);
 
+    controls.push(<ViewControls view={this.state.view} />);
+
     return (
-      <div>
-      <div id="controls">
-        <h1>Calendrier de la FÉÉCUM</h1>
-      </div>
-      <div id="views">
-        {views}
-      </div>
+      <div id="interface">
+        {controls}
+        <div id="views">
+          {views}
+        </div>
       </div>
     );
   }
