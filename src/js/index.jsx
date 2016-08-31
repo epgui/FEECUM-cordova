@@ -1,66 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
-
-import { StateMachine } from './StateMachine.js';
-import ViewCalendar from './ViewCalendar.jsx';
-import ViewEvent from './ViewEvent.jsx';
-import ViewSettings from './ViewSettings.jsx';
-import ViewControls from './ViewControls.jsx';
-
-let store = createStore(StateMachine);
-
-class CalendarApplication extends React.Component
-{
-  constructor(props)
-  {
-    super(props);
-    this.state = {
-      error: false,
-      view: 'calendar-month', // Possible values for view: ['calendar-month', 'event-details', 'settings-panel']
-      data: {}
-    };
-  }
-
-  render()
-  {
-    var views = [];
-    var controls = [];
-
-    views.push(<ViewCalendar
-                 year={this.props.year}
-                 month={this.props.month}
-                 isElementHidden={(this.state.view != 'calendar-month')}
-               />);
-
-    views.push(<ViewEvent
-                 eventData={null}
-                 isElementHidden={(this.state.view != 'event-details')}
-               />);
-
-    views.push(<ViewSettings
-                 isElementHidden={(this.state.view != 'settings-panel')}
-               />);
-
-    controls.push(<ViewControls view={this.state.view} />);
-
-    return (
-      <div id="interface">
-        {controls}
-        <div id="views">
-          {views}
-        </div>
-      </div>
-    );
-  }
-}
+import { Provider } from 'react-redux';
+import { store } from './Store.js';
+import ContainerApplication from './ContainerApplication.jsx';
 
 $(function()
 {
-  var year  = 2016;
-  var month = 9;
   render(
-    <CalendarApplication year={year} month={leadingZeros(month)} />,
+    <Provider store={store}>
+      <ContainerApplication />
+    </Provider>,
     document.getElementById('app')
   );
 });

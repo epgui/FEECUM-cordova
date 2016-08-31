@@ -49,103 +49,28 @@
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _redux = __webpack_require__(/*! redux */ 172);
+	var _reactRedux = __webpack_require__(/*! react-redux */ 172);
 	
-	var _StateMachine = __webpack_require__(/*! ./StateMachine.js */ 186);
+	var _Store = __webpack_require__(/*! ./Store.js */ 200);
 	
-	var _ViewCalendar = __webpack_require__(/*! ./ViewCalendar.jsx */ 189);
+	var _ContainerApplication = __webpack_require__(/*! ./ContainerApplication.jsx */ 204);
 	
-	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
-	
-	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 190);
-	
-	var _ViewEvent2 = _interopRequireDefault(_ViewEvent);
-	
-	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 191);
-	
-	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
-	
-	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 192);
-	
-	var _ViewControls2 = _interopRequireDefault(_ViewControls);
+	var _ContainerApplication2 = _interopRequireDefault(_ContainerApplication);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var store = (0, _redux.createStore)(_StateMachine.StateMachine);
-	
-	var CalendarApplication = function (_React$Component) {
-	  _inherits(CalendarApplication, _React$Component);
-	
-	  function CalendarApplication(props) {
-	    _classCallCheck(this, CalendarApplication);
-	
-	    var _this = _possibleConstructorReturn(this, (CalendarApplication.__proto__ || Object.getPrototypeOf(CalendarApplication)).call(this, props));
-	
-	    _this.state = {
-	      error: false,
-	      view: 'calendar-month', // Possible values for view: ['calendar-month', 'event-details', 'settings-panel']
-	      data: {}
-	    };
-	    return _this;
-	  }
-	
-	  _createClass(CalendarApplication, [{
-	    key: 'render',
-	    value: function render() {
-	      var views = [];
-	      var controls = [];
-	
-	      views.push(_react2.default.createElement(_ViewCalendar2.default, {
-	        year: this.props.year,
-	        month: this.props.month,
-	        isElementHidden: this.state.view != 'calendar-month'
-	      }));
-	
-	      views.push(_react2.default.createElement(_ViewEvent2.default, {
-	        eventData: null,
-	        isElementHidden: this.state.view != 'event-details'
-	      }));
-	
-	      views.push(_react2.default.createElement(_ViewSettings2.default, {
-	        isElementHidden: this.state.view != 'settings-panel'
-	      }));
-	
-	      controls.push(_react2.default.createElement(_ViewControls2.default, { view: this.state.view }));
-	
-	      return _react2.default.createElement(
-	        'div',
-	        { id: 'interface' },
-	        controls,
-	        _react2.default.createElement(
-	          'div',
-	          { id: 'views' },
-	          views
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return CalendarApplication;
-	}(_react2.default.Component);
-	
 	$(function () {
-	  var year = 2016;
-	  var month = 9;
-	  (0, _reactDom.render)(_react2.default.createElement(CalendarApplication, { year: year, month: leadingZeros(month) }), document.getElementById('app'));
+	  (0, _reactDom.render)(_react2.default.createElement(
+	    _reactRedux.Provider,
+	    { store: _Store.store },
+	    _react2.default.createElement(_ContainerApplication2.default, null)
+	  ), document.getElementById('app'));
 	});
 
 /***/ },
@@ -429,9 +354,9 @@
 
 /***/ },
 /* 4 */
-/*!******************************************!*\
-  !*** ./~/react/~/object-assign/index.js ***!
-  \******************************************/
+/*!**********************************!*\
+  !*** ./~/object-assign/index.js ***!
+  \**********************************/
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22014,6 +21939,625 @@
 
 /***/ },
 /* 172 */
+/*!************************************!*\
+  !*** ./~/react-redux/lib/index.js ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.connect = exports.Provider = undefined;
+	
+	var _Provider = __webpack_require__(/*! ./components/Provider */ 173);
+	
+	var _Provider2 = _interopRequireDefault(_Provider);
+	
+	var _connect = __webpack_require__(/*! ./components/connect */ 176);
+	
+	var _connect2 = _interopRequireDefault(_connect);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	
+	exports.Provider = _Provider2["default"];
+	exports.connect = _connect2["default"];
+
+/***/ },
+/* 173 */
+/*!**************************************************!*\
+  !*** ./~/react-redux/lib/components/Provider.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	exports.__esModule = true;
+	exports["default"] = undefined;
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _storeShape = __webpack_require__(/*! ../utils/storeShape */ 174);
+	
+	var _storeShape2 = _interopRequireDefault(_storeShape);
+	
+	var _warning = __webpack_require__(/*! ../utils/warning */ 175);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var didWarnAboutReceivingStore = false;
+	function warnAboutReceivingStore() {
+	  if (didWarnAboutReceivingStore) {
+	    return;
+	  }
+	  didWarnAboutReceivingStore = true;
+	
+	  (0, _warning2["default"])('<Provider> does not support changing `store` on the fly. ' + 'It is most likely that you see this error because you updated to ' + 'Redux 2.x and React Redux 2.x which no longer hot reload reducers ' + 'automatically. See https://github.com/reactjs/react-redux/releases/' + 'tag/v2.0.0 for the migration instructions.');
+	}
+	
+	var Provider = function (_Component) {
+	  _inherits(Provider, _Component);
+	
+	  Provider.prototype.getChildContext = function getChildContext() {
+	    return { store: this.store };
+	  };
+	
+	  function Provider(props, context) {
+	    _classCallCheck(this, Provider);
+	
+	    var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	    _this.store = props.store;
+	    return _this;
+	  }
+	
+	  Provider.prototype.render = function render() {
+	    var children = this.props.children;
+	
+	    return _react.Children.only(children);
+	  };
+	
+	  return Provider;
+	}(_react.Component);
+	
+	exports["default"] = Provider;
+	
+	if (process.env.NODE_ENV !== 'production') {
+	  Provider.prototype.componentWillReceiveProps = function (nextProps) {
+	    var store = this.store;
+	    var nextStore = nextProps.store;
+	
+	    if (store !== nextStore) {
+	      warnAboutReceivingStore();
+	    }
+	  };
+	}
+	
+	Provider.propTypes = {
+	  store: _storeShape2["default"].isRequired,
+	  children: _react.PropTypes.element.isRequired
+	};
+	Provider.childContextTypes = {
+	  store: _storeShape2["default"].isRequired
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 3)))
+
+/***/ },
+/* 174 */
+/*!***********************************************!*\
+  !*** ./~/react-redux/lib/utils/storeShape.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	exports["default"] = _react.PropTypes.shape({
+	  subscribe: _react.PropTypes.func.isRequired,
+	  dispatch: _react.PropTypes.func.isRequired,
+	  getState: _react.PropTypes.func.isRequired
+	});
+
+/***/ },
+/* 175 */
+/*!********************************************!*\
+  !*** ./~/react-redux/lib/utils/warning.js ***!
+  \********************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports["default"] = warning;
+	/**
+	 * Prints a warning in the console if it exists.
+	 *
+	 * @param {String} message The warning message.
+	 * @returns {void}
+	 */
+	function warning(message) {
+	  /* eslint-disable no-console */
+	  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+	    console.error(message);
+	  }
+	  /* eslint-enable no-console */
+	  try {
+	    // This error was thrown as a convenience so that you can use this stack
+	    // to find the callsite that caused this warning to fire.
+	    throw new Error(message);
+	    /* eslint-disable no-empty */
+	  } catch (e) {}
+	  /* eslint-enable no-empty */
+	}
+
+/***/ },
+/* 176 */
+/*!*************************************************!*\
+  !*** ./~/react-redux/lib/components/connect.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.__esModule = true;
+	exports["default"] = connect;
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _storeShape = __webpack_require__(/*! ../utils/storeShape */ 174);
+	
+	var _storeShape2 = _interopRequireDefault(_storeShape);
+	
+	var _shallowEqual = __webpack_require__(/*! ../utils/shallowEqual */ 177);
+	
+	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
+	
+	var _wrapActionCreators = __webpack_require__(/*! ../utils/wrapActionCreators */ 178);
+	
+	var _wrapActionCreators2 = _interopRequireDefault(_wrapActionCreators);
+	
+	var _warning = __webpack_require__(/*! ../utils/warning */ 175);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 193);
+	
+	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+	
+	var _hoistNonReactStatics = __webpack_require__(/*! hoist-non-react-statics */ 198);
+	
+	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
+	
+	var _invariant = __webpack_require__(/*! invariant */ 199);
+	
+	var _invariant2 = _interopRequireDefault(_invariant);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var defaultMapStateToProps = function defaultMapStateToProps(state) {
+	  return {};
+	}; // eslint-disable-line no-unused-vars
+	var defaultMapDispatchToProps = function defaultMapDispatchToProps(dispatch) {
+	  return { dispatch: dispatch };
+	};
+	var defaultMergeProps = function defaultMergeProps(stateProps, dispatchProps, parentProps) {
+	  return _extends({}, parentProps, stateProps, dispatchProps);
+	};
+	
+	function getDisplayName(WrappedComponent) {
+	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	}
+	
+	var errorObject = { value: null };
+	function tryCatch(fn, ctx) {
+	  try {
+	    return fn.apply(ctx);
+	  } catch (e) {
+	    errorObject.value = e;
+	    return errorObject;
+	  }
+	}
+	
+	// Helps track hot reloading.
+	var nextVersion = 0;
+	
+	function connect(mapStateToProps, mapDispatchToProps, mergeProps) {
+	  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+	
+	  var shouldSubscribe = Boolean(mapStateToProps);
+	  var mapState = mapStateToProps || defaultMapStateToProps;
+	
+	  var mapDispatch = undefined;
+	  if (typeof mapDispatchToProps === 'function') {
+	    mapDispatch = mapDispatchToProps;
+	  } else if (!mapDispatchToProps) {
+	    mapDispatch = defaultMapDispatchToProps;
+	  } else {
+	    mapDispatch = (0, _wrapActionCreators2["default"])(mapDispatchToProps);
+	  }
+	
+	  var finalMergeProps = mergeProps || defaultMergeProps;
+	  var _options$pure = options.pure;
+	  var pure = _options$pure === undefined ? true : _options$pure;
+	  var _options$withRef = options.withRef;
+	  var withRef = _options$withRef === undefined ? false : _options$withRef;
+	
+	  var checkMergedEquals = pure && finalMergeProps !== defaultMergeProps;
+	
+	  // Helps track hot reloading.
+	  var version = nextVersion++;
+	
+	  return function wrapWithConnect(WrappedComponent) {
+	    var connectDisplayName = 'Connect(' + getDisplayName(WrappedComponent) + ')';
+	
+	    function checkStateShape(props, methodName) {
+	      if (!(0, _isPlainObject2["default"])(props)) {
+	        (0, _warning2["default"])(methodName + '() in ' + connectDisplayName + ' must return a plain object. ' + ('Instead received ' + props + '.'));
+	      }
+	    }
+	
+	    function computeMergedProps(stateProps, dispatchProps, parentProps) {
+	      var mergedProps = finalMergeProps(stateProps, dispatchProps, parentProps);
+	      if (process.env.NODE_ENV !== 'production') {
+	        checkStateShape(mergedProps, 'mergeProps');
+	      }
+	      return mergedProps;
+	    }
+	
+	    var Connect = function (_Component) {
+	      _inherits(Connect, _Component);
+	
+	      Connect.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+	        return !pure || this.haveOwnPropsChanged || this.hasStoreStateChanged;
+	      };
+	
+	      function Connect(props, context) {
+	        _classCallCheck(this, Connect);
+	
+	        var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	        _this.version = version;
+	        _this.store = props.store || context.store;
+	
+	        (0, _invariant2["default"])(_this.store, 'Could not find "store" in either the context or ' + ('props of "' + connectDisplayName + '". ') + 'Either wrap the root component in a <Provider>, ' + ('or explicitly pass "store" as a prop to "' + connectDisplayName + '".'));
+	
+	        var storeState = _this.store.getState();
+	        _this.state = { storeState: storeState };
+	        _this.clearCache();
+	        return _this;
+	      }
+	
+	      Connect.prototype.computeStateProps = function computeStateProps(store, props) {
+	        if (!this.finalMapStateToProps) {
+	          return this.configureFinalMapState(store, props);
+	        }
+	
+	        var state = store.getState();
+	        var stateProps = this.doStatePropsDependOnOwnProps ? this.finalMapStateToProps(state, props) : this.finalMapStateToProps(state);
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(stateProps, 'mapStateToProps');
+	        }
+	        return stateProps;
+	      };
+	
+	      Connect.prototype.configureFinalMapState = function configureFinalMapState(store, props) {
+	        var mappedState = mapState(store.getState(), props);
+	        var isFactory = typeof mappedState === 'function';
+	
+	        this.finalMapStateToProps = isFactory ? mappedState : mapState;
+	        this.doStatePropsDependOnOwnProps = this.finalMapStateToProps.length !== 1;
+	
+	        if (isFactory) {
+	          return this.computeStateProps(store, props);
+	        }
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(mappedState, 'mapStateToProps');
+	        }
+	        return mappedState;
+	      };
+	
+	      Connect.prototype.computeDispatchProps = function computeDispatchProps(store, props) {
+	        if (!this.finalMapDispatchToProps) {
+	          return this.configureFinalMapDispatch(store, props);
+	        }
+	
+	        var dispatch = store.dispatch;
+	
+	        var dispatchProps = this.doDispatchPropsDependOnOwnProps ? this.finalMapDispatchToProps(dispatch, props) : this.finalMapDispatchToProps(dispatch);
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(dispatchProps, 'mapDispatchToProps');
+	        }
+	        return dispatchProps;
+	      };
+	
+	      Connect.prototype.configureFinalMapDispatch = function configureFinalMapDispatch(store, props) {
+	        var mappedDispatch = mapDispatch(store.dispatch, props);
+	        var isFactory = typeof mappedDispatch === 'function';
+	
+	        this.finalMapDispatchToProps = isFactory ? mappedDispatch : mapDispatch;
+	        this.doDispatchPropsDependOnOwnProps = this.finalMapDispatchToProps.length !== 1;
+	
+	        if (isFactory) {
+	          return this.computeDispatchProps(store, props);
+	        }
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(mappedDispatch, 'mapDispatchToProps');
+	        }
+	        return mappedDispatch;
+	      };
+	
+	      Connect.prototype.updateStatePropsIfNeeded = function updateStatePropsIfNeeded() {
+	        var nextStateProps = this.computeStateProps(this.store, this.props);
+	        if (this.stateProps && (0, _shallowEqual2["default"])(nextStateProps, this.stateProps)) {
+	          return false;
+	        }
+	
+	        this.stateProps = nextStateProps;
+	        return true;
+	      };
+	
+	      Connect.prototype.updateDispatchPropsIfNeeded = function updateDispatchPropsIfNeeded() {
+	        var nextDispatchProps = this.computeDispatchProps(this.store, this.props);
+	        if (this.dispatchProps && (0, _shallowEqual2["default"])(nextDispatchProps, this.dispatchProps)) {
+	          return false;
+	        }
+	
+	        this.dispatchProps = nextDispatchProps;
+	        return true;
+	      };
+	
+	      Connect.prototype.updateMergedPropsIfNeeded = function updateMergedPropsIfNeeded() {
+	        var nextMergedProps = computeMergedProps(this.stateProps, this.dispatchProps, this.props);
+	        if (this.mergedProps && checkMergedEquals && (0, _shallowEqual2["default"])(nextMergedProps, this.mergedProps)) {
+	          return false;
+	        }
+	
+	        this.mergedProps = nextMergedProps;
+	        return true;
+	      };
+	
+	      Connect.prototype.isSubscribed = function isSubscribed() {
+	        return typeof this.unsubscribe === 'function';
+	      };
+	
+	      Connect.prototype.trySubscribe = function trySubscribe() {
+	        if (shouldSubscribe && !this.unsubscribe) {
+	          this.unsubscribe = this.store.subscribe(this.handleChange.bind(this));
+	          this.handleChange();
+	        }
+	      };
+	
+	      Connect.prototype.tryUnsubscribe = function tryUnsubscribe() {
+	        if (this.unsubscribe) {
+	          this.unsubscribe();
+	          this.unsubscribe = null;
+	        }
+	      };
+	
+	      Connect.prototype.componentDidMount = function componentDidMount() {
+	        this.trySubscribe();
+	      };
+	
+	      Connect.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	        if (!pure || !(0, _shallowEqual2["default"])(nextProps, this.props)) {
+	          this.haveOwnPropsChanged = true;
+	        }
+	      };
+	
+	      Connect.prototype.componentWillUnmount = function componentWillUnmount() {
+	        this.tryUnsubscribe();
+	        this.clearCache();
+	      };
+	
+	      Connect.prototype.clearCache = function clearCache() {
+	        this.dispatchProps = null;
+	        this.stateProps = null;
+	        this.mergedProps = null;
+	        this.haveOwnPropsChanged = true;
+	        this.hasStoreStateChanged = true;
+	        this.haveStatePropsBeenPrecalculated = false;
+	        this.statePropsPrecalculationError = null;
+	        this.renderedElement = null;
+	        this.finalMapDispatchToProps = null;
+	        this.finalMapStateToProps = null;
+	      };
+	
+	      Connect.prototype.handleChange = function handleChange() {
+	        if (!this.unsubscribe) {
+	          return;
+	        }
+	
+	        var storeState = this.store.getState();
+	        var prevStoreState = this.state.storeState;
+	        if (pure && prevStoreState === storeState) {
+	          return;
+	        }
+	
+	        if (pure && !this.doStatePropsDependOnOwnProps) {
+	          var haveStatePropsChanged = tryCatch(this.updateStatePropsIfNeeded, this);
+	          if (!haveStatePropsChanged) {
+	            return;
+	          }
+	          if (haveStatePropsChanged === errorObject) {
+	            this.statePropsPrecalculationError = errorObject.value;
+	          }
+	          this.haveStatePropsBeenPrecalculated = true;
+	        }
+	
+	        this.hasStoreStateChanged = true;
+	        this.setState({ storeState: storeState });
+	      };
+	
+	      Connect.prototype.getWrappedInstance = function getWrappedInstance() {
+	        (0, _invariant2["default"])(withRef, 'To access the wrapped instance, you need to specify ' + '{ withRef: true } as the fourth argument of the connect() call.');
+	
+	        return this.refs.wrappedInstance;
+	      };
+	
+	      Connect.prototype.render = function render() {
+	        var haveOwnPropsChanged = this.haveOwnPropsChanged;
+	        var hasStoreStateChanged = this.hasStoreStateChanged;
+	        var haveStatePropsBeenPrecalculated = this.haveStatePropsBeenPrecalculated;
+	        var statePropsPrecalculationError = this.statePropsPrecalculationError;
+	        var renderedElement = this.renderedElement;
+	
+	        this.haveOwnPropsChanged = false;
+	        this.hasStoreStateChanged = false;
+	        this.haveStatePropsBeenPrecalculated = false;
+	        this.statePropsPrecalculationError = null;
+	
+	        if (statePropsPrecalculationError) {
+	          throw statePropsPrecalculationError;
+	        }
+	
+	        var shouldUpdateStateProps = true;
+	        var shouldUpdateDispatchProps = true;
+	        if (pure && renderedElement) {
+	          shouldUpdateStateProps = hasStoreStateChanged || haveOwnPropsChanged && this.doStatePropsDependOnOwnProps;
+	          shouldUpdateDispatchProps = haveOwnPropsChanged && this.doDispatchPropsDependOnOwnProps;
+	        }
+	
+	        var haveStatePropsChanged = false;
+	        var haveDispatchPropsChanged = false;
+	        if (haveStatePropsBeenPrecalculated) {
+	          haveStatePropsChanged = true;
+	        } else if (shouldUpdateStateProps) {
+	          haveStatePropsChanged = this.updateStatePropsIfNeeded();
+	        }
+	        if (shouldUpdateDispatchProps) {
+	          haveDispatchPropsChanged = this.updateDispatchPropsIfNeeded();
+	        }
+	
+	        var haveMergedPropsChanged = true;
+	        if (haveStatePropsChanged || haveDispatchPropsChanged || haveOwnPropsChanged) {
+	          haveMergedPropsChanged = this.updateMergedPropsIfNeeded();
+	        } else {
+	          haveMergedPropsChanged = false;
+	        }
+	
+	        if (!haveMergedPropsChanged && renderedElement) {
+	          return renderedElement;
+	        }
+	
+	        if (withRef) {
+	          this.renderedElement = (0, _react.createElement)(WrappedComponent, _extends({}, this.mergedProps, {
+	            ref: 'wrappedInstance'
+	          }));
+	        } else {
+	          this.renderedElement = (0, _react.createElement)(WrappedComponent, this.mergedProps);
+	        }
+	
+	        return this.renderedElement;
+	      };
+	
+	      return Connect;
+	    }(_react.Component);
+	
+	    Connect.displayName = connectDisplayName;
+	    Connect.WrappedComponent = WrappedComponent;
+	    Connect.contextTypes = {
+	      store: _storeShape2["default"]
+	    };
+	    Connect.propTypes = {
+	      store: _storeShape2["default"]
+	    };
+	
+	    if (process.env.NODE_ENV !== 'production') {
+	      Connect.prototype.componentWillUpdate = function componentWillUpdate() {
+	        if (this.version === version) {
+	          return;
+	        }
+	
+	        // We are hot reloading!
+	        this.version = version;
+	        this.trySubscribe();
+	        this.clearCache();
+	      };
+	    }
+	
+	    return (0, _hoistNonReactStatics2["default"])(Connect, WrappedComponent);
+	  };
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 3)))
+
+/***/ },
+/* 177 */
+/*!*************************************************!*\
+  !*** ./~/react-redux/lib/utils/shallowEqual.js ***!
+  \*************************************************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	exports["default"] = shallowEqual;
+	function shallowEqual(objA, objB) {
+	  if (objA === objB) {
+	    return true;
+	  }
+	
+	  var keysA = Object.keys(objA);
+	  var keysB = Object.keys(objB);
+	
+	  if (keysA.length !== keysB.length) {
+	    return false;
+	  }
+	
+	  // Test for A's keys different from B.
+	  var hasOwn = Object.prototype.hasOwnProperty;
+	  for (var i = 0; i < keysA.length; i++) {
+	    if (!hasOwn.call(objB, keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) {
+	      return false;
+	    }
+	  }
+	
+	  return true;
+	}
+
+/***/ },
+/* 178 */
+/*!*******************************************************!*\
+  !*** ./~/react-redux/lib/utils/wrapActionCreators.js ***!
+  \*******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports["default"] = wrapActionCreators;
+	
+	var _redux = __webpack_require__(/*! redux */ 179);
+	
+	function wrapActionCreators(actionCreators) {
+	  return function (dispatch) {
+	    return (0, _redux.bindActionCreators)(actionCreators, dispatch);
+	  };
+	}
+
+/***/ },
+/* 179 */
 /*!******************************!*\
   !*** ./~/redux/lib/index.js ***!
   \******************************/
@@ -22024,27 +22568,27 @@
 	exports.__esModule = true;
 	exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 173);
+	var _createStore = __webpack_require__(/*! ./createStore */ 180);
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 181);
+	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 188);
 	
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 	
-	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 183);
+	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 190);
 	
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 	
-	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 184);
+	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 191);
 	
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 	
-	var _compose = __webpack_require__(/*! ./compose */ 185);
+	var _compose = __webpack_require__(/*! ./compose */ 192);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 182);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 189);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -22068,7 +22612,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 3)))
 
 /***/ },
-/* 173 */
+/* 180 */
 /*!************************************!*\
   !*** ./~/redux/lib/createStore.js ***!
   \************************************/
@@ -22080,11 +22624,11 @@
 	exports.ActionTypes = undefined;
 	exports["default"] = createStore;
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 174);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 181);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 179);
+	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 186);
 	
 	var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 	
@@ -22338,15 +22882,15 @@
 	}
 
 /***/ },
-/* 174 */
+/* 181 */
 /*!*******************************************!*\
   !*** ./~/redux/~/lodash/isPlainObject.js ***!
   \*******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 175),
-	    isHostObject = __webpack_require__(/*! ./_isHostObject */ 177),
-	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 178);
+	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 182),
+	    isHostObject = __webpack_require__(/*! ./_isHostObject */ 184),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 185);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -22417,13 +22961,13 @@
 
 
 /***/ },
-/* 175 */
+/* 182 */
 /*!*******************************************!*\
   !*** ./~/redux/~/lodash/_getPrototype.js ***!
   \*******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(/*! ./_overArg */ 176);
+	var overArg = __webpack_require__(/*! ./_overArg */ 183);
 	
 	/** Built-in value references. */
 	var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -22432,7 +22976,7 @@
 
 
 /***/ },
-/* 176 */
+/* 183 */
 /*!**************************************!*\
   !*** ./~/redux/~/lodash/_overArg.js ***!
   \**************************************/
@@ -22456,7 +23000,7 @@
 
 
 /***/ },
-/* 177 */
+/* 184 */
 /*!*******************************************!*\
   !*** ./~/redux/~/lodash/_isHostObject.js ***!
   \*******************************************/
@@ -22485,7 +23029,7 @@
 
 
 /***/ },
-/* 178 */
+/* 185 */
 /*!******************************************!*\
   !*** ./~/redux/~/lodash/isObjectLike.js ***!
   \******************************************/
@@ -22523,7 +23067,7 @@
 
 
 /***/ },
-/* 179 */
+/* 186 */
 /*!**********************************************!*\
   !*** ./~/redux/~/symbol-observable/index.js ***!
   \**********************************************/
@@ -22532,12 +23076,12 @@
 	/* WEBPACK VAR INJECTION */(function(global) {/* global window */
 	'use strict';
 	
-	module.exports = __webpack_require__(/*! ./ponyfill */ 180)(global || window || this);
+	module.exports = __webpack_require__(/*! ./ponyfill */ 187)(global || window || this);
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 180 */
+/* 187 */
 /*!*************************************************!*\
   !*** ./~/redux/~/symbol-observable/ponyfill.js ***!
   \*************************************************/
@@ -22565,7 +23109,7 @@
 
 
 /***/ },
-/* 181 */
+/* 188 */
 /*!****************************************!*\
   !*** ./~/redux/lib/combineReducers.js ***!
   \****************************************/
@@ -22576,13 +23120,13 @@
 	exports.__esModule = true;
 	exports["default"] = combineReducers;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 173);
+	var _createStore = __webpack_require__(/*! ./createStore */ 180);
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 174);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 181);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 182);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 189);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -22701,7 +23245,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 3)))
 
 /***/ },
-/* 182 */
+/* 189 */
 /*!**************************************!*\
   !*** ./~/redux/lib/utils/warning.js ***!
   \**************************************/
@@ -22734,7 +23278,7 @@
 	}
 
 /***/ },
-/* 183 */
+/* 190 */
 /*!*******************************************!*\
   !*** ./~/redux/lib/bindActionCreators.js ***!
   \*******************************************/
@@ -22793,7 +23337,7 @@
 	}
 
 /***/ },
-/* 184 */
+/* 191 */
 /*!****************************************!*\
   !*** ./~/redux/lib/applyMiddleware.js ***!
   \****************************************/
@@ -22807,7 +23351,7 @@
 	
 	exports["default"] = applyMiddleware;
 	
-	var _compose = __webpack_require__(/*! ./compose */ 185);
+	var _compose = __webpack_require__(/*! ./compose */ 192);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
@@ -22859,7 +23403,7 @@
 	}
 
 /***/ },
-/* 185 */
+/* 192 */
 /*!********************************!*\
   !*** ./~/redux/lib/compose.js ***!
   \********************************/
@@ -22907,7 +23451,332 @@
 	}
 
 /***/ },
-/* 186 */
+/* 193 */
+/*!*************************************************!*\
+  !*** ./~/react-redux/~/lodash/isPlainObject.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 194),
+	    isHostObject = __webpack_require__(/*! ./_isHostObject */ 196),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 197);
+	
+	/** `Object#toString` result references. */
+	var objectTag = '[object Object]';
+	
+	/** Used for built-in method references. */
+	var funcProto = Function.prototype,
+	    objectProto = Object.prototype;
+	
+	/** Used to resolve the decompiled source of functions. */
+	var funcToString = funcProto.toString;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/** Used to infer the `Object` constructor. */
+	var objectCtorString = funcToString.call(Object);
+	
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objectToString = objectProto.toString;
+	
+	/**
+	 * Checks if `value` is a plain object, that is, an object created by the
+	 * `Object` constructor or one with a `[[Prototype]]` of `null`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.8.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 * }
+	 *
+	 * _.isPlainObject(new Foo);
+	 * // => false
+	 *
+	 * _.isPlainObject([1, 2, 3]);
+	 * // => false
+	 *
+	 * _.isPlainObject({ 'x': 0, 'y': 0 });
+	 * // => true
+	 *
+	 * _.isPlainObject(Object.create(null));
+	 * // => true
+	 */
+	function isPlainObject(value) {
+	  if (!isObjectLike(value) ||
+	      objectToString.call(value) != objectTag || isHostObject(value)) {
+	    return false;
+	  }
+	  var proto = getPrototype(value);
+	  if (proto === null) {
+	    return true;
+	  }
+	  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+	  return (typeof Ctor == 'function' &&
+	    Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString);
+	}
+	
+	module.exports = isPlainObject;
+
+
+/***/ },
+/* 194 */
+/*!*************************************************!*\
+  !*** ./~/react-redux/~/lodash/_getPrototype.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var overArg = __webpack_require__(/*! ./_overArg */ 195);
+	
+	/** Built-in value references. */
+	var getPrototype = overArg(Object.getPrototypeOf, Object);
+	
+	module.exports = getPrototype;
+
+
+/***/ },
+/* 195 */
+/*!********************************************!*\
+  !*** ./~/react-redux/~/lodash/_overArg.js ***!
+  \********************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Creates a unary function that invokes `func` with its argument transformed.
+	 *
+	 * @private
+	 * @param {Function} func The function to wrap.
+	 * @param {Function} transform The argument transform.
+	 * @returns {Function} Returns the new function.
+	 */
+	function overArg(func, transform) {
+	  return function(arg) {
+	    return func(transform(arg));
+	  };
+	}
+	
+	module.exports = overArg;
+
+
+/***/ },
+/* 196 */
+/*!*************************************************!*\
+  !*** ./~/react-redux/~/lodash/_isHostObject.js ***!
+  \*************************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is a host object in IE < 9.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+	 */
+	function isHostObject(value) {
+	  // Many host objects are `Object` objects that can coerce to strings
+	  // despite having improperly defined `toString` methods.
+	  var result = false;
+	  if (value != null && typeof value.toString != 'function') {
+	    try {
+	      result = !!(value + '');
+	    } catch (e) {}
+	  }
+	  return result;
+	}
+	
+	module.exports = isHostObject;
+
+
+/***/ },
+/* 197 */
+/*!************************************************!*\
+  !*** ./~/react-redux/~/lodash/isObjectLike.js ***!
+  \************************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+	
+	module.exports = isObjectLike;
+
+
+/***/ },
+/* 198 */
+/*!**********************************************************!*\
+  !*** ./~/react-redux/~/hoist-non-react-statics/index.js ***!
+  \**********************************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2015, Yahoo! Inc.
+	 * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+	 */
+	'use strict';
+	
+	var REACT_STATICS = {
+	    childContextTypes: true,
+	    contextTypes: true,
+	    defaultProps: true,
+	    displayName: true,
+	    getDefaultProps: true,
+	    mixins: true,
+	    propTypes: true,
+	    type: true
+	};
+	
+	var KNOWN_STATICS = {
+	    name: true,
+	    length: true,
+	    prototype: true,
+	    caller: true,
+	    arguments: true,
+	    arity: true
+	};
+	
+	var isGetOwnPropertySymbolsAvailable = typeof Object.getOwnPropertySymbols === 'function';
+	
+	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
+	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
+	        var keys = Object.getOwnPropertyNames(sourceComponent);
+	
+	        /* istanbul ignore else */
+	        if (isGetOwnPropertySymbolsAvailable) {
+	            keys = keys.concat(Object.getOwnPropertySymbols(sourceComponent));
+	        }
+	
+	        for (var i = 0; i < keys.length; ++i) {
+	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
+	                try {
+	                    targetComponent[keys[i]] = sourceComponent[keys[i]];
+	                } catch (error) {
+	
+	                }
+	            }
+	        }
+	    }
+	
+	    return targetComponent;
+	};
+
+
+/***/ },
+/* 199 */
+/*!********************************!*\
+  !*** ./~/invariant/browser.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	'use strict';
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	      error.name = 'Invariant Violation';
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 3)))
+
+/***/ },
+/* 200 */
+/*!*************************!*\
+  !*** ./src/js/Store.js ***!
+  \*************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.store = undefined;
+	
+	var _redux = __webpack_require__(/*! redux */ 179);
+	
+	var _StateMachine = __webpack_require__(/*! ./StateMachine.js */ 201);
+	
+	var store = exports.store = (0, _redux.createStore)(_StateMachine.StateMachine);
+
+/***/ },
+/* 201 */
 /*!********************************!*\
   !*** ./src/js/StateMachine.js ***!
   \********************************/
@@ -22921,9 +23790,9 @@
 	exports.initialState = undefined;
 	exports.StateMachine = StateMachine;
 	
-	var _StateMachineComponents = __webpack_require__(/*! ./StateMachineComponents.js */ 187);
+	var _StateMachineComponents = __webpack_require__(/*! ./StateMachineComponents.js */ 202);
 	
-	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 188);
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
 	
 	// Get current date
 	
@@ -22939,7 +23808,7 @@
 	  view: _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH,
 	  setTime: {
 	    calYear: today.getFullYear(),
-	    calMonth: today.getMonth(),
+	    calMonth: today.getMonth() + 1,
 	    viewDay: null,
 	    viewEventID: null
 	  },
@@ -22954,12 +23823,12 @@
 	  return {
 	    view: (0, _StateMachineComponents.ViewStateMachine)(state.view, action),
 	    setTime: (0, _StateMachineComponents.TimeStateMachine)(state.setTime, action),
-	    data: (0, _StateMachineComponents.DataStateMachine)(state.data, action)
+	    data: (0, _StateMachineComponents.DataStateMachine)(state, action)
 	  };
 	}
 
 /***/ },
-/* 187 */
+/* 202 */
 /*!******************************************!*\
   !*** ./src/js/StateMachineComponents.js ***!
   \******************************************/
@@ -22974,7 +23843,7 @@
 	exports.DataStateMachine = DataStateMachine;
 	exports.TimeStateMachine = TimeStateMachine;
 	
-	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 188);
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } // Import state machine actions
 	
@@ -22996,18 +23865,16 @@
 	}
 	
 	function DataStateMachine() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
 	
 	  switch (action.type) {
 	    case _StateMachineDefinitions.LOAD_DATA:
-	      return Object.assign({}, state, {
-	        data: [].concat(_toConsumableArray(state.data), [{
-	          events: action.data,
-	          year: state.calYear,
-	          month: state.calMonth
-	        }])
-	      });
+	      return [].concat(_toConsumableArray(state.data), [{
+	        events: action.data.events,
+	        year: state.setTime.calYear,
+	        month: state.setTime.calMonth
+	      }]);
 	    default:
 	      return state;
 	  }
@@ -23037,7 +23904,7 @@
 	}
 
 /***/ },
-/* 188 */
+/* 203 */
 /*!*******************************************!*\
   !*** ./src/js/StateMachineDefinitions.js ***!
   \*******************************************/
@@ -23090,10 +23957,251 @@
 	}
 
 /***/ },
-/* 189 */
+/* 204 */
+/*!*****************************************!*\
+  !*** ./src/js/ContainerApplication.jsx ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 172);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
+	
+	var _ViewApplication = __webpack_require__(/*! ./ViewApplication.jsx */ 205);
+	
+	var _ViewApplication2 = _interopRequireDefault(_ViewApplication);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// This generates ContainerApplication, which passes the store's state onto Application, its child component.
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    error: state.error,
+	    view: state.view,
+	    year: state.setTime.calYear,
+	    month: state.setTime.calMonth
+	  };
+	};
+	
+	var ContainerApplication = (0, _reactRedux.connect)(mapStateToProps)(_ViewApplication2.default);
+	
+	exports.default = ContainerApplication;
+
+/***/ },
+/* 205 */
+/*!************************************!*\
+  !*** ./src/js/ViewApplication.jsx ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	var _ViewCalendar = __webpack_require__(/*! ./ViewCalendar.jsx */ 206);
+	
+	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
+	
+	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 209);
+	
+	var _ViewEvent2 = _interopRequireDefault(_ViewEvent);
+	
+	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 210);
+	
+	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
+	
+	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 211);
+	
+	var _ViewControls2 = _interopRequireDefault(_ViewControls);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ViewApplication = function (_React$Component) {
+	  _inherits(ViewApplication, _React$Component);
+	
+	  function ViewApplication() {
+	    _classCallCheck(this, ViewApplication);
+	
+	    return _possibleConstructorReturn(this, (ViewApplication.__proto__ || Object.getPrototypeOf(ViewApplication)).apply(this, arguments));
+	  }
+	
+	  _createClass(ViewApplication, [{
+	    key: 'render',
+	    value: function render() {
+	      var views = [];
+	      var controls = [];
+	
+	      switch (this.props.view) {
+	        case 'calendar-month':
+	          views.push(_react2.default.createElement(_ViewCalendar2.default, {
+	            key: 1,
+	            year: this.props.year,
+	            month: this.props.month
+	          }));
+	        case 'event-details':
+	          views.push(_react2.default.createElement(_ViewEvent2.default, {
+	            key: 2,
+	            eventData: null,
+	            isElementHidden: this.props.view != 'event-details'
+	          }));
+	        case 'settings-panel':
+	          views.push(_react2.default.createElement(_ViewSettings2.default, {
+	            key: 3,
+	            isElementHidden: this.props.view != 'settings-panel'
+	          }));
+	      }
+	
+	      controls.push(_react2.default.createElement(_ViewControls2.default, { key: 1, view: this.props.view }));
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'interface' },
+	        controls,
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'views' },
+	          views
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ViewApplication;
+	}(_react2.default.Component);
+	
+	exports.default = ViewApplication;
+
+/***/ },
+/* 206 */
 /*!*********************************!*\
   !*** ./src/js/ViewCalendar.jsx ***!
   \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _ContainerCalendarMonth = __webpack_require__(/*! ./ContainerCalendarMonth.jsx */ 207);
+	
+	var _ContainerCalendarMonth2 = _interopRequireDefault(_ContainerCalendarMonth);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ViewCalendar = _react2.default.createClass({
+	  displayName: 'ViewCalendar',
+	
+	  render: function render() {
+	    var year = this.props.year;
+	    var month = this.props.month;
+	
+	    var calendarMonths = [];
+	
+	    calendarMonths.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
+	      key: 1,
+	      year: year,
+	      month: month
+	    }));
+	
+	    return _react2.default.createElement(
+	      'time',
+	      { dateTime: year, className: 'year' },
+	      calendarMonths
+	    );
+	  }
+	});
+	
+	exports.default = ViewCalendar;
+
+/***/ },
+/* 207 */
+/*!*******************************************!*\
+  !*** ./src/js/ContainerCalendarMonth.jsx ***!
+  \*******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 172);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
+	
+	var _ViewCalendarMonth = __webpack_require__(/*! ./ViewCalendarMonth.jsx */ 208);
+	
+	var _ViewCalendarMonth2 = _interopRequireDefault(_ViewCalendarMonth);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// This generates ContainerApplication, which passes the store's state onto Application, its child component.
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    data: state.data
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    loadDataIntoStateMachine: function loadDataIntoStateMachine(data) {
+	      dispatch((0, _StateMachineDefinitions.loadData)(data));
+	    }
+	  };
+	};
+	
+	var ContainerCalendarMonth = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_ViewCalendarMonth2.default);
+	
+	exports.default = ContainerCalendarMonth;
+
+/***/ },
+/* 208 */
+/*!**************************************!*\
+  !*** ./src/js/ViewCalendarMonth.jsx ***!
+  \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23108,77 +24216,57 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var ViewCalendar = _react2.default.createClass({
-	  displayName: "ViewCalendar",
-	
-	  render: function render() {
-	    var calendarMonths = [];
-	
-	    for (var i = 0; i < parseInt(this.props.month); i++) {
-	      var monthNumber = i + 1;
-	      if (monthNumber == parseInt(this.props.month)) {
-	        calendarMonths.push(_react2.default.createElement(CalendarMonth, {
-	          key: i,
-	          year: this.props.year,
-	          month: monthNumber,
-	          url: "http://feecum.ca/dev/backend.php?year=" + this.props.year + "&month=" + monthNumber
-	        }));
-	      } else {
-	        /*
-	          calendarMonths.push(<CalendarMonth
-	                                key={i}
-	                                year={this.props.year}
-	                                month={monthNumber}
-	                                url={"http://feecum.ca/dev/backend.php?year=" + this.props.year + "&month=" + monthNumber}
-	                                isElementHidden={1}
-	                              />);
-	        */
-	      }
-	    }
-	
-	    return _react2.default.createElement(
-	      "time",
-	      { dateTime: this.props.year, className: "year" },
-	      calendarMonths
-	    );
-	  }
-	});
-	
-	var CalendarMonth = _react2.default.createClass({
-	  displayName: "CalendarMonth",
+	var ViewCalendarMonth = _react2.default.createClass({
+	  displayName: "ViewCalendarMonth",
 	
 	  loadEventsFromServer: function loadEventsFromServer() {
+	    var year = this.props.year;
+	    var month = this.props.month;
+	    var apiURL = "http://feecum.ca/dev/backend.php?year=" + year + "&month=" + parseInt(month);
+	
 	    this.serverRequest = $.ajax({
-	      url: this.props.url,
+	      url: apiURL,
 	      dataType: 'json',
 	      cache: false,
 	      async: true,
 	      success: function (data) {
-	        this.setState({ data: data });
+	        this.props.loadDataIntoStateMachine(data);
 	      }.bind(this),
 	      error: function (xhr, status, err) {
-	        console.error(this.props.url, status, err.toString());
+	        console.error(apiURL, status, err.toString());
 	        console.warn(xhr.responseText);
 	      }.bind(this)
 	    });
-	  },
-	  getInitialState: function getInitialState() {
-	    return { data: [] };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    // Fetch data from FÉÉCUM servers
 	    this.loadEventsFromServer();
 	
 	    // Check for new events every 10 seconds
-	    setInterval(this.loadEventsFromServer, 10000);
+	    // Currently unsupported by StateMachineComponents.js
+	    // setInterval(this.loadEventsFromServer, 10000);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    // Cancel any outstanding requests before the component is unmounted.
 	    this.serverRequest.abort();
 	  },
 	  render: function render() {
-	    var monthName = monthNumber(parseInt(this.props.month) - 1);
-	    var firstDay = new Date(this.props.year, this.props.month - 1, 1);
+	    var year = this.props.year;
+	    var month = this.props.month;
+	
+	    // Look in the state for data for the currently displayed month
+	    var data = this.props.data;
+	    if (data.length > 0) {
+	      for (var i = 0, length = data.length; i < length; i++) {
+	        if (data[i].year == year && data[i].month == month) {
+	          data = data[i].events;
+	        }
+	      }
+	    }
+	
+	    // Calculate how many weeks in the currently displayed month
+	    var monthName = monthNumber(month - 1);
+	    var firstDay = new Date(year, month - 1, 1);
 	    var weeksInMonth = firstDay.countWeeksOfMonth();
 	    var indexOfFirstWeek = firstDay.getWeekNumber();
 	    var calendarWeeks = [];
@@ -23187,10 +24275,10 @@
 	    for (var i = 0; i < weeksInMonth; i++) {
 	      calendarWeeks.push(_react2.default.createElement(CalendarWeek, {
 	        key: i,
-	        year: this.props.year,
-	        month: this.props.month,
+	        year: year,
+	        month: month,
 	        week: indexOfFirstWeek + i,
-	        data: this.state.data
+	        data: data
 	      }));
 	    }
 	
@@ -23200,7 +24288,7 @@
 	
 	    return _react2.default.createElement(
 	      "time",
-	      { dateTime: this.props.year + "-" + leadingZeros(this.props.month), className: "month " + displayClass },
+	      { dateTime: year + "-" + leadingZeros(month), className: "month " + displayClass },
 	      _react2.default.createElement(
 	        "span",
 	        { className: "month-label" },
@@ -23279,8 +24367,8 @@
 	
 	    var eventsForThisDate = [];
 	
-	    if ("events" in this.props.data) {
-	      $.each(this.props.data.events, function (i, item) {
+	    if (this.props.data.length > 0) {
+	      $.each(this.props.data, function (i, item) {
 	        // See calendar-functions.js
 	        var eventYear = item.t_start.getYear();
 	        var eventMonth = item.t_start.getMonth();
@@ -23313,10 +24401,10 @@
 	  }
 	});
 	
-	exports.default = ViewCalendar;
+	exports.default = ViewCalendarMonth;
 
 /***/ },
-/* 190 */
+/* 209 */
 /*!******************************!*\
   !*** ./src/js/ViewEvent.jsx ***!
   \******************************/
@@ -23364,7 +24452,7 @@
 	exports.default = ViewEvent;
 
 /***/ },
-/* 191 */
+/* 210 */
 /*!*********************************!*\
   !*** ./src/js/ViewSettings.jsx ***!
   \*********************************/
@@ -23412,7 +24500,7 @@
 	exports.default = ViewSettings;
 
 /***/ },
-/* 192 */
+/* 211 */
 /*!*********************************!*\
   !*** ./src/js/ViewControls.jsx ***!
   \*********************************/

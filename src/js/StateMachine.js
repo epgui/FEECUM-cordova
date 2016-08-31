@@ -16,7 +16,7 @@ export const initialState = {
   view: VIEW_STATE.CALENDAR_MONTH,
   setTime: {
     calYear: today.getFullYear(),
-    calMonth: today.getMonth(),
+    calMonth: today.getMonth() + 1,
     viewDay: null,
     viewEventID: null
   },
@@ -30,6 +30,6 @@ export function StateMachine(state = initialState, action)
   return {
     view:    ViewStateMachine(state.view, action),
     setTime: TimeStateMachine(state.setTime, action),
-    data:    DataStateMachine(state.data, action)
+    data:    DataStateMachine(state, action)
   }
 }

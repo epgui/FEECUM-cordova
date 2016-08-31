@@ -90,9 +90,10 @@ Installing [Apache Cordova](https://cordova.apache.org/):
 $ npm install -g cordova
 ```
 
-Installing [Babel](https://babeljs.io/):
+Installing [Babel](https://babeljs.io/) and the [ES2015 object rest spread syntax plugin](https://babeljs.io/docs/plugins/syntax-object-rest-spread/):
 ```
 $ npm install --global babel-cli
+$ npm install babel-plugin-syntax-object-rest-spread
 ```
 
 Installing [webpack](https://webpack.github.io/):
@@ -221,5 +222,14 @@ Debugging
 * [Debugging with Xcode](https://developer.apple.com/support/debugging/)
 * [Debugging with Android Studio](https://developer.android.com/studio/debug/index.html)
 
+
+Troubleshooting
+-----------------------
+
+* There is a known issue where [Redux stores will not work properly if more than one version of the React module is loaded](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375#.s4sbzx3jk). If this becomes an issue, try running [npm dedupe](https://docs.npmjs.com/cli/dedupe):
+
+```
+npm dedupe
+```
 
 ![](readme-hr.png)

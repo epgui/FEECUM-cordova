@@ -87,8 +87,8 @@ Date.prototype.countWeeksOfMonth = function()
 {
   var year         = this.getFullYear();
   var month_number = this.getMonth();
-  var firstOfMonth = new Date(year, month_number - 1, 1);
-  var lastOfMonth  = new Date(year, month_number, 0);
+  var firstOfMonth = new Date(year, month_number, 1);
+  var lastOfMonth  = new Date(year, month_number + 1, 0);
   var used         = firstOfMonth.getDay() + lastOfMonth.getDate();
   return Math.ceil( used / 7);
 }

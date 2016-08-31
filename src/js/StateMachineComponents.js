@@ -17,21 +17,19 @@ export function ViewStateMachine(state = VIEW_STATE.CALENDAR_MONTH, action)
   }
 }
 
-export function DataStateMachine(state = [], action)
+export function DataStateMachine(state = {}, action)
 {
   switch (action.type)
   {
     case LOAD_DATA:
-      return Object.assign({}, state, {
-        data: [
-          ...state.data,
-          {
-            events: action.data,
-            year: state.calYear,
-            month: state.calMonth
-          }
-        ]
-      });
+      return [
+        ...state.data,
+        {
+          events: action.data.events,
+          year: state.setTime.calYear,
+          month: state.setTime.calMonth
+        }
+      ];
     default:
       return state;
   }
