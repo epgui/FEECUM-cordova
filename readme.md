@@ -229,7 +229,7 @@ Troubleshooting
 * There is a known issue where [Redux stores will not work properly if more than one version of the React module is loaded](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375#.s4sbzx3jk). If this becomes an issue, try running [npm dedupe](https://docs.npmjs.com/cli/dedupe):
 
 ```
-npm dedupe
+$ npm dedupe
 ```
 
 ![](readme-hr.png)
