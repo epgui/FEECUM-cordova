@@ -62,15 +62,51 @@ body {
 }
 
 h1 {
+  display: block;
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 55px;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  text-align: center;
+}
+
+#controls {
   background: #FDFDFD;
   border-bottom: 1px solid #EEE;
   display: block;
-  font-size:24px;
-  font-weight:normal;
-  margin:0px;
-  overflow:visible;
-  padding:8px 0;
-  text-align:center;
+  left: 50%;
+  margin: 0 0 0 -198.5px;
+  overflow: hidden;
+  position: absolute;
+  width: 397px;
+}
+
+#controls #ctrl-title-bar {
+  display: block;
+  float: left;
+  height: 55px;
+  width: 285px;
+}
+
+#controls #ctrl-left-button, #controls #ctrl-right-button {
+  color: #CCC;
+  display: block;
+  float: left;
+  font-size: 24px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+  width: 55px;
+}
+
+#controls #ctrl-left-button {
+  border-right: 1px solid #EEE;
+}
+
+#controls #ctrl-right-button {
+  border-left: 1px solid #EEE;
 }
 
 #views {

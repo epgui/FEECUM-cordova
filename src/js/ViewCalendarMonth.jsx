@@ -34,6 +34,11 @@ var ViewCalendarMonth = React.createClass(
     // Currently unsupported by StateMachineComponents.js
     // setInterval(this.loadEventsFromServer, 10000);
   },
+  componentDidUpdate: function()
+  {
+    // Fetch data from FÉÉCUM servers
+    this.loadEventsFromServer();
+  },
   componentWillUnmount: function()
   {
     // Cancel any outstanding requests before the component is unmounted.

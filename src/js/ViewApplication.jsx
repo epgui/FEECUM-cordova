@@ -33,7 +33,13 @@ render()
                    />);
     }
 
-    controls.push(<ViewControls key={1} view={this.props.view} />);
+    controls.push(<ViewControls
+                    key={1}
+                    view={this.props.view}
+                    year={this.props.year}
+                    month={this.props.month}
+                    switchPage={this.props.switchPage}
+                  />);
 
     return (
       <div id="interface">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
-import { loadData } from './StateMachineDefinitions.js';
+import { setCalendarPage } from './StateMachineDefinitions.js';
 import ViewApplication from './ViewApplication.jsx';
 
 // This generates ContainerApplication, which passes the store's state onto Application, its child component.
@@ -16,6 +16,14 @@ const mapStateToProps = function(state)
   };
 }
 
-const ContainerApplication = connect(mapStateToProps)(ViewApplication);
+const mapDispatchToProps = function(dispatch) {
+  return {
+    switchPage: (calYear, calMonth) => {
+      dispatch(setCalendarPage(calYear, calMonth));
+    }
+  }
+}
+
+const ContainerApplication = connect(mapStateToProps, mapDispatchToProps)(ViewApplication);
 
 export default ContainerApplication;

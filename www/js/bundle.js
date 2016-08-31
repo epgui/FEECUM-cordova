@@ -23996,7 +23996,15 @@
 	  };
 	};
 	
-	var ContainerApplication = (0, _reactRedux.connect)(mapStateToProps)(_ViewApplication2.default);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    switchPage: function switchPage(calYear, calMonth) {
+	      dispatch((0, _StateMachineDefinitions.setCalendarPage)(calYear, calMonth));
+	    }
+	  };
+	};
+	
+	var ContainerApplication = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_ViewApplication2.default);
 	
 	exports.default = ContainerApplication;
 
@@ -24080,7 +24088,13 @@
 	          }));
 	      }
 	
-	      controls.push(_react2.default.createElement(_ViewControls2.default, { key: 1, view: this.props.view }));
+	      controls.push(_react2.default.createElement(_ViewControls2.default, {
+	        key: 1,
+	        view: this.props.view,
+	        year: this.props.year,
+	        month: this.props.month,
+	        switchPage: this.props.switchPage
+	      }));
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -24245,6 +24259,10 @@
 	    // Check for new events every 10 seconds
 	    // Currently unsupported by StateMachineComponents.js
 	    // setInterval(this.loadEventsFromServer, 10000);
+	  },
+	  componentDidUpdate: function componentDidUpdate() {
+	    // Fetch data from FÉÉCUM servers
+	    this.loadEventsFromServer();
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    // Cancel any outstanding requests before the component is unmounted.
@@ -24538,6 +24556,15 @@
 	  _createClass(ViewControls, [{
 	    key: "render",
 	    value: function render() {
+	      var _this2 = this;
+	
+	      var thisYear = this.props.year;
+	      var thisMonth = this.props.month;
+	      var nextMonthYear = nextMonthYearNumber(thisYear, thisMonth);
+	      var nextMonth = nextMonthNumber(thisMonth);
+	      var previousMonthYear = previousMonthYearNumber(thisYear, thisMonth);
+	      var previousMonth = previousMonthNumber(thisMonth);
+	
 	      return _react2.default.createElement(
 	        "div",
 	        { id: "controls" },
@@ -24546,7 +24573,9 @@
 	          { id: "ctrl-left-button" },
 	          _react2.default.createElement(
 	            "span",
-	            null,
+	            { onClick: function onClick() {
+	                return _this2.props.switchPage(previousMonthYear, previousMonth);
+	              } },
 	            "«"
 	          )
 	        ),
@@ -24556,7 +24585,7 @@
 	          _react2.default.createElement(
 	            "h1",
 	            null,
-	            "Calendrier de la FÉÉCUM"
+	            "FÉÉCUM"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -24564,7 +24593,9 @@
 	          { id: "ctrl-right-button" },
 	          _react2.default.createElement(
 	            "span",
-	            null,
+	            { onClick: function onClick() {
+	                return _this2.props.switchPage(nextMonthYear, nextMonth);
+	              } },
 	            "»"
 	          )
 	        )
