@@ -111,10 +111,10 @@ h1 {
 
 #views {
   left: 50%;
-  margin: -200px 0 0 -200px;
+  margin: 20px 0 0 -200px;
   padding: 40px 0;
   position: absolute;
-  top: 50%;
+  top: 0;
   width: 400px;
 }
 
@@ -164,6 +164,60 @@ h1 {
 #views time.day.next-month, #views time.day.previous-month {
   background: #EEE;
   color: #AAA;
+}
+
+#dayView {
+  background: #FFF;
+  padding: 20px;
+  text-align: left;
+  text-transform: none;
+  width: 360px;
+}
+
+#dayView h2 {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+#dayView li.event-container {
+  border: 1px solid #CCC;
+  border-radius: 3px;
+  display: block;
+  list-style-type: none;
+  margin: 20px 0 0;
+  overflow: hidden;
+  padding: 0 10px 10px;
+}
+
+#dayView .event-category {
+  background: #ECECEC;
+  border-bottom: 1px solid #DFDFDF;
+  border-radius: 2px 2px 0 0;
+  color: #AAA;
+  display: block;
+  font-size: 11px;
+  margin: 1px -9px 10px;
+  padding: 3px 10px;
+}
+
+#dayView .event-title {
+  display: block;
+  font-size: 20px;
+  margin: 5px 0;
+}
+
+#dayView .event-time {
+  border-bottom: 1px solid #DFDFDF;
+  color: #999;
+  display: block;
+  font-style: italic;
+  padding: 0 0 10px;
+}
+
+#dayView .event-description {
+  display: block;
+  font-size: 12px;
 }
 
 .event {

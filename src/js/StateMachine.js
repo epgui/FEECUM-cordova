@@ -17,7 +17,7 @@ export const initialState = {
   setTime: {
     calYear: today.getFullYear(),
     calMonth: today.getMonth() + 1,
-    viewDay: null,
+    viewDay: 1,
     viewEventID: null
   },
   data: []
@@ -28,8 +28,9 @@ export const initialState = {
 export function StateMachine(state = initialState, action)
 {
   return {
+    error:   false,
     view:    ViewStateMachine(state.view, action),
     setTime: TimeStateMachine(state.setTime, action),
-    data:    DataStateMachine(state, action)
+    data:    DataStateMachine(state.data, action)
   }
 }

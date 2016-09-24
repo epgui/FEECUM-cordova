@@ -23809,7 +23809,7 @@
 	  setTime: {
 	    calYear: today.getFullYear(),
 	    calMonth: today.getMonth() + 1,
-	    viewDay: null,
+	    viewDay: 1,
 	    viewEventID: null
 	  },
 	  data: []
@@ -23821,9 +23821,10 @@
 	  var action = arguments[1];
 	
 	  return {
+	    error: false,
 	    view: (0, _StateMachineComponents.ViewStateMachine)(state.view, action),
 	    setTime: (0, _StateMachineComponents.TimeStateMachine)(state.setTime, action),
-	    data: (0, _StateMachineComponents.DataStateMachine)(state, action)
+	    data: (0, _StateMachineComponents.DataStateMachine)(state.data, action)
 	  };
 	}
 
@@ -23840,8 +23841,8 @@
 	  value: true
 	});
 	exports.ViewStateMachine = ViewStateMachine;
-	exports.DataStateMachine = DataStateMachine;
 	exports.TimeStateMachine = TimeStateMachine;
+	exports.DataStateMachine = DataStateMachine;
 	
 	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
 	
@@ -23856,25 +23857,7 @@
 	
 	  switch (action.type) {
 	    case _StateMachineDefinitions.GOTO_VIEW:
-	      return Object.assign({}, state, {
-	        view: action.view
-	      });
-	    default:
-	      return state;
-	  }
-	}
-	
-	function DataStateMachine() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case _StateMachineDefinitions.LOAD_DATA:
-	      return [].concat(_toConsumableArray(state.data), [{
-	        events: action.data.events,
-	        year: state.setTime.calYear,
-	        month: state.setTime.calMonth
-	      }]);
+	      return action.viewState;
 	    default:
 	      return state;
 	  }
@@ -23892,12 +23875,28 @@
 	      });
 	    case _StateMachineDefinitions.SET_VIEW_DAY:
 	      return Object.assign({}, state, {
-	        viewDay: action.calDay
+	        viewDay: action.viewDay
 	      });
 	    case _StateMachineDefinitions.SET_VIEW_EVENT_ID:
 	      return Object.assign({}, state, {
 	        viewEventID: action.viewEventID
 	      });
+	    default:
+	      return state;
+	  }
+	}
+	
+	function DataStateMachine() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _StateMachineDefinitions.LOAD_DATA:
+	      return [].concat(_toConsumableArray(state), [{
+	        events: action.data.events,
+	        year: action.data.calYear,
+	        month: action.data.calMonth
+	      }]);
 	    default:
 	      return state;
 	  }
@@ -23910,7 +23909,7 @@
   \*******************************************/
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -23922,38 +23921,54 @@
 	exports.setViewEventID = setViewEventID;
 	// Define all possible view states
 	var VIEW_STATE = exports.VIEW_STATE = {
-	  CALENDAR_MONTH: 'calendar-month',
-	  CALENDAR_DAY: 'calendar-day',
-	  EVENT_DETAILS: 'event-details',
-	  SETTINGS_PANEL: 'settings-panel'
+	  CALENDAR_MONTH: "calendar-month",
+	  CALENDAR_DAY: "calendar-day",
+	  EVENT_DETAILS: "event-details",
+	  SETTINGS_PANEL: "settings-panel"
 	};
 	
 	// Define all possible action types
-	var LOAD_DATA = exports.LOAD_DATA = 'load-data';
-	var GOTO_VIEW = exports.GOTO_VIEW = 'goto-view';
-	var SET_CALENDAR_PAGE = exports.SET_CALENDAR_PAGE = 'set-calendar-page';
-	var SET_VIEW_DAY = exports.SET_VIEW_DAY = 'set-view-day';
-	var SET_VIEW_EVENT_ID = exports.SET_VIEW_EVENT_ID = 'set-view-event-id';
+	var LOAD_DATA = exports.LOAD_DATA = "load-data";
+	var GOTO_VIEW = exports.GOTO_VIEW = "goto-view";
+	var SET_CALENDAR_PAGE = exports.SET_CALENDAR_PAGE = "set-calendar-page";
+	var SET_VIEW_DAY = exports.SET_VIEW_DAY = "set-view-day";
+	var SET_VIEW_EVENT_ID = exports.SET_VIEW_EVENT_ID = "set-view-event-id";
 	
 	// Define action creators
 	function loadData(data) {
-	  return { type: LOAD_DATA, data: data };
+	  return {
+	    type: LOAD_DATA,
+	    data: data
+	  };
 	}
 	
 	function goto(viewState) {
-	  return { type: GOTO_VIEW, viewState: viewState };
+	  return {
+	    type: GOTO_VIEW,
+	    viewState: viewState
+	  };
 	}
 	
 	function setCalendarPage(calYear, calMonth) {
-	  return { type: SET_CALENDAR_PAGE, calYear: calYear, calMonth: calMonth };
+	  return {
+	    type: SET_CALENDAR_PAGE,
+	    calYear: calYear,
+	    calMonth: calMonth
+	  };
 	}
 	
 	function setViewDay(viewDay) {
-	  return { type: SET_VIEW_DAY, viewDay: viewDay };
+	  return {
+	    type: SET_VIEW_DAY,
+	    viewDay: viewDay
+	  };
 	}
 	
 	function setViewEventID(viewEventID) {
-	  return { type: SET_VIEW_EVENT_ID, viewEventID: viewEventID };
+	  return {
+	    type: SET_VIEW_EVENT_ID,
+	    viewEventID: viewEventID
+	  };
 	}
 
 /***/ },
@@ -23991,8 +24006,11 @@
 	  return {
 	    error: state.error,
 	    view: state.view,
-	    year: state.setTime.calYear,
-	    month: state.setTime.calMonth
+	    setTime: {
+	      calYear: state.setTime.calYear,
+	      calMonth: state.setTime.calMonth,
+	      viewDay: state.setTime.viewDay
+	    }
 	  };
 	};
 	
@@ -24033,17 +24051,19 @@
 	
 	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
 	
-	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 209);
+	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 212);
 	
 	var _ViewEvent2 = _interopRequireDefault(_ViewEvent);
 	
-	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 210);
+	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 213);
 	
 	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
 	
-	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 211);
+	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 214);
 	
 	var _ViewControls2 = _interopRequireDefault(_ViewControls);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -24069,30 +24089,42 @@
 	      var controls = [];
 	
 	      switch (this.props.view) {
-	        case 'calendar-month':
+	        case _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH:
 	          views.push(_react2.default.createElement(_ViewCalendar2.default, {
 	            key: 1,
-	            year: this.props.year,
-	            month: this.props.month
+	            year: this.props.setTime.calYear,
+	            month: this.props.setTime.calMonth,
+	            viewMode: this.props.view
 	          }));
-	        case 'event-details':
-	          views.push(_react2.default.createElement(_ViewEvent2.default, {
+	          break;
+	        case _StateMachineDefinitions.VIEW_STATE.CALENDAR_DAY:
+	          views.push(_react2.default.createElement(_ViewCalendar2.default, {
 	            key: 2,
-	            eventData: null,
-	            isElementHidden: this.props.view != 'event-details'
+	            year: this.props.setTime.calYear,
+	            month: this.props.setTime.calMonth,
+	            day: this.props.setTime.viewDay,
+	            viewMode: this.props.view
 	          }));
-	        case 'settings-panel':
-	          views.push(_react2.default.createElement(_ViewSettings2.default, {
+	          break;
+	        case _StateMachineDefinitions.VIEW_STATE.EVENT_DETAILS:
+	          views.push(_react2.default.createElement(_ViewEvent2.default, {
 	            key: 3,
-	            isElementHidden: this.props.view != 'settings-panel'
+	            eventData: null,
+	            isElementHidden: true
+	          }));
+	          break;
+	        case _StateMachineDefinitions.VIEW_STATE.SETTINGS_PANEL:
+	          views.push(_react2.default.createElement(_ViewSettings2.default, {
+	            key: 4,
+	            isElementHidden: true
 	          }));
 	      }
 	
 	      controls.push(_react2.default.createElement(_ViewControls2.default, {
 	        key: 1,
 	        view: this.props.view,
-	        year: this.props.year,
-	        month: this.props.month,
+	        year: this.props.setTime.calYear,
+	        month: this.props.setTime.calMonth,
 	        switchPage: this.props.switchPage
 	      }));
 	
@@ -24135,6 +24167,10 @@
 	
 	var _ContainerCalendarMonth2 = _interopRequireDefault(_ContainerCalendarMonth);
 	
+	var _ContainerCalendarDay = __webpack_require__(/*! ./ContainerCalendarDay.jsx */ 210);
+	
+	var _ContainerCalendarDay2 = _interopRequireDefault(_ContainerCalendarDay);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ViewCalendar = _react2.default.createClass({
@@ -24144,18 +24180,31 @@
 	    var year = this.props.year;
 	    var month = this.props.month;
 	
-	    var calendarMonths = [];
+	    var calendarPages = [];
 	
-	    calendarMonths.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
-	      key: 1,
-	      year: year,
-	      month: month
-	    }));
+	    if (this.props.viewMode == 'calendar-month') {
+	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
+	        key: 1,
+	        year: year,
+	        month: month,
+	        viewMode: this.props.viewMode
+	      }));
+	    }
+	    if (this.props.viewMode == 'calendar-day') {
+	      calendarPages.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
+	        key: 1,
+	        year: this.props.year,
+	        month: leadingZeros(this.props.month),
+	        day: leadingZeros(this.props.day),
+	        viewMode: this.props.viewMode,
+	        'class': 'day'
+	      }));
+	    }
 	
 	    return _react2.default.createElement(
 	      'time',
 	      { dateTime: year, className: 'year' },
-	      calendarMonths
+	      calendarPages
 	    );
 	  }
 	});
@@ -24218,7 +24267,7 @@
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -24228,10 +24277,14 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _ViewCalendarWeek = __webpack_require__(/*! ./ViewCalendarWeek.jsx */ 209);
+	
+	var _ViewCalendarWeek2 = _interopRequireDefault(_ViewCalendarWeek);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ViewCalendarMonth = _react2.default.createClass({
-	  displayName: "ViewCalendarMonth",
+	  displayName: 'ViewCalendarMonth',
 	
 	  loadEventsFromServer: function loadEventsFromServer() {
 	    var year = this.props.year;
@@ -24244,7 +24297,25 @@
 	      cache: false,
 	      async: true,
 	      success: function (data) {
-	        this.props.loadDataIntoStateMachine(data);
+	
+	        var recordAlreadyExists = false;
+	
+	        for (var i = 0, len = this.props.data.length; i < len; i++) {
+	          if (year == this.props.data[i].year && month == this.props.data[i].month) {
+	            recordAlreadyExists = true;
+	
+	            // Eventually, check to see if records need updating here.
+	          }
+	        }
+	
+	        if (recordAlreadyExists == false) {
+	          var newData = {
+	            events: data.events,
+	            calYear: year,
+	            calMonth: month
+	          };
+	          this.props.loadDataIntoStateMachine(newData);
+	        }
 	      }.bind(this),
 	      error: function (xhr, status, err) {
 	        console.error(apiURL, status, err.toString());
@@ -24258,7 +24329,7 @@
 	
 	    // Check for new events every 10 seconds
 	    // Currently unsupported by StateMachineComponents.js
-	    // setInterval(this.loadEventsFromServer, 10000);
+	    setInterval(this.loadEventsFromServer, 10000);
 	  },
 	  componentDidUpdate: function componentDidUpdate() {
 	    // Fetch data from FÉÉCUM servers
@@ -24272,16 +24343,6 @@
 	    var year = this.props.year;
 	    var month = this.props.month;
 	
-	    // Look in the state for data for the currently displayed month
-	    var data = this.props.data;
-	    if (data.length > 0) {
-	      for (var i = 0, length = data.length; i < length; i++) {
-	        if (data[i].year == year && data[i].month == month) {
-	          data = data[i].events;
-	        }
-	      }
-	    }
-	
 	    // Calculate how many weeks in the currently displayed month
 	    var monthName = monthNumber(month - 1);
 	    var firstDay = new Date(year, month - 1, 1);
@@ -24291,12 +24352,12 @@
 	    var displayClass = "";
 	
 	    for (var i = 0; i < weeksInMonth; i++) {
-	      calendarWeeks.push(_react2.default.createElement(CalendarWeek, {
+	      calendarWeeks.push(_react2.default.createElement(_ViewCalendarWeek2.default, {
 	        key: i,
 	        year: year,
 	        month: month,
 	        week: indexOfFirstWeek + i,
-	        data: data
+	        viewMode: this.props.viewMode
 	      }));
 	    }
 	
@@ -24305,11 +24366,11 @@
 	    }
 	
 	    return _react2.default.createElement(
-	      "time",
+	      'time',
 	      { dateTime: year + "-" + leadingZeros(month), className: "month " + displayClass },
 	      _react2.default.createElement(
-	        "span",
-	        { className: "month-label" },
+	        'span',
+	        { className: 'month-label' },
 	        monthName
 	      ),
 	      calendarWeeks
@@ -24317,8 +24378,33 @@
 	  }
 	});
 	
-	var CalendarWeek = _react2.default.createClass({
-	  displayName: "CalendarWeek",
+	exports.default = ViewCalendarMonth;
+
+/***/ },
+/* 209 */
+/*!*************************************!*\
+  !*** ./src/js/ViewCalendarWeek.jsx ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _ContainerCalendarDay = __webpack_require__(/*! ./ContainerCalendarDay.jsx */ 210);
+	
+	var _ContainerCalendarDay2 = _interopRequireDefault(_ContainerCalendarDay);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ViewCalendarWeek = _react2.default.createClass({
+	  displayName: 'ViewCalendarWeek',
 	
 	  render: function render() {
 	    var firstDay = new Date(this.props.year, this.props.month - 1, 1);
@@ -24331,98 +24417,275 @@
 	    var dayNumber = 0;
 	
 	    for (var i = 0; i <= 6; i++) {
+	      // For the first calendar week of the month
 	      if (this.props.week - indexOfFirstWeek == 0 && i < indexOfFirstDay) {
 	        dayNumber = lastMonthStart + i;
 	
-	        weekDays.push(_react2.default.createElement(CalendarDay, {
+	        weekDays.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
 	          key: i,
 	          year: previousMonthYearNumber(this.props.year, this.props.month),
 	          month: leadingZeros(previousMonthNumber(this.props.month)),
 	          day: leadingZeros(dayNumber),
-	          data: this.props.data,
-	          "class": "day previous-month"
-	        }));
-	      } else if (this.props.week - indexOfFirstWeek + 1 == weeksInMonth && i > indexOfLastDay) {
-	        dayNumber = i - indexOfLastDay;
-	
-	        weekDays.push(_react2.default.createElement(CalendarDay, {
-	          key: i,
-	          year: nextMonthYearNumber(this.props.year, this.props.month),
-	          month: leadingZeros(nextMonthNumber(this.props.month)),
-	          day: leadingZeros(dayNumber),
-	          data: this.props.data,
-	          "class": "day next-month"
-	        }));
-	      } else {
-	        dayNumber = (this.props.week - indexOfFirstWeek) * 7 + (i + 1) - indexOfFirstDay;
-	
-	        weekDays.push(_react2.default.createElement(CalendarDay, {
-	          key: i,
-	          year: this.props.year,
-	          month: leadingZeros(this.props.month),
-	          day: leadingZeros(dayNumber),
-	          data: this.props.data,
-	          "class": "day"
+	          viewMode: this.props.viewMode,
+	          'class': 'day previous-month'
 	        }));
 	      }
+	      // For the last calendar week of the month
+	      else if (this.props.week - indexOfFirstWeek + 1 == weeksInMonth && i > indexOfLastDay) {
+	          dayNumber = i - indexOfLastDay;
+	
+	          weekDays.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
+	            key: i,
+	            year: nextMonthYearNumber(this.props.year, this.props.month),
+	            month: leadingZeros(nextMonthNumber(this.props.month)),
+	            day: leadingZeros(dayNumber),
+	            viewMode: this.props.viewMode,
+	            'class': 'day next-month'
+	          }));
+	        }
+	        // For all other weeks of the month
+	        else {
+	            dayNumber = (this.props.week - indexOfFirstWeek) * 7 + (i + 1) - indexOfFirstDay;
+	
+	            weekDays.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
+	              key: i,
+	              year: this.props.year,
+	              month: leadingZeros(this.props.month),
+	              day: leadingZeros(dayNumber),
+	              viewMode: this.props.viewMode,
+	              'class': 'day'
+	            }));
+	          }
 	    }
 	
 	    return _react2.default.createElement(
-	      "time",
-	      { dateTime: this.props.year + "-W" + leadingZeros(this.props.week), className: "week" },
+	      'time',
+	      { dateTime: this.props.year + "-W" + leadingZeros(this.props.week), className: 'week' },
 	      weekDays
 	    );
 	  }
 	});
 	
-	var CalendarDay = _react2.default.createClass({
-	  displayName: "CalendarDay",
+	exports.default = ViewCalendarWeek;
+
+/***/ },
+/* 210 */
+/*!*****************************************!*\
+  !*** ./src/js/ContainerCalendarDay.jsx ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 	
-	  render: function render() {
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 172);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
+	
+	var _ViewCalendarDay = __webpack_require__(/*! ./ViewCalendarDay.jsx */ 211);
+	
+	var _ViewCalendarDay2 = _interopRequireDefault(_ViewCalendarDay);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// This generates ContainerApplication, which passes the store's state onto Application, its child component.
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    data: state.data
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    viewEventsForThisDay: function viewEventsForThisDay(thisDay) {
+	      dispatch((0, _StateMachineDefinitions.setViewDay)(thisDay));
+	      dispatch((0, _StateMachineDefinitions.goto)(_StateMachineDefinitions.VIEW_STATE.CALENDAR_DAY));
+	    },
+	    exitDayMode: function exitDayMode() {
+	      dispatch((0, _StateMachineDefinitions.goto)(_StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH));
+	    }
+	  };
+	};
+	
+	var ContainerCalendarDay = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_ViewCalendarDay2.default);
+	
+	exports.default = ContainerCalendarDay;
+
+/***/ },
+/* 211 */
+/*!************************************!*\
+  !*** ./src/js/ViewCalendarDay.jsx ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ViewCalendarDay = _react2.default.createClass({
+	  displayName: 'ViewCalendarDay',
+	
+	  filterEventsForThisDate: function filterEventsForThisDate() {
+	    var year = this.props.year;
+	    var month = this.props.month;
+	    var day = this.props.day;
+	
 	    // Don't forget month is zero-indexed for Date().
-	    var thisDate = new Date(this.props.year, this.props.month - 1, this.props.day);
+	    var thisDate = new Date(year, month - 1, day);
 	    thisDate.setHours(0, 0, 0, 0);
 	
+	    var data = this.props.data;
+	    var eventsForThisMonth = [];
 	    var eventsForThisDate = [];
 	
-	    if (this.props.data.length > 0) {
-	      $.each(this.props.data, function (i, item) {
+	    // Look in the state for data for the currently displayed month
+	    if (data.length > 0) {
+	      for (var i = 0, length = data.length; i < length; i++) {
+	        if (data[i].year == year && data[i].month == month) {
+	          eventsForThisMonth = data[i].events;
+	        }
+	      }
+	    }
+	
+	    if (eventsForThisMonth.length > 0) {
+	      $.each(eventsForThisMonth, function (i, event) {
 	        // See calendar-functions.js
-	        var eventYear = item.t_start.getYear();
-	        var eventMonth = item.t_start.getMonth();
-	        var eventDay = item.t_start.getDay();
+	        var eventYear = event.t_start.getYear();
+	        var eventMonth = event.t_start.getMonth();
+	        var eventDay = event.t_start.getDay();
 	
 	        // Don't forget month is zero-indexed for Date().
 	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
 	        eventDate.setHours(0, 0, 0, 0);
 	
 	        if (eventDate.getTime() == thisDate.getTime()) {
-	          eventsForThisDate.push(item);
+	          eventsForThisDate.push(event);
 	        }
 	      });
 	    }
 	
-	    return _react2.default.createElement(
-	      "time",
-	      { dateTime: this.props.year + "-" + leadingZeros(this.props.month) + "-" + leadingZeros(this.props.day), className: this.props.class },
-	      _react2.default.createElement(
-	        "span",
-	        { className: "day-label" },
-	        this.props.day
-	      ),
-	      _react2.default.createElement(
-	        "span",
-	        { className: "day-label" },
-	        JSON.stringify(eventsForThisDate)
-	      )
-	    );
+	    return eventsForThisDate;
+	  },
+	  formatHTML: function formatHTML(htmlString) {
+	    return { __html: htmlString };
+	  },
+	  render: function render() {
+	    var _this = this;
+	
+	    // Format dateTime for HTML
+	    var formattedDateTime = this.props.year + "-" + leadingZeros(this.props.month) + "-" + leadingZeros(this.props.day);
+	
+	    // Return all events for this day
+	    var eventsForThisDate = this.filterEventsForThisDate();
+	
+	    if (this.props.viewMode == _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH) {
+	      // Fetch action passed down from props
+	      var viewEventsForThisDate = function viewEventsForThisDate() {
+	        return _this.props.viewEventsForThisDay(_this.props.day);
+	      };
+	
+	      return _react2.default.createElement(
+	        'time',
+	        { dateTime: formattedDateTime,
+	          className: this.props.class,
+	          onClick: viewEventsForThisDate },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'day-label' },
+	          this.props.day
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'day-label' },
+	          JSON.stringify(eventsForThisDate)
+	        )
+	      );
+	    }
+	    if (this.props.viewMode == _StateMachineDefinitions.VIEW_STATE.CALENDAR_DAY) {
+	      // Fetch action passed down from props
+	      var exitDayMode = function exitDayMode() {
+	        return _this.props.exitDayMode(_this.props.day);
+	      };
+	
+	      var formattedEventsForThisDate = [];
+	
+	      if (eventsForThisDate.length > 0) {
+	        for (var i = 0, len = eventsForThisDate.length; i < len; i++) {
+	          var event = eventsForThisDate[i];
+	          var eventStartTime = event.t_start.getHours() + "h" + leadingZeros(event.t_start.getMinutes());
+	          var eventEndTime = event.t_end.getHours() + "h" + leadingZeros(event.t_end.getMinutes());
+	
+	          formattedEventsForThisDate.push(_react2.default.createElement(
+	            'li',
+	            { className: 'event-container', id: "eventID-" + event.id },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'event-category' },
+	              event.category
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'event-title' },
+	              event.summary
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'event-time' },
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                eventStartTime
+	              ),
+	              ' - ',
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                eventEndTime
+	              )
+	            ),
+	            _react2.default.createElement('p', { className: 'event-description', dangerouslySetInnerHTML: this.formatHTML(event.description) })
+	          ));
+	        }
+	      }
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'dayView' },
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          formattedDateTime
+	        ),
+	        formattedEventsForThisDate
+	      );
+	    }
 	  }
 	});
 	
-	exports.default = ViewCalendarMonth;
+	exports.default = ViewCalendarDay;
 
 /***/ },
-/* 209 */
+/* 212 */
 /*!******************************!*\
   !*** ./src/js/ViewEvent.jsx ***!
   \******************************/
@@ -24470,7 +24733,7 @@
 	exports.default = ViewEvent;
 
 /***/ },
-/* 210 */
+/* 213 */
 /*!*********************************!*\
   !*** ./src/js/ViewSettings.jsx ***!
   \*********************************/
@@ -24518,7 +24781,7 @@
 	exports.default = ViewSettings;
 
 /***/ },
-/* 211 */
+/* 214 */
 /*!*********************************!*\
   !*** ./src/js/ViewControls.jsx ***!
   \*********************************/
@@ -24565,6 +24828,13 @@
 	      var previousMonthYear = previousMonthYearNumber(thisYear, thisMonth);
 	      var previousMonth = previousMonthNumber(thisMonth);
 	
+	      var previousPage = function previousPage() {
+	        return _this2.props.switchPage(previousMonthYear, previousMonth);
+	      };
+	      var nextPage = function nextPage() {
+	        return _this2.props.switchPage(nextMonthYear, nextMonth);
+	      };
+	
 	      return _react2.default.createElement(
 	        "div",
 	        { id: "controls" },
@@ -24573,9 +24843,7 @@
 	          { id: "ctrl-left-button" },
 	          _react2.default.createElement(
 	            "span",
-	            { onClick: function onClick() {
-	                return _this2.props.switchPage(previousMonthYear, previousMonth);
-	              } },
+	            { onClick: previousPage },
 	            "«"
 	          )
 	        ),
@@ -24593,9 +24861,7 @@
 	          { id: "ctrl-right-button" },
 	          _react2.default.createElement(
 	            "span",
-	            { onClick: function onClick() {
-	                return _this2.props.switchPage(nextMonthYear, nextMonth);
-	              } },
+	            { onClick: nextPage },
 	            "»"
 	          )
 	        )

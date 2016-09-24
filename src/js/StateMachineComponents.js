@@ -9,27 +9,7 @@ export function ViewStateMachine(state = VIEW_STATE.CALENDAR_MONTH, action)
   switch (action.type)
   {
     case GOTO_VIEW:
-      return Object.assign({}, state, {
-        view: action.view
-      });
-    default:
-      return state;
-  }
-}
-
-export function DataStateMachine(state = {}, action)
-{
-  switch (action.type)
-  {
-    case LOAD_DATA:
-      return [
-        ...state.data,
-        {
-          events: action.data.events,
-          year: state.setTime.calYear,
-          month: state.setTime.calMonth
-        }
-      ];
+      return action.viewState;
     default:
       return state;
   }
@@ -46,12 +26,30 @@ export function TimeStateMachine(state = {}, action)
       });
     case SET_VIEW_DAY:
       return Object.assign({}, state, {
-        viewDay: action.calDay
+        viewDay: action.viewDay
       });
     case SET_VIEW_EVENT_ID:
       return Object.assign({}, state, {
         viewEventID: action.viewEventID
       });
+    default:
+      return state;
+  }
+}
+
+export function DataStateMachine(state = [], action)
+{
+  switch (action.type)
+  {
+    case LOAD_DATA:
+      return [
+        ...state,
+        {
+          events: action.data.events,
+          year: action.data.calYear,
+          month: action.data.calMonth
+        }
+      ];
     default:
       return state;
   }

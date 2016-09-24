@@ -18,7 +18,8 @@
   },
   "scripts": {
     "dev": "webpack -d --watch",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "browser": "webpack -d && cordova run browser"
   },
   "author": "",
   "license": "ISC",

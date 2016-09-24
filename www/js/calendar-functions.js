@@ -104,35 +104,54 @@ Date.prototype.getWeekNumber = function()
     return weeksElapsedInYear;
 };
 
-function parseDateString(dateString)
+function parseDateString(dateString, type = 0)
 {
   // Regular expressions are the best way to parse the date.
   // Otherwise, a different implementation of Date in Safari will
   // cause everything to fail silently.
 
-  // For example, let's take the date string representation "2016-09-05 10:00:00".
-  // /\s/ will match any whitespace.
-  // Doing split(/\s/) results in this array: ["2016-09-05", "10:00:00"].
-  // We're not interested in the time of day, so let's just keep the first element [0].
-  var eventDateStr  = dateString.split(/\s/)[0];
+  // If type == 0, get the date.
+  if (type == 0)
+  {
+    // For example, let's take the date string representation "2016-09-05 10:00:00".
+    // /\s/ will match any whitespace.
+    // Doing split(/\s/) results in this array: ["2016-09-05", "10:00:00"].
+    // We're not interested in the time of day, so let's just keep the first element [0].
+    var eventDateStr = dateString.split(/\s/)[0];
 
-  // /\-/ will match the minus sign (used as a dash separator in "2016-09-05")
-  // Thus split(/\-/) results in this array: ["2016", "09", "05"], which is
-  // exactly what we're looking for! We use parseInt() with base 10 (decimal).
-  return eventDateStr.split(/\-/);
+    // /\-/ will match the minus sign (used as a dash separator in "2016-09-05")
+    // Thus split(/\-/) results in this array: ["2016", "09", "05"], which is
+    // exactly what we're looking for! We use parseInt() with base 10 (decimal).
+    return eventDateStr.split(/\-/);
+  }
+  else // If type == 1, get the time
+  {
+    var eventTimeStr = dateString.split(/\s/)[1];
+    return eventTimeStr.split(/\:/);
+  }
 }
 
 String.prototype.getYear = function()
 {
-  return parseInt(parseDateString(this)[0], 10);
+  return parseInt(parseDateString(this, 0)[0], 10);
 }
 
 String.prototype.getMonth = function()
 {
-  return parseInt(parseDateString(this)[1], 10);
+  return parseInt(parseDateString(this, 0)[1], 10);
 }
 
 String.prototype.getDay = function()
 {
-  return parseInt(parseDateString(this)[2], 10);
+  return parseInt(parseDateString(this, 0)[2], 10);
+}
+
+String.prototype.getHours = function()
+{
+  return parseInt(parseDateString(this, 1)[0], 10);
+}
+
+String.prototype.getMinutes = function()
+{
+  return parseInt(parseDateString(this, 1)[1], 10);
 }

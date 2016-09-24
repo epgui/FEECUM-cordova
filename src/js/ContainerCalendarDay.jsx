@@ -3,7 +3,7 @@ import { render }                     from 'react-dom';
 import { connect }                    from 'react-redux';
 import { loadData, goto, setViewDay } from './StateMachineDefinitions.js';
 import { VIEW_STATE }                 from './StateMachineDefinitions.js';
-import ViewCalendarMonth              from './ViewCalendarMonth.jsx';
+import ViewCalendarDay                from './ViewCalendarDay.jsx';
 
 // This generates ContainerApplication, which passes the store's state onto Application, its child component.
 
@@ -16,12 +16,16 @@ const mapStateToProps = function(state)
 
 const mapDispatchToProps = function(dispatch) {
   return {
-    loadDataIntoStateMachine: (data) => {
-      dispatch(loadData(data));
+    viewEventsForThisDay: (thisDay) => {
+      dispatch(setViewDay(thisDay));
+      dispatch(goto(VIEW_STATE.CALENDAR_DAY));
+    },
+    exitDayMode: () => {
+      dispatch(goto(VIEW_STATE.CALENDAR_MONTH));
     }
   }
 }
 
-const ContainerCalendarMonth = connect(mapStateToProps, mapDispatchToProps)(ViewCalendarMonth);
+const ContainerCalendarDay = connect(mapStateToProps, mapDispatchToProps)(ViewCalendarDay);
 
-export default ContainerCalendarMonth;
+export default ContainerCalendarDay;
