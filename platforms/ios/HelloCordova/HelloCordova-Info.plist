@@ -52,5 +52,15 @@
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
+    <key>CFBundleLocalizations</key>
+    <array>
+      <string>en</string>
+      <string>de</string>
+      <string>nl</string>
+      <string>fr</string>
+      <string>it</string>
+    </array>
+    <key>NSCalendarsUsageDescription</key>
+    <string/>
   </dict>
 </plist>

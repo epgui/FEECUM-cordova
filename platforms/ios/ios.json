@@ -4,16 +4,61 @@
         "uninstalled": []
     },
     "config_munge": {
-        "files": {}
+        "files": {
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Calendar\"><param name=\"ios-package\" value=\"Calendar\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "*-Info.plist": {
+                "parents": {
+                    "CFBundleLocalizations": [
+                        {
+                            "xml": "<array><string>en</string><string>de</string><string>nl</string><string>fr</string><string>it</string></array>",
+                            "count": 1
+                        }
+                    ],
+                    "NSCalendarsUsageDescription": [
+                        {
+                            "xml": "<string />",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
     },
     "installed_plugins": {
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-calendar": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
     "dependent_plugins": {},
-    "modules": [],
+    "modules": [
+        {
+            "id": "cordova-plugin-calendar.Calendar",
+            "file": "plugins/cordova-plugin-calendar/www/Calendar.js",
+            "pluginId": "cordova-plugin-calendar",
+            "clobbers": [
+                "Calendar"
+            ]
+        },
+        {
+            "id": "cordova-plugin-calendar.tests",
+            "file": "plugins/cordova-plugin-calendar/test/tests.js",
+            "pluginId": "cordova-plugin-calendar"
+        }
+    ],
     "plugin_metadata": {
-        "cordova-plugin-whitelist": "1.2.2"
+        "cordova-plugin-whitelist": "1.2.2",
+        "cordova-plugin-calendar": "4.5.3"
     }
 }

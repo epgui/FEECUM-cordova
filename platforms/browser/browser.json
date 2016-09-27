@@ -9,11 +9,29 @@
     "installed_plugins": {
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-calendar": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
     "dependent_plugins": {},
-    "modules": [],
+    "modules": [
+        {
+            "file": "plugins/cordova-plugin-calendar/www/Calendar.js",
+            "id": "cordova-plugin-calendar.Calendar",
+            "pluginId": "cordova-plugin-calendar",
+            "clobbers": [
+                "Calendar"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-calendar/test/tests.js",
+            "id": "cordova-plugin-calendar.tests",
+            "pluginId": "cordova-plugin-calendar"
+        }
+    ],
     "plugin_metadata": {
-        "cordova-plugin-whitelist": "1.2.2"
+        "cordova-plugin-whitelist": "1.2.2",
+        "cordova-plugin-calendar": "4.5.3"
     }
 }

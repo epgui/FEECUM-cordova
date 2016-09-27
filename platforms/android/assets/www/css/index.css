@@ -46,7 +46,7 @@ body {
 }
 
 /* Portrait layout (default) */
-.app {
+#app {
   height: 700px;
   text-align:center;
   position: relative;
@@ -62,45 +62,82 @@ body {
 }
 
 h1 {
+  display: block;
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 55px;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  text-align: center;
+}
+
+#controls {
   background: #FDFDFD;
   border-bottom: 1px solid #EEE;
   display: block;
-  font-size:24px;
-  font-weight:normal;
-  margin:0px;
-  overflow:visible;
-  padding:8px 0;
-  text-align:center;
+  left: 50%;
+  margin: 0 0 0 -198.5px;
+  overflow: hidden;
+  position: absolute;
+  width: 397px;
+  z-index: 2;
 }
 
-#calendarView {
+#controls #ctrl-title-bar {
+  display: block;
+  float: left;
+  height: 55px;
+  width: 285px;
+}
+
+#controls #ctrl-left-button, #controls #ctrl-right-button {
+  color: #CCC;
+  display: block;
+  float: left;
+  font-size: 24px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+  width: 55px;
+}
+
+#controls #ctrl-left-button {
+  border-right: 1px solid #EEE;
+}
+
+#controls #ctrl-right-button {
+  border-left: 1px solid #EEE;
+}
+
+#views {
   left: 50%;
-  margin: -200px 0 0 -200px;
+  margin: 20px 0 0 -200px;
   padding: 40px 0;
   position: absolute;
-  top: 50%;
+  top: 0;
   width: 400px;
 }
 
-#calendarView time.year {
+#views time.year {
   display: block;
   margin: 0;
   padding: 0;
   width: 100%;
 }
 
-#calendarView time.month {
+#views time.month {
   display: block;
   margin: 0;
   padding: 0;
   width: 100%;
 }
 
-#calendarView time.month.hidden {
+#views time.month.hidden {
   display: none;
 }
 
-#calendarView time.month .month-label {
+#views time.month .month-label {
   background: #FFF;
   display: block;
   height: 55px;
@@ -109,13 +146,13 @@ h1 {
   width: 397px;
 }
 
-#calendarView time.week {
+#views time.week {
   display: block;
   overflow: hidden;
   width: 100%;
 }
 
-#calendarView time.day {
+#views time.day {
   background: #FFF;
   display: block;
   float: left;
@@ -125,9 +162,63 @@ h1 {
   width: 55px;
 }
 
-#calendarView time.day.next-month, #calendarView time.day.previous-month {
+#views time.day.next-month, #views time.day.previous-month {
   background: #EEE;
   color: #AAA;
+}
+
+#dayView {
+  background: #FFF;
+  padding: 20px;
+  text-align: left;
+  text-transform: none;
+  width: 360px;
+}
+
+#dayView h2 {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+#dayView li.event-container {
+  border: 1px solid #CCC;
+  border-radius: 3px;
+  display: block;
+  list-style-type: none;
+  margin: 20px 0 0;
+  overflow: hidden;
+  padding: 0 10px 10px;
+}
+
+#dayView .event-category {
+  background: #ECECEC;
+  border-bottom: 1px solid #DFDFDF;
+  border-radius: 2px 2px 0 0;
+  color: #AAA;
+  display: block;
+  font-size: 11px;
+  margin: 1px -9px 10px;
+  padding: 3px 10px;
+}
+
+#dayView .event-title {
+  display: block;
+  font-size: 20px;
+  margin: 5px 0;
+}
+
+#dayView .event-time {
+  border-bottom: 1px solid #DFDFDF;
+  color: #999;
+  display: block;
+  font-style: italic;
+  padding: 0 0 10px;
+}
+
+#dayView .event-description {
+  display: block;
+  font-size: 12px;
 }
 
 .event {

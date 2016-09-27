@@ -1,5 +1,6 @@
-import React          from 'react';
-import { VIEW_STATE } from './StateMachineDefinitions.js';
+import React             from 'react';
+import ViewCalendarEvent from './ViewCalendarEvent.jsx';
+import { VIEW_STATE }    from './StateMachineDefinitions.js';
 
 var ViewCalendarDay = React.createClass(
 {
@@ -52,10 +53,6 @@ var ViewCalendarDay = React.createClass(
     return eventsForThisDate;
 
   },
-  formatHTML: function(htmlString)
-  {
-    return { __html: htmlString };
-  },
   render: function()
   {
     // Format dateTime for HTML
@@ -91,33 +88,30 @@ var ViewCalendarDay = React.createClass(
       // Fetch action passed down from props
       var exitDayMode = () => this.props.exitDayMode(this.props.day);
 
-      var formattedEventsForThisDate = [];
+      var viewEventsForThisDate = [];
 
       if (eventsForThisDate.length > 0)
       {
         for (var i = 0, len = eventsForThisDate.length; i < len; i++)
         {
-          var event          = eventsForThisDate[i];
-          var eventStartTime = event.t_start.getHours() + "h" + leadingZeros(event.t_start.getMinutes());
-          var eventEndTime   = event.t_end.getHours()   + "h" + leadingZeros(event.t_end.getMinutes());
+          var event = eventsForThisDate[i];
 
-          formattedEventsForThisDate.push(
-            <li key={i} className="event-container" id={"eventID-" + event.id}>
-              <span className="event-category">{event.category}</span>
-              <span className="event-title">{event.summary}</span>
-              <span className="event-time">
-                <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
-              </span>
-              <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(event.description)}></p>
-            </li>
-          );
+          viewEventsForThisDate.push(<ViewCalendarEvent
+                                       key={i}
+                                       id={event.id}
+                                       category={event.category}
+                                       title={event.summary}
+                                       tStart={event.t_start}
+                                       tEnd={event.t_end}
+                                       description={event.description}
+                                     />);
         }
       }
 
       return (
         <div id="dayView">
           <h2>{formattedDateTime}</h2>
-          {formattedEventsForThisDate}
+          {viewEventsForThisDate}
         </div>
       );
     }

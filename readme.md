@@ -118,6 +118,11 @@ $ npm install --save react-redux
 $ npm install --save-dev redux-devtools
 ```
 
+Installing [cordova-plugin-calendar](https://www.npmjs.com/package/cordova-plugin-calendar):
+```
+$ cordova plugin add cordova-plugin-calendar
+```
+
 
 For iOS
 -----------------------

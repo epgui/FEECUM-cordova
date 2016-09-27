@@ -24054,15 +24054,15 @@
 	
 	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
 	
-	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 212);
+	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 213);
 	
 	var _ViewEvent2 = _interopRequireDefault(_ViewEvent);
 	
-	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 213);
+	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 214);
 	
 	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
 	
-	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 214);
+	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 215);
 	
 	var _ViewControls2 = _interopRequireDefault(_ViewControls);
 	
@@ -24542,6 +24542,10 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _ViewCalendarEvent = __webpack_require__(/*! ./ViewCalendarEvent.jsx */ 212);
+	
+	var _ViewCalendarEvent2 = _interopRequireDefault(_ViewCalendarEvent);
+	
 	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -24590,9 +24594,6 @@
 	
 	    return eventsForThisDate;
 	  },
-	  formatHTML: function formatHTML(htmlString) {
-	    return { __html: htmlString };
-	  },
 	  render: function render() {
 	    var _this = this;
 	
@@ -24631,7 +24632,7 @@
 	        return _this.props.exitDayMode(_this.props.day);
 	      };
 	
-	      var formattedEventsForThisDate = [];
+	      var viewEventsForThisDate = [];
 	
 	      if (eventsForThisDate.length > 0) {
 	        for (var i = 0, len = eventsForThisDate.length; i < len; i++) {
@@ -24639,36 +24640,15 @@
 	          var eventStartTime = event.t_start.getHours() + "h" + leadingZeros(event.t_start.getMinutes());
 	          var eventEndTime = event.t_end.getHours() + "h" + leadingZeros(event.t_end.getMinutes());
 	
-	          formattedEventsForThisDate.push(_react2.default.createElement(
-	            'li',
-	            { key: i, className: 'event-container', id: "eventID-" + event.id },
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'event-category' },
-	              event.category
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'event-title' },
-	              event.summary
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'event-time' },
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                eventStartTime
-	              ),
-	              ' - ',
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                eventEndTime
-	              )
-	            ),
-	            _react2.default.createElement('p', { className: 'event-description', dangerouslySetInnerHTML: this.formatHTML(event.description) })
-	          ));
+	          viewEventsForThisDate.push(_react2.default.createElement(_ViewCalendarEvent2.default, {
+	            key: i,
+	            id: event.id,
+	            category: event.category,
+	            title: event.summary,
+	            eventStartTime: eventStartTime,
+	            eventEndTime: eventEndTime,
+	            description: event.description
+	          }));
 	        }
 	      }
 	
@@ -24680,7 +24660,7 @@
 	          null,
 	          formattedDateTime
 	        ),
-	        formattedEventsForThisDate
+	        viewEventsForThisDate
 	      );
 	    }
 	  }
@@ -24690,6 +24670,76 @@
 
 /***/ },
 /* 212 */
+/*!**************************************!*\
+  !*** ./src/js/ViewCalendarEvent.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ViewCalendarEvent = _react2.default.createClass({
+	  displayName: 'ViewCalendarEvent',
+	
+	  addToCalendar: function addToCalendar() {},
+	  formatHTML: function formatHTML(htmlString) {
+	    return { __html: htmlString };
+	  },
+	  render: function render() {
+	    var _this = this;
+	
+	    var addEventToCalendar = function addEventToCalendar() {
+	      return _this.addToCalendar();
+	    };
+	
+	    return _react2.default.createElement(
+	      'li',
+	      { className: 'event-container', id: "eventID-" + this.props.id },
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-category' },
+	        this.props.category
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-title' },
+	        this.props.title
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-time' },
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          this.props.eventStartTime
+	        ),
+	        ' - ',
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          this.props.eventEndTime
+	        )
+	      ),
+	      _react2.default.createElement('p', { className: 'event-description', dangerouslySetInnerHTML: this.formatHTML(this.props.description) })
+	    );
+	  }
+	});
+	
+	exports.default = ViewCalendarEvent;
+
+/***/ },
+/* 213 */
 /*!******************************!*\
   !*** ./src/js/ViewEvent.jsx ***!
   \******************************/
@@ -24737,7 +24787,7 @@
 	exports.default = ViewEvent;
 
 /***/ },
-/* 213 */
+/* 214 */
 /*!*********************************!*\
   !*** ./src/js/ViewSettings.jsx ***!
   \*********************************/
@@ -24785,7 +24835,7 @@
 	exports.default = ViewSettings;
 
 /***/ },
-/* 214 */
+/* 215 */
 /*!*********************************!*\
   !*** ./src/js/ViewControls.jsx ***!
   \*********************************/
