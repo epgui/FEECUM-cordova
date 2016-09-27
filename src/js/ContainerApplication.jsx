@@ -1,8 +1,9 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { connect } from 'react-redux';
-import { setCalendarPage } from './StateMachineDefinitions.js';
-import ViewApplication from './ViewApplication.jsx';
+import React                                 from 'react';
+import { render }                            from 'react-dom';
+import { connect }                           from 'react-redux';
+import { setCalendarPage, goto, setViewDay } from './StateMachineDefinitions.js';
+import { VIEW_STATE }                        from './StateMachineDefinitions.js';
+import ViewApplication                       from './ViewApplication.jsx';
 
 // This generates ContainerApplication, which passes the store's state onto Application, its child component.
 
@@ -23,6 +24,9 @@ const mapDispatchToProps = function(dispatch) {
   return {
     switchPage: (calYear, calMonth) => {
       dispatch(setCalendarPage(calYear, calMonth));
+    },
+    exitDayMode: () => {
+      dispatch(goto(VIEW_STATE.CALENDAR_MONTH));
     }
   }
 }

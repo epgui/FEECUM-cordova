@@ -102,7 +102,7 @@ var ViewCalendarDay = React.createClass(
           var eventEndTime   = event.t_end.getHours()   + "h" + leadingZeros(event.t_end.getMinutes());
 
           formattedEventsForThisDate.push(
-            <li className="event-container" id={"eventID-" + event.id}>
+            <li key={i} className="event-container" id={"eventID-" + event.id}>
               <span className="event-category">{event.category}</span>
               <span className="event-title">{event.summary}</span>
               <span className="event-time">

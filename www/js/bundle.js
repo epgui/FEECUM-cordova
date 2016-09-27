@@ -24018,6 +24018,9 @@
 	  return {
 	    switchPage: function switchPage(calYear, calMonth) {
 	      dispatch((0, _StateMachineDefinitions.setCalendarPage)(calYear, calMonth));
+	    },
+	    exitDayMode: function exitDayMode() {
+	      dispatch((0, _StateMachineDefinitions.goto)(_StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH));
 	    }
 	  };
 	};
@@ -24122,10 +24125,11 @@
 	
 	      controls.push(_react2.default.createElement(_ViewControls2.default, {
 	        key: 1,
-	        view: this.props.view,
 	        year: this.props.setTime.calYear,
 	        month: this.props.setTime.calMonth,
-	        switchPage: this.props.switchPage
+	        viewMode: this.props.view,
+	        switchPage: this.props.switchPage,
+	        exitDayMode: this.props.exitDayMode
 	      }));
 	
 	      return _react2.default.createElement(
@@ -24637,7 +24641,7 @@
 	
 	          formattedEventsForThisDate.push(_react2.default.createElement(
 	            'li',
-	            { className: 'event-container', id: "eventID-" + event.id },
+	            { key: i, className: 'event-container', id: "eventID-" + event.id },
 	            _react2.default.createElement(
 	              'span',
 	              { className: 'event-category' },
@@ -24787,7 +24791,7 @@
   \*********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -24798,6 +24802,8 @@
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -24817,7 +24823,7 @@
 	  }
 	
 	  _createClass(ViewControls, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
@@ -24828,43 +24834,89 @@
 	      var previousMonthYear = previousMonthYearNumber(thisYear, thisMonth);
 	      var previousMonth = previousMonthNumber(thisMonth);
 	
+	      // Fetch action passed down from props
 	      var previousPage = function previousPage() {
 	        return _this2.props.switchPage(previousMonthYear, previousMonth);
 	      };
 	      var nextPage = function nextPage() {
 	        return _this2.props.switchPage(nextMonthYear, nextMonth);
 	      };
+	      var exitDayMode = function exitDayMode() {
+	        return _this2.props.exitDayMode();
+	      };
+	
+	      var leftButton = [];
+	      var titleBar = [];
+	      var rightButton = [];
+	
+	      switch (this.props.viewMode) {
+	        case _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH:
+	          leftButton.push(_react2.default.createElement(
+	            'div',
+	            { key: '1', id: 'ctrl-left-button' },
+	            _react2.default.createElement(
+	              'span',
+	              { onClick: previousPage },
+	              '«'
+	            )
+	          ));
+	          titleBar.push(_react2.default.createElement(
+	            'div',
+	            { key: '2', id: 'ctrl-title-bar' },
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              'FÉÉCUM'
+	            )
+	          ));
+	          rightButton.push(_react2.default.createElement(
+	            'div',
+	            { key: '3', id: 'ctrl-right-button' },
+	            _react2.default.createElement(
+	              'span',
+	              { onClick: nextPage },
+	              '»'
+	            )
+	          ));
+	          break;
+	        case _StateMachineDefinitions.VIEW_STATE.CALENDAR_DAY:
+	          leftButton.push(_react2.default.createElement(
+	            'div',
+	            { key: '1', id: 'ctrl-left-button' },
+	            _react2.default.createElement(
+	              'span',
+	              { onClick: exitDayMode },
+	              "« " + monthNumber(this.props.month).substring(0, 3)
+	            )
+	          ));
+	          titleBar.push(_react2.default.createElement(
+	            'div',
+	            { key: '2', id: 'ctrl-title-bar' },
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              'FÉÉCUM'
+	            )
+	          ));
+	          break;
+	        default:
+	          titleBar.push(_react2.default.createElement(
+	            'div',
+	            { key: '2', id: 'ctrl-title-bar' },
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              'FÉÉCUM'
+	            )
+	          ));
+	      }
 	
 	      return _react2.default.createElement(
-	        "div",
-	        { id: "controls" },
-	        _react2.default.createElement(
-	          "div",
-	          { id: "ctrl-left-button" },
-	          _react2.default.createElement(
-	            "span",
-	            { onClick: previousPage },
-	            "«"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { id: "ctrl-title-bar" },
-	          _react2.default.createElement(
-	            "h1",
-	            null,
-	            "FÉÉCUM"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { id: "ctrl-right-button" },
-	          _react2.default.createElement(
-	            "span",
-	            { onClick: nextPage },
-	            "»"
-	          )
-	        )
+	        'div',
+	        { id: 'controls' },
+	        leftButton,
+	        titleBar,
+	        rightButton
 	      );
 	    }
 	  }]);

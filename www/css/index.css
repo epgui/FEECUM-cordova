@@ -81,6 +81,7 @@ h1 {
   overflow: hidden;
   position: absolute;
   width: 397px;
+  z-index: 2;
 }
 
 #controls #ctrl-title-bar {

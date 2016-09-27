@@ -48,10 +48,11 @@ render()
 
     controls.push(<ViewControls
                     key={1}
-                    view={this.props.view}
                     year={this.props.setTime.calYear}
                     month={this.props.setTime.calMonth}
+                    viewMode={this.props.view}
                     switchPage={this.props.switchPage}
+                    exitDayMode={this.props.exitDayMode}
                   />);
 
     return (
