@@ -24054,15 +24054,15 @@
 	
 	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
 	
-	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 212);
+	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 214);
 	
 	var _ViewEvent2 = _interopRequireDefault(_ViewEvent);
 	
-	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 213);
+	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 215);
 	
 	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
 	
-	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 214);
+	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 216);
 	
 	var _ViewControls2 = _interopRequireDefault(_ViewControls);
 	
@@ -24542,6 +24542,10 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _ViewCalendarEvent = __webpack_require__(/*! ./ViewCalendarEvent.jsx */ 212);
+	
+	var _ViewCalendarEvent2 = _interopRequireDefault(_ViewCalendarEvent);
+	
 	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -24590,9 +24594,6 @@
 	
 	    return eventsForThisDate;
 	  },
-	  formatHTML: function formatHTML(htmlString) {
-	    return { __html: htmlString };
-	  },
 	  render: function render() {
 	    var _this = this;
 	
@@ -24631,44 +24632,21 @@
 	        return _this.props.exitDayMode(_this.props.day);
 	      };
 	
-	      var formattedEventsForThisDate = [];
+	      var viewEventsForThisDate = [];
 	
 	      if (eventsForThisDate.length > 0) {
 	        for (var i = 0, len = eventsForThisDate.length; i < len; i++) {
 	          var event = eventsForThisDate[i];
-	          var eventStartTime = event.t_start.getHours() + "h" + leadingZeros(event.t_start.getMinutes());
-	          var eventEndTime = event.t_end.getHours() + "h" + leadingZeros(event.t_end.getMinutes());
 	
-	          formattedEventsForThisDate.push(_react2.default.createElement(
-	            'li',
-	            { key: i, className: 'event-container', id: "eventID-" + event.id },
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'event-category' },
-	              event.category
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'event-title' },
-	              event.summary
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'event-time' },
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                eventStartTime
-	              ),
-	              ' - ',
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                eventEndTime
-	              )
-	            ),
-	            _react2.default.createElement('p', { className: 'event-description', dangerouslySetInnerHTML: this.formatHTML(event.description) })
-	          ));
+	          viewEventsForThisDate.push(_react2.default.createElement(_ViewCalendarEvent2.default, {
+	            key: i,
+	            id: event.id,
+	            category: event.category,
+	            title: event.summary,
+	            tStart: event.t_start,
+	            tEnd: event.t_end,
+	            description: event.description
+	          }));
 	        }
 	      }
 	
@@ -24680,7 +24658,7 @@
 	          null,
 	          formattedDateTime
 	        ),
-	        formattedEventsForThisDate
+	        viewEventsForThisDate
 	      );
 	    }
 	  }
@@ -24690,6 +24668,264 @@
 
 /***/ },
 /* 212 */
+/*!**************************************!*\
+  !*** ./src/js/ViewCalendarEvent.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 203);
+	
+	var _DeviceCalendar = __webpack_require__(/*! ./DeviceCalendar.js */ 213);
+	
+	var _DeviceCalendar2 = _interopRequireDefault(_DeviceCalendar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ViewCalendarEvent = _react2.default.createClass({
+	  displayName: 'ViewCalendarEvent',
+	
+	
+	  addToCalendar: function addToCalendar() {
+	    var firstReminder = arguments.length <= 0 || arguments[0] === undefined ? 60 : arguments[0];
+	    var secondReminder = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+	
+	
+	    event = _DeviceCalendar2.default.constructEvent(this.props.title, this.props.tStart, this.props.tEnd, this.props.description);
+	
+	    _DeviceCalendar2.default.add(event, firstReminder, secondReminder);
+	  },
+	
+	  findEvent: function findEvent() {
+	
+	    event = _DeviceCalendar2.default.constructEvent(this.props.title, this.props.tStart, this.props.tEnd, this.props.description);
+	    _DeviceCalendar2.default.find(event);
+	  },
+	
+	  deleteEvent: function deleteEvent() {
+	
+	    event = _DeviceCalendar2.default.constructEvent(this.props.title, this.props.tStart, this.props.tEnd, this.props.description);
+	    _DeviceCalendar2.default.find(event);
+	  },
+	
+	  openCalendar: function openCalendar() {
+	
+	    var year = this.props.tStart.getYear();
+	    var month = this.props.tStart.getMonth();
+	    var day = this.props.tStart.getDay();
+	
+	    _DeviceCalendar2.default.openDeviceCalendar(year, month, day);
+	  },
+	
+	  formatHTML: function formatHTML(htmlString) {
+	    return { __html: htmlString };
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var eventStartTime = this.props.tStart.getHours() + "h" + leadingZeros(this.props.tStart.getMinutes());
+	    var eventEndTime = this.props.tEnd.getHours() + "h" + leadingZeros(this.props.tEnd.getMinutes());
+	
+	    var addToCalendar = function addToCalendar() {
+	      return _this.addToCalendar();
+	    };
+	
+	    return _react2.default.createElement(
+	      'li',
+	      { className: 'event-container', id: "eventID-" + this.props.id },
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-category' },
+	        this.props.category
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-title' },
+	        this.props.title
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-time' },
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          eventStartTime
+	        ),
+	        ' - ',
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          eventEndTime
+	        )
+	      ),
+	      _react2.default.createElement('p', { className: 'event-description', dangerouslySetInnerHTML: this.formatHTML(this.props.description) }),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'button add-event', onClick: addToCalendar },
+	        'Ajouter à mon calendrier'
+	      )
+	    );
+	  }
+	});
+	
+	exports.default = ViewCalendarEvent;
+
+/***/ },
+/* 213 */
+/*!**********************************!*\
+  !*** ./src/js/DeviceCalendar.js ***!
+  \**********************************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var DeviceCalendar = {
+	
+	  constructEvent: function constructEvent(title, tStart, tEnd, description) {
+	    var location = arguments.length <= 4 || arguments[4] === undefined ? "FÉÉCUM" : arguments[4];
+	    var url = arguments.length <= 5 || arguments[5] === undefined ? "http://www.feecum.ca" : arguments[5];
+	
+	
+	    return {
+	      "title": title,
+	      "tStart": {
+	        "year": tStart.getYear(),
+	        "month": tStart.getMonth() - 1, // zero-indexed
+	        "day": tStart.getDay(),
+	        "hours": tStart.getHours(),
+	        "minutes": tStart.getMinutes()
+	      },
+	      "tEnd": {
+	        "year": tEnd.getYear(),
+	        "month": tEnd.getMonth() - 1, // zero-indexed
+	        "day": tEnd.getDay(),
+	        "hours": tEnd.getHours(),
+	        "minutes": tEnd.getMinutes()
+	      },
+	      "location": location,
+	      "description": description,
+	      "url": url
+	    };
+	  },
+	
+	  getEventStartTime: function getEventStartTime(event) {
+	    return new Date(event.tStart.year, event.tStart.month, event.tStart.day, event.tStart.hours, event.tStart.minutes, 0, 0);
+	  },
+	
+	  getEventEndTime: function getEventEndTime(event) {
+	    return new Date(event.tEnd.year, event.tEnd.month, event.tEnd.day, event.tEnd.hours, event.tEnd.minutes, 0, 0);
+	  },
+	
+	  successCallback: function successCallback() {
+	    var success = function success(message) {
+	      alert("Success: " + JSON.stringify(message));
+	    };
+	    return success;
+	  },
+	
+	  errorCallback: function errorCallback() {
+	    var error = function error(message) {
+	      alert("Error: " + message);
+	    };
+	    return error;
+	  },
+	
+	  find: function find(event) {
+	
+	    var title = event.title;
+	    var description = event.description;
+	    var location = event.location;
+	    var startTime = this.getEventStartTime(event);
+	    var endTime = this.getEventEndTime(event);
+	
+	    // find events (on iOS this includes a list of attendees (if any))
+	    window.plugins.calendar.findEvent(title, location, description, startTime, endTime, this.successCallback(), this.errorCallback());
+	  },
+	
+	  add: function add(event) // Reminders are in units of minutes
+	  {
+	    var firstReminder = arguments.length <= 1 || arguments[1] === undefined ? 60 : arguments[1];
+	    var secondReminder = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	
+	
+	    var title = event.title;
+	    var description = event.description;
+	    var location = event.location;
+	    var startTime = this.getEventStartTime(event);
+	    var endTime = this.getEventEndTime(event);
+	
+	    // Populate default optional parameters for event creation
+	    //
+	    // Example response on iOS:
+	    //
+	    //   {
+	    //     calendarId: null,
+	    //     calendarName: "calendar",
+	    //     firstReminderMinutes: 60,
+	    //     recurrence: null,
+	    //     recurrenceEndDate: null,
+	    //     recurrenceInterval: 1,
+	    //     secondReminderMinutes: null,
+	    //     url: null
+	    //   }
+	    //
+	    var options = window.plugins.calendar.getCalendarOptions();
+	
+	    // Modify optional parameters before event creation
+	    options.url = event.url;
+	    options.firstReminderMinutes = firstReminder;
+	    options.secondReminderMinutes = secondReminder;
+	
+	    // on iOS the success handler receives the event ID (since 4.3.6)
+	    // window.plugins.calendar.createEventWithOptions(title,eventLocation,notes,startDate,endDate,calOptions,success,error);
+	
+	    // create an event interactively with the calOptions object as shown above
+	    window.plugins.calendar.createEventInteractivelyWithOptions(title, location, description, startTime, endTime, options, this.successCallback(), this.errorCallback());
+	  },
+	
+	  remove: function remove(event) {
+	
+	    //
+	    //  -  You can pass nulls for irrelevant parameters.
+	    //
+	    //  -  Note that on Android, `notes` is ignored.
+	    //
+	    //  -  The dates are mandatory and represent a date range to delete events in.
+	    //
+	    //  -  On iOS there is a bug where the timespan must not be larger than 4 years.
+	    //
+	    //  -  You can match events starting with a prefix title, so if your event title
+	    //     is 'My app - cool event' then 'My app -' will match.
+	    //
+	
+	    window.plugins.calendar.deleteEvent(event.title, event.location, event.description, this.getEventStartTime(event), this.getEventEndTime(event), this.successCallback(), this.errorCallback());
+	  },
+	
+	  openDeviceCalendar: function openDeviceCalendar(year, month, day) {
+	
+	    // Open the device's built-in calendar at today's date
+	    window.plugins.calendar.openCalendar(new Date(year, month - 1, day), this.successCallback(), this.errorCallback()); // callbacks are optional
+	  }
+	
+	};
+	
+	exports.default = DeviceCalendar;
+
+/***/ },
+/* 214 */
 /*!******************************!*\
   !*** ./src/js/ViewEvent.jsx ***!
   \******************************/
@@ -24737,7 +24973,7 @@
 	exports.default = ViewEvent;
 
 /***/ },
-/* 213 */
+/* 215 */
 /*!*********************************!*\
   !*** ./src/js/ViewSettings.jsx ***!
   \*********************************/
@@ -24785,7 +25021,7 @@
 	exports.default = ViewSettings;
 
 /***/ },
-/* 214 */
+/* 216 */
 /*!*********************************!*\
   !*** ./src/js/ViewControls.jsx ***!
   \*********************************/
