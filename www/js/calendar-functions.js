@@ -102,10 +102,15 @@ Date.prototype.getWeekNumber = function()
     var daysElapsedInYear  = (d - yearStart) / 8.64e7 // divide by milliseconds
     var weeksElapsedInYear = Math.ceil( (daysElapsedInYear + 1) / 7 )
     return weeksElapsedInYear;
-};
+}
 
-function parseDateString(dateString, type = 0)
+function parseDateString(dateString, type)
 {
+  if (type === undefined)
+  {
+    type = 0;
+  }
+
   // Regular expressions are the best way to parse the date.
   // Otherwise, a different implementation of Date in Safari will
   // cause everything to fail silently.
