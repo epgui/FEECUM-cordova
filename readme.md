@@ -192,6 +192,7 @@ To build the application:
 ```
 $ npm run build            // run webpack in production mode (minimize automatically)
 $ npm run dev              // run webpack in watch mode (auto-bundles whenever files change)
+$ npm run browser          // equivalent to `npm run dev && cordova run browser`
 ```
 
 To deploy and launch in the browser:
@@ -202,11 +203,12 @@ $ cordova run browser --target=Safari
 $ cordova run browser --target=Firefox
 ```
 
-To deploy and launch on Android simulator:
+To deploy and launch on Android:
 
 ```
 $ cordova build android
 $ cordova run android --emulator
+$ cordova run android --device
 ```
 
 To deploy and launch on iOS simulator:
@@ -231,10 +233,27 @@ Debugging
 Troubleshooting
 -----------------------
 
-* There is a known issue where [Redux stores will not work properly if more than one version of the React module is loaded](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375#.s4sbzx3jk). If this becomes an issue, try running [npm dedupe](https://docs.npmjs.com/cli/dedupe):
+There is a known issue where [Redux stores will not work properly if more than one version of the React module is loaded](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375#.s4sbzx3jk). If this becomes an issue, try running [npm dedupe](https://docs.npmjs.com/cli/dedupe):
 
 ```
 $ npm dedupe
+```
+
+If there are issues attaching to the Android device, check to make sure
+that you don't have the Chrome Developer Tools open to a device inspector.
+Remote Debugging of Android devices is only supported since Android 4.4. To
+troubleshoot Android device attachment issues, try:
+```
+$ adb kill-server
+$ adb start-server
+$ adb devices
+```
+
+If `cordova build android` complains about Gradle after you update Android Studio,
+try updating the cordova android platform. This might downgrade Gradle to an
+earlier version, but it will make the bitchin' stop:
+```
+$ cordova platform update android
 ```
 
 ![](readme-hr.png)

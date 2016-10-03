@@ -20,18 +20,21 @@ export function TimeStateMachine(state = {}, action)
   switch (action.type)
   {
     case SET_CALENDAR_PAGE:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         calYear: action.calYear,
         calMonth: action.calMonth
-      });
+      };
     case SET_VIEW_DAY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         viewDay: action.viewDay
-      });
+      };
     case SET_VIEW_EVENT_ID:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         viewEventID: action.viewEventID
-      });
+      };
     default:
       return state;
   }
