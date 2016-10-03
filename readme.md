@@ -224,10 +224,20 @@ $ cordova run ios --emulator
 Debugging
 =======================
 
-* Install the [React Developer Tools](https://github.com/facebook/react-devtools)
-* Enable [Remote Debugging with Safari Developer Tools](https://developer.apple.com/safari/tools/)
-* [Debugging with Xcode](https://developer.apple.com/support/debugging/)
-* [Debugging with Android Studio](https://developer.android.com/studio/debug/index.html)
+### JavaScript debugging
+* Make sure code is being processed by the [webpack loader](https://webpack.github.io/docs/loaders.html).
+* Make sure [Babel](http://babeljs.io/) is working fine.
+* Install and use the [React Developer Tools](https://github.com/facebook/react-devtools)
+* TODO: implement [flow](https://flowtype.org/)
+
+### iOS debugging
+* Enable [Remote Debugging with Safari Developer Tools](https://developer.apple.com/safari/tools/).
+* See [Debugging with Xcode](https://developer.apple.com/support/debugging/).
+
+### Android debugging
+* See [Debugging with Android Studio](https://developer.android.com/studio/debug/index.html).
+* See [Remote Debugging Android Devices](https://developers.google.com/web/tools/chrome-devtools/remote-debugging/).
+Note that Remote Debugging only works since Android 4.4.
 
 
 Troubleshooting
