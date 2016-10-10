@@ -9081,7 +9081,7 @@
 	//   "...mobile browsers will wait approximately 300ms from the time that you
 	//   tap the button to fire the click event. The reason for this is that the
 	//   browser is waiting to see if you are actually performing a double tap."
-	var FastClick = __webpack_require__(/*! fastclick */ 514);
+	var FastClick = __webpack_require__(/*! fastclick */ 516);
 	
 	$(function () {
 	  // The script must be loaded prior to instantiating FastClick on any element of the page.
@@ -32909,11 +32909,11 @@
 	
 	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
 	
-	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 512);
+	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 514);
 	
 	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
 	
-	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 513);
+	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 515);
 	
 	var _ViewControls2 = _interopRequireDefault(_ViewControls);
 	
@@ -33024,6 +33024,10 @@
 	
 	var _ContainerCalendarDay2 = _interopRequireDefault(_ContainerCalendarDay);
 	
+	var _ContainerCalendarUpcoming = __webpack_require__(/*! ./ContainerCalendarUpcoming.jsx */ 512);
+	
+	var _ContainerCalendarUpcoming2 = _interopRequireDefault(_ContainerCalendarUpcoming);
+	
 	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -33038,7 +33042,7 @@
 	    var today = today.getDate();
 	
 	    var calendarPages = [];
-	    var todayInBrief = [];
+	    var upcomingEvents = [];
 	
 	    if (this.props.viewMode == 'calendar-month') {
 	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
@@ -33050,20 +33054,19 @@
 	
 	      var title = "Prochains évènements";
 	      var subtitle = "Plus tard aujourd'hui";
-	      //
 	
-	      todayInBrief.push(_react2.default.createElement(
+	      upcomingEvents.push(_react2.default.createElement(
 	        'span',
 	        { key: 1, className: 'title' },
 	        title
 	      ));
-	      todayInBrief.push(_react2.default.createElement(
+	      upcomingEvents.push(_react2.default.createElement(
 	        'span',
 	        { key: 2, className: 'subtitle' },
 	        subtitle
 	      ));
 	
-	      todayInBrief.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
+	      upcomingEvents.push(_react2.default.createElement(_ContainerCalendarUpcoming2.default, {
 	        key: 3,
 	        year: year,
 	        month: month,
@@ -33098,8 +33101,8 @@
 	      ),
 	      _react2.default.createElement(
 	        'div',
-	        { id: 'view-today-in-brief' },
-	        todayInBrief
+	        { id: 'view-upcoming-events' },
+	        upcomingEvents
 	      )
 	    );
 	  }
@@ -33187,14 +33190,11 @@
 	  displayName: 'ViewCalendarMonth',
 	
 	  componentDidMount: function componentDidMount() {
+	    _DataLoader2.default.loadApplicationState(this.props.data);
 	    _DataLoader2.default.loadEvents(this.props.year, this.props.month, this.props.loadDataIntoStateMachine);
 	  },
-	  componentDidUpdate: function componentDidUpdate() {
-	    console.log("DataLoader.serverRequest: " + _DataLoader2.default.serverRequest);
-	  },
 	  componentWillUnmount: function componentWillUnmount() {
-	    // Cancel any outstanding requests before the component is unmounted.
-	    // this.serverRequest.abort();
+	    _DataLoader2.default.abortConnection();
 	  },
 	  render: function render() {
 	    var year = this.props.year;
@@ -33858,29 +33858,22 @@
 	    // Keep scope
 	    this.loadDataIntoStateMachine = loadDataIntoStateMachine;
 	
-	    console.log("this.connectionState(): " + this.connectionState());
-	    console.log("this.needsUpdating(year, month): " + this.needsUpdating(year, month));
-	    console.log("deviceEvents: " + deviceEvents);
-	
 	    if (this.needsUpdating(year, month)) {
 	      switch (this.connectionState()) {
 	        case 'No network connection':
 	          this.registerEvents(deviceEvents, year, month);
-	          console.log("warning: no network connection");
+	          console.warn("No network connection");
 	          break;
 	        case 'Unknown connection':
 	          this.loadEventsFromServer(year, month);
-	          console.log("warning: connection status unknown");
+	          console.warn("Connection status unknown");
 	          break;
 	        default:
 	          this.loadEventsFromServer(year, month);
-	          console.log("all good: device is connected");
 	      }
 	    } else {
 	      this.registerEvents(deviceEvents, year, month);
 	    }
-	
-	    console.log("this.serverRequest: " + this.serverRequest);
 	  },
 	
 	  loadEventsFromServer: function loadEventsFromServer(year, month) {
@@ -33903,14 +33896,14 @@
 	  },
 	
 	  abortConnection: function abortConnection() {
-	    this.serverRequest.abort();
+	    if ("serverRequest" in this) {
+	      this.serverRequest.abort();
+	    }
 	  },
 	
 	  loadEventsFromDevice: function loadEventsFromDevice(year, month) {
 	    var storage = window.localStorage;
 	    var key = year + "-" + leadingZeros(month);
-	    console.log(key);
-	    console.log(JSON.parse(storage.getItem(key)));
 	
 	    return JSON.parse(storage.getItem(key));
 	  },
@@ -33920,16 +33913,11 @@
 	    var lastUpdatedKey = year + "-" + leadingZeros(month) + "-" + "lastUpdated";
 	    var timestamp = Math.floor(+new Date() / 1000);
 	
-	    console.log("lastUpdatedKey: " + lastUpdatedKey);
-	    console.log("timestamp: " + timestamp);
-	
 	    // Check if app has cached data.
 	    var appHasCachedData = storage.getItem(lastUpdatedKey) != null;
-	    console.log("appHasCachedData: " + appHasCachedData);
 	
 	    // Check if data is less than an hour old.
 	    var appHasRecentData = timestamp - storage.getItem(lastUpdatedKey) <= 216000;
-	    console.log("appHasRecentData: " + appHasRecentData);
 	
 	    // App needs updating if there is no data or if data is old.
 	    return !appHasCachedData || !appHasRecentData;
@@ -33942,8 +33930,29 @@
 	      calMonth: month
 	    };
 	
+	    this.eraseEventsFromDevice(year, month);
 	    this.writeEventsToDevice(data);
-	    this.loadDataIntoStateMachine(data);
+	
+	    if (this.applicationState.length > 0) {
+	      var stateNeedsUpdating = false;
+	
+	      for (var i = 0, len = this.applicationState.length; i < len; i++) {
+	        var entry = this.applicationState[i];
+	
+	        console.log("entry.month: " + entry.month);
+	        console.log("entry.year: " + entry.year);
+	
+	        if (entry.year != year || entry.month != month) {
+	          this.loadDataIntoStateMachine(data);
+	        }
+	      }
+	    } else {
+	      this.loadDataIntoStateMachine(data);
+	    }
+	  },
+	
+	  loadApplicationState: function loadApplicationState(data) {
+	    this.applicationState = data;
 	  },
 	
 	  writeEventsToDevice: function writeEventsToDevice(data) {
@@ -33971,6 +33980,159 @@
 
 /***/ },
 /* 512 */
+/*!**********************************************!*\
+  !*** ./src/js/ContainerCalendarUpcoming.jsx ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 299);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 331);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 469);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
+	
+	var _ViewCalendarUpcoming = __webpack_require__(/*! ./ViewCalendarUpcoming.jsx */ 513);
+	
+	var _ViewCalendarUpcoming2 = _interopRequireDefault(_ViewCalendarUpcoming);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// This generates ContainerApplication, which passes the store's state onto Application, its child component.
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    data: state.data
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    loadDataIntoStateMachine: function loadDataIntoStateMachine(data) {
+	      dispatch((0, _StateMachineDefinitions.loadData)(data));
+	    }
+	  };
+	};
+	
+	var ContainerCalendarUpcoming = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_ViewCalendarUpcoming2.default);
+	
+	exports.default = ContainerCalendarUpcoming;
+
+/***/ },
+/* 513 */
+/*!*****************************************!*\
+  !*** ./src/js/ViewCalendarUpcoming.jsx ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 299);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _ViewCalendarEvent = __webpack_require__(/*! ./ViewCalendarEvent.jsx */ 509);
+	
+	var _ViewCalendarEvent2 = _interopRequireDefault(_ViewCalendarEvent);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ViewCalendarUpcoming = _react2.default.createClass({
+	  displayName: 'ViewCalendarUpcoming',
+	
+	  getUpcomingEvents: function getUpcomingEvents(numberOfEventsToGet) {
+	    var year = this.props.year;
+	    var month = this.props.month;
+	    var day = this.props.day;
+	
+	    // Don't forget month is zero-indexed for Date().
+	    var thisDate = new Date(year, month - 1, day);
+	
+	    var data = this.props.data;
+	    var eventsForThisMonthAndTheNext = [];
+	    var upcomingEvents = [];
+	
+	    // Look in the state for data for the currently displayed month
+	    if (data.length > 0) {
+	      for (var i = 0, length = data.length; i < length; i++) {
+	        if (data[i].year == year && (data[i].month == month || data[i].month == month + 1)) {
+	          eventsForThisMonthAndTheNext = eventsForThisMonthAndTheNext.concat(data[i].events);
+	        }
+	      }
+	    }
+	
+	    if (eventsForThisMonthAndTheNext.length > 0) {
+	      $.each(eventsForThisMonthAndTheNext, function (i, event) {
+	        // See calendar-functions.js
+	        var eventYear = event.t_start.getYear();
+	        var eventMonth = event.t_start.getMonth();
+	        var eventDay = event.t_start.getDay();
+	
+	        // Don't forget month is zero-indexed for Date().
+	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
+	
+	        if (eventDate.getTime() >= thisDate.getTime() && upcomingEvents.length < numberOfEventsToGet) {
+	          upcomingEvents.push(event);
+	        }
+	      });
+	    }
+	
+	    return upcomingEvents;
+	  },
+	
+	  render: function render() {
+	    // Return all events for this day
+	    var upcomingEvents = this.getUpcomingEvents(5);
+	    var viewUpcomingEvents = [];
+	
+	    // Don't forget month is zero-indexed for Date().
+	    var today = new Date();
+	    today.setHours(0, 0, 0, 0);
+	
+	    if (upcomingEvents.length > 0) {
+	      for (var i = 0, len = upcomingEvents.length; i < len; i++) {
+	        var event = upcomingEvents[i];
+	
+	        viewUpcomingEvents.push(_react2.default.createElement(_ViewCalendarEvent2.default, {
+	          key: i,
+	          id: event.id,
+	          category: event.category,
+	          title: event.summary,
+	          tStart: event.t_start,
+	          tEnd: event.t_end,
+	          description: event.description
+	        }));
+	      }
+	    }
+	
+	    return _react2.default.createElement(
+	      'div',
+	      { id: 'dayView' },
+	      viewUpcomingEvents
+	    );
+	  }
+	
+	});
+	
+	exports.default = ViewCalendarUpcoming;
+
+/***/ },
+/* 514 */
 /*!*********************************!*\
   !*** ./src/js/ViewSettings.jsx ***!
   \*********************************/
@@ -34018,7 +34180,7 @@
 	exports.default = ViewSettings;
 
 /***/ },
-/* 513 */
+/* 515 */
 /*!*********************************!*\
   !*** ./src/js/ViewControls.jsx ***!
   \*********************************/
@@ -34114,29 +34276,21 @@
 	            { key: '1', id: 'ctrl-left-button' },
 	            _react2.default.createElement(
 	              'span',
-	              { onClick: exitDayMode },
-	              "◀︎ " + monthNumber(previousMonthNumber(this.props.month) - 1).substring(0, 3)
+	              { className: 'menu-button-back', onClick: exitDayMode },
+	              _react2.default.createElement('img', { src: 'img/controls_arrow_left.png', alt: 'Back' })
 	            )
 	          ));
 	          titleBar.push(_react2.default.createElement(
 	            'div',
 	            { key: '2', id: 'ctrl-title-bar' },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'FÉÉCUM'
-	            )
+	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'FÉÉCUM' })
 	          ));
 	          break;
 	        default:
 	          titleBar.push(_react2.default.createElement(
 	            'div',
 	            { key: '2', id: 'ctrl-title-bar' },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'FÉÉCUM'
-	            )
+	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'FÉÉCUM' })
 	          ));
 	      }
 	
@@ -34156,7 +34310,7 @@
 	exports.default = ViewControls;
 
 /***/ },
-/* 514 */
+/* 516 */
 /*!**************************************!*\
   !*** ./~/fastclick/lib/fastclick.js ***!
   \**************************************/

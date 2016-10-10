@@ -1,7 +1,8 @@
-import React                  from 'react';
-import ContainerCalendarMonth from './ContainerCalendarMonth.jsx';
-import ContainerCalendarDay   from './ContainerCalendarDay.jsx';
-import { VIEW_STATE }         from './StateMachineDefinitions.js';
+import React                     from 'react';
+import ContainerCalendarMonth    from './ContainerCalendarMonth.jsx';
+import ContainerCalendarDay      from './ContainerCalendarDay.jsx';
+import ContainerCalendarUpcoming from './ContainerCalendarUpcoming.jsx';
+import { VIEW_STATE }            from './StateMachineDefinitions.js';
 
 var ViewCalendar = React.createClass({
   render: function()
@@ -12,7 +13,7 @@ var ViewCalendar = React.createClass({
     var today = today.getDate();
 
     var calendarPages = [];
-    var todayInBrief  = [];
+    var upcomingEvents  = [];
 
     if (this.props.viewMode == 'calendar-month')
     {
@@ -25,19 +26,18 @@ var ViewCalendar = React.createClass({
 
       var title    = "Prochains évènements";
       var subtitle = "Plus tard aujourd'hui";
-      //
 
-      todayInBrief.push(<span key={1} className="title">{title}</span>);
-      todayInBrief.push(<span key={2} className="subtitle">{subtitle}</span>);
+      upcomingEvents.push(<span key={1} className="title">{title}</span>);
+      upcomingEvents.push(<span key={2} className="subtitle">{subtitle}</span>);
 
-      todayInBrief.push(<ContainerCalendarDay
-                           key={3}
-                           year={year}
-                           month={month}
-                           day={leadingZeros(today)}
-                           viewMode={VIEW_STATE.CALENDAR_DAY}
-                           class="day"
-                         />);
+      upcomingEvents.push(<ContainerCalendarUpcoming
+                            key={3}
+                            year={year}
+                            month={month}
+                            day={leadingZeros(today)}
+                            viewMode={VIEW_STATE.CALENDAR_DAY}
+                            class="day"
+                          />);
     }
     if (this.props.viewMode == 'calendar-day')
     {
@@ -57,8 +57,8 @@ var ViewCalendar = React.createClass({
           <span className="year-label">{this.props.year}</span>
           {calendarPages}
         </time>
-        <div id="view-today-in-brief">
-          {todayInBrief}
+        <div id="view-upcoming-events">
+          {upcomingEvents}
         </div>
       </div>
     );

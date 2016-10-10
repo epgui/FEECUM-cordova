@@ -6,6 +6,7 @@ var ViewCalendarMonth = React.createClass(
 {
   componentDidMount: function()
   {
+    DataLoader.loadApplicationState(this.props.data);
     DataLoader.loadEvents(this.props.year, this.props.month, this.props.loadDataIntoStateMachine);
   },
   componentWillUnmount: function()

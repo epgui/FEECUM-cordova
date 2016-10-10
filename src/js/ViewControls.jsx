@@ -48,19 +48,21 @@ class ViewControls extends React.Component
       case VIEW_STATE.CALENDAR_DAY:
         leftButton.push(
           <div key="1" id="ctrl-left-button">
-            <span onClick={exitDayMode}>{"◀︎ " + monthNumber(previousMonthNumber(this.props.month) - 1).substring(0,3)}</span>
+            <span className="menu-button-back" onClick={exitDayMode}>
+              <img src="img/controls_arrow_left.png" alt="Back" />
+            </span>
           </div>
         );
         titleBar.push(
           <div key="2" id="ctrl-title-bar">
-            <h1>FÉÉCUM</h1>
+            <img src="img/FEECUM_header.png" alt="FÉÉCUM" />
           </div>
         );
         break;
       default:
         titleBar.push(
           <div key="2" id="ctrl-title-bar">
-            <h1>FÉÉCUM</h1>
+            <img src="img/FEECUM_header.png" alt="FÉÉCUM" />
           </div>
         );
     }

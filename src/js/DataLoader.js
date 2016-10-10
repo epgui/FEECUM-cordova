@@ -70,8 +70,12 @@ var DataLoader = {
     });
   },
 
-  abortConnection: function() {
-    this.serverRequest.abort();
+  abortConnection: function()
+  {
+    if ("serverRequest" in this)
+    {
+      this.serverRequest.abort();
+    }
   },
 
   loadEventsFromDevice: function(year, month)
@@ -106,8 +110,35 @@ var DataLoader = {
       calMonth: month
     };
 
+    this.eraseEventsFromDevice(year, month)
     this.writeEventsToDevice(data);
-    this.loadDataIntoStateMachine(data);
+
+    if (this.applicationState.length > 0)
+    {
+      var stateNeedsUpdating = false;
+
+      for (var i = 0, len = this.applicationState.length; i < len; i++)
+      {
+        var entry = this.applicationState[i];
+
+        console.log("entry.month: " + entry.month);
+        console.log("entry.year: " + entry.year);
+
+        if ((entry.year != year) || (entry.month != month))
+        {
+          this.loadDataIntoStateMachine(data);
+        }
+      }
+    }
+    else
+    {
+      this.loadDataIntoStateMachine(data);
+    }
+  },
+
+  loadApplicationState: function(data)
+  {
+    this.applicationState = data;
   },
 
   writeEventsToDevice: function(data)
