@@ -61,6 +61,19 @@ var ViewCalendarDay = React.createClass(
     // Return all events for this day
     var eventsForThisDate = this.filterEventsForThisDate();
 
+    // Don't forget month is zero-indexed for Date().
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    var dayClass = "";
+
+    // Add class if day has events
+    dayClass += (eventsForThisDate.length > 0) ? " has-events" : "";
+
+    // Add class if day is today
+    dayClass += ((today.getFullYear()  == this.props.year)  &&
+                 (today.getMonth() == this.props.month - 1) &&
+                 (today.getDate()  == this.props.day)) ? " today" : "";
 
     if (this.props.viewMode == VIEW_STATE.CALENDAR_MONTH)
     {
@@ -72,13 +85,9 @@ var ViewCalendarDay = React.createClass(
               className={this.props.class}
               onClick={viewEventsForThisDate}>
 
-          <span className="day-label">
-            {this.props.day}
-          </span>
-
-          <span className="day-label">
-            {JSON.stringify(eventsForThisDate)}
-          </span>
+            <span className={"day-label" + dayClass}>
+              {parseInt(this.props.day)}
+            </span>
 
         </time>
       );
@@ -110,7 +119,6 @@ var ViewCalendarDay = React.createClass(
 
       return (
         <div id="dayView">
-          <h2>{formattedDateTime}</h2>
           {viewEventsForThisDate}
         </div>
       );

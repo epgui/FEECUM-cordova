@@ -1,4 +1,6 @@
 {
     "EventKit.framework": 1,
-    "EventKitUI.framework": 1
+    "EventKitUI.framework": 1,
+    "SystemConfiguration.framework": 1,
+    "CoreTelephony.framework": 1
 }

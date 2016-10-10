@@ -18,6 +18,11 @@
 		DD290D88015A41CF988EB54E /* Calendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F49A5E53542589A9C4153 /* Calendar.m */; };
 		41429C233DF843B5AB55409B /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D498DB42754E4C1AB1CF5635 /* EventKit.framework */; };
 		7289AA93EEC34D3CB21DECD5 /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B50E04BA6B6448DDBA8ECC6C /* EventKitUI.framework */; };
+		3508D4366FDF4BD9B894831B /* CDVStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E7AE228B05E5480F8ED27953 /* CDVStatusBar.m */; };
+		38E8F465D93341319AB60E2D /* CDVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 489131EAD2D9461780FC61D4 /* CDVConnection.m */; };
+		85F665B57D8E447C99D351DC /* CDVReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABA4A2301B4C5F930B71F8 /* CDVReachability.m */; };
+		3F663D09AC514C32AD0BBAB0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124994E95E3744548C96B26B /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A35E7B4C237E448FBB123E09 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869B3AB716FF418B8C268A86 /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +66,14 @@
 		130975D020FF486C9851ADE8 /* Calendar.h */ = {isa = PBXFileReference; name = "Calendar.h"; path = "cordova-plugin-calendar/Calendar.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		D498DB42754E4C1AB1CF5635 /* EventKit.framework */ = {isa = PBXFileReference; name = "EventKit.framework"; path = "System/Library/Frameworks/EventKit.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		B50E04BA6B6448DDBA8ECC6C /* EventKitUI.framework */ = {isa = PBXFileReference; name = "EventKitUI.framework"; path = "System/Library/Frameworks/EventKitUI.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		E7AE228B05E5480F8ED27953 /* CDVStatusBar.m */ = {isa = PBXFileReference; name = "CDVStatusBar.m"; path = "cordova-plugin-statusbar/CDVStatusBar.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		13CB4AD33C0946A68E3DD907 /* CDVStatusBar.h */ = {isa = PBXFileReference; name = "CDVStatusBar.h"; path = "cordova-plugin-statusbar/CDVStatusBar.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		489131EAD2D9461780FC61D4 /* CDVConnection.m */ = {isa = PBXFileReference; name = "CDVConnection.m"; path = "cordova-plugin-network-information/CDVConnection.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		09ABA4A2301B4C5F930B71F8 /* CDVReachability.m */ = {isa = PBXFileReference; name = "CDVReachability.m"; path = "cordova-plugin-network-information/CDVReachability.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		F3376D72E6B94BA68BDE19CD /* CDVConnection.h */ = {isa = PBXFileReference; name = "CDVConnection.h"; path = "cordova-plugin-network-information/CDVConnection.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		6A75C82DF10C45BEA4114D75 /* CDVReachability.h */ = {isa = PBXFileReference; name = "CDVReachability.h"; path = "cordova-plugin-network-information/CDVReachability.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		124994E95E3744548C96B26B /* SystemConfiguration.framework */ = {isa = PBXFileReference; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		869B3AB716FF418B8C268A86 /* CoreTelephony.framework */ = {isa = PBXFileReference; name = "CoreTelephony.framework"; path = "System/Library/Frameworks/CoreTelephony.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +84,8 @@
 				301BF552109A68D80062928A /* libCordova.a in Frameworks */,
 				41429C233DF843B5AB55409B /* EventKit.framework in Frameworks */,
 				7289AA93EEC34D3CB21DECD5 /* EventKitUI.framework in Frameworks */,
+				3F663D09AC514C32AD0BBAB0 /* SystemConfiguration.framework in Frameworks */,
+				A35E7B4C237E448FBB123E09 /* CoreTelephony.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +157,8 @@
 			children = (
 				D498DB42754E4C1AB1CF5635 /* EventKit.framework */,
 				B50E04BA6B6448DDBA8ECC6C /* EventKitUI.framework */,
+				124994E95E3744548C96B26B /* SystemConfiguration.framework */,
+				869B3AB716FF418B8C268A86 /* CoreTelephony.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,6 +186,12 @@
 			children = (
 				1A2F49A5E53542589A9C4153 /* Calendar.m */,
 				130975D020FF486C9851ADE8 /* Calendar.h */,
+				E7AE228B05E5480F8ED27953 /* CDVStatusBar.m */,
+				13CB4AD33C0946A68E3DD907 /* CDVStatusBar.h */,
+				489131EAD2D9461780FC61D4 /* CDVConnection.m */,
+				09ABA4A2301B4C5F930B71F8 /* CDVReachability.m */,
+				F3376D72E6B94BA68BDE19CD /* CDVConnection.h */,
+				6A75C82DF10C45BEA4114D75 /* CDVReachability.h */,
 			);
 			name = Plugins;
 			path = "HelloCordova/Plugins";
@@ -281,6 +304,9 @@
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
 				DD290D88015A41CF988EB54E /* Calendar.m in Sources */,
+				3508D4366FDF4BD9B894831B /* CDVStatusBar.m in Sources */,
+				38E8F465D93341319AB60E2D /* CDVConnection.m in Sources */,
+				85F665B57D8E447C99D351DC /* CDVReachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,7 +32,7 @@ function monthNumber(month)
 
 function leadingZeros(number)
 {
-  return ('0'  + parseInt(number)).slice(-2);
+  return ('0' + parseInt(number)).slice(-2);
 }
 
 function previousMonthNumber(monthNumber)

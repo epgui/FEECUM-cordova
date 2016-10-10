@@ -1,71 +1,16 @@
 import React            from 'react';
 import ViewCalendarWeek from './ViewCalendarWeek.jsx';
+import DataLoader       from './DataLoader.js';
 
 var ViewCalendarMonth = React.createClass(
 {
-  loadEventsFromServer: function()
-  {
-    var year   = this.props.year;
-    var month  = this.props.month;
-    var apiURL = "http://feecum.ca/dev/backend.php?year=" + year + "&month=" + parseInt(month);
-
-    this.serverRequest = $.ajax(
-    {
-      url: apiURL,
-      dataType: 'json',
-      cache: false,
-      async: true,
-      success: function(data)
-      {
-
-        var recordAlreadyExists = false;
-
-        for (var i = 0, len = this.props.data.length; i < len; i++)
-        {
-          if ((year == this.props.data[i].year) && (month == this.props.data[i].month))
-          {
-            recordAlreadyExists = true;
-
-            // Eventually, check to see if records need updating here.
-          }
-        }
-
-        if (recordAlreadyExists == false)
-        {
-          var newData = {
-            events: data.events,
-            calYear: year,
-            calMonth: month
-          };
-          this.props.loadDataIntoStateMachine(newData);
-        }
-
-      }.bind(this),
-      error: function(xhr, status, err)
-      {
-        console.error(apiURL, status, err.toString());
-        console.warn(xhr.responseText);
-      }.bind(this)
-    });
-  },
   componentDidMount: function()
   {
-    // Fetch data from FÉÉCUM servers
-    this.loadEventsFromServer();
-
-    // Check for new events every 10 seconds
-    // Currently unsupported by StateMachineComponents.js
-    setInterval(this.loadEventsFromServer, 10000);
-  },
-  componentDidUpdate: function()
-  {
-    // Fetch data from FÉÉCUM servers
-    this.loadEventsFromServer();
+    DataLoader.loadEvents(this.props.year, this.props.month, this.props.loadDataIntoStateMachine);
   },
   componentWillUnmount: function()
   {
-    // Cancel any outstanding requests before the component is unmounted.
-    this.serverRequest.abort();
+    DataLoader.abortConnection();
   },
   render: function()
   {
@@ -99,6 +44,15 @@ var ViewCalendarMonth = React.createClass(
     return (
       <time dateTime={year + "-" + leadingZeros(month)} className={"month " + displayClass}>
         <span className="month-label">{monthName}</span>
+        <div className="weekdays-labels">
+          <span className="weekend-label">Dim</span>
+          <span className="weekday-label">Lun</span>
+          <span className="weekday-label">Mar</span>
+          <span className="weekday-label">Mer</span>
+          <span className="weekday-label">Jeu</span>
+          <span className="weekday-label">Ven</span>
+          <span className="weekend-label">Sam</span>
+        </div>
         {calendarWeeks}
       </time>
     );

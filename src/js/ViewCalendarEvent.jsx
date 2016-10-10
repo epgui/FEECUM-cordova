@@ -69,13 +69,13 @@ var ViewCalendarEvent = React.createClass(
 
     return(
       <li className="event-container" id={"eventID-" + this.props.id}>
-        <span className="event-category">{this.props.category}</span>
-        <span className="event-title">{this.props.title}</span>
         <span className="event-time">
           <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
         </span>
+        <span className="event-title">{this.props.title}</span>
+        <span className="event-category">{this.props.category}</span>
         <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
-        <span className="button add-event" onClick={addToCalendar}>Ajouter à mon calendrier</span>
+        <span className="button add-event" onClick={addToCalendar}>Ajouter</span>
       </li>
     );
   }

@@ -32909,10 +32909,6 @@
 	
 	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
 	
-	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 511);
-	
-	var _ViewEvent2 = _interopRequireDefault(_ViewEvent);
-	
 	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 512);
 	
 	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
@@ -32952,6 +32948,7 @@
 	            key: 1,
 	            year: this.props.setTime.calYear,
 	            month: this.props.setTime.calMonth,
+	            day: this.props.setTime.viewDay,
 	            viewMode: this.props.view
 	          }));
 	          break;
@@ -32962,13 +32959,6 @@
 	            month: this.props.setTime.calMonth,
 	            day: this.props.setTime.viewDay,
 	            viewMode: this.props.view
-	          }));
-	          break;
-	        case _StateMachineDefinitions.VIEW_STATE.EVENT_DETAILS:
-	          views.push(_react2.default.createElement(_ViewEvent2.default, {
-	            key: 3,
-	            eventData: null,
-	            isElementHidden: true
 	          }));
 	          break;
 	        case _StateMachineDefinitions.VIEW_STATE.SETTINGS_PANEL:
@@ -32990,7 +32980,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'interface' },
-	        controls,
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'header' },
+	          controls
+	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { id: 'views' },
@@ -33030,6 +33024,8 @@
 	
 	var _ContainerCalendarDay2 = _interopRequireDefault(_ContainerCalendarDay);
 	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ViewCalendar = _react2.default.createClass({
@@ -33038,8 +33034,11 @@
 	  render: function render() {
 	    var year = this.props.year;
 	    var month = this.props.month;
+	    var today = new Date();
+	    var today = today.getDate();
 	
 	    var calendarPages = [];
+	    var todayInBrief = [];
 	
 	    if (this.props.viewMode == 'calendar-month') {
 	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
@@ -33047,6 +33046,30 @@
 	        year: year,
 	        month: month,
 	        viewMode: this.props.viewMode
+	      }));
+	
+	      var title = "Prochains évènements";
+	      var subtitle = "Plus tard aujourd'hui";
+	      //
+	
+	      todayInBrief.push(_react2.default.createElement(
+	        'span',
+	        { key: 1, className: 'title' },
+	        title
+	      ));
+	      todayInBrief.push(_react2.default.createElement(
+	        'span',
+	        { key: 2, className: 'subtitle' },
+	        subtitle
+	      ));
+	
+	      todayInBrief.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
+	        key: 3,
+	        year: year,
+	        month: month,
+	        day: leadingZeros(today),
+	        viewMode: _StateMachineDefinitions.VIEW_STATE.CALENDAR_DAY,
+	        'class': 'day'
 	      }));
 	    }
 	    if (this.props.viewMode == 'calendar-day') {
@@ -33061,9 +33084,23 @@
 	    }
 	
 	    return _react2.default.createElement(
-	      'time',
-	      { dateTime: year, className: 'year' },
-	      calendarPages
+	      'div',
+	      { id: 'view-calendar' },
+	      _react2.default.createElement(
+	        'time',
+	        { dateTime: year, className: 'year' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'year-label' },
+	          this.props.year
+	        ),
+	        calendarPages
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { id: 'view-today-in-brief' },
+	        todayInBrief
+	      )
 	    );
 	  }
 	});
@@ -33140,63 +33177,24 @@
 	
 	var _ViewCalendarWeek2 = _interopRequireDefault(_ViewCalendarWeek);
 	
+	var _DataLoader = __webpack_require__(/*! ./DataLoader.js */ 511);
+	
+	var _DataLoader2 = _interopRequireDefault(_DataLoader);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ViewCalendarMonth = _react2.default.createClass({
 	  displayName: 'ViewCalendarMonth',
 	
-	  loadEventsFromServer: function loadEventsFromServer() {
-	    var year = this.props.year;
-	    var month = this.props.month;
-	    var apiURL = "http://feecum.ca/dev/backend.php?year=" + year + "&month=" + parseInt(month);
-	
-	    this.serverRequest = $.ajax({
-	      url: apiURL,
-	      dataType: 'json',
-	      cache: false,
-	      async: true,
-	      success: function (data) {
-	
-	        var recordAlreadyExists = false;
-	
-	        for (var i = 0, len = this.props.data.length; i < len; i++) {
-	          if (year == this.props.data[i].year && month == this.props.data[i].month) {
-	            recordAlreadyExists = true;
-	
-	            // Eventually, check to see if records need updating here.
-	          }
-	        }
-	
-	        if (recordAlreadyExists == false) {
-	          var newData = {
-	            events: data.events,
-	            calYear: year,
-	            calMonth: month
-	          };
-	          this.props.loadDataIntoStateMachine(newData);
-	        }
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(apiURL, status, err.toString());
-	        console.warn(xhr.responseText);
-	      }.bind(this)
-	    });
-	  },
 	  componentDidMount: function componentDidMount() {
-	    // Fetch data from FÉÉCUM servers
-	    this.loadEventsFromServer();
-	
-	    // Check for new events every 10 seconds
-	    // Currently unsupported by StateMachineComponents.js
-	    setInterval(this.loadEventsFromServer, 10000);
+	    _DataLoader2.default.loadEvents(this.props.year, this.props.month, this.props.loadDataIntoStateMachine);
 	  },
 	  componentDidUpdate: function componentDidUpdate() {
-	    // Fetch data from FÉÉCUM servers
-	    this.loadEventsFromServer();
+	    console.log("DataLoader.serverRequest: " + _DataLoader2.default.serverRequest);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    // Cancel any outstanding requests before the component is unmounted.
-	    this.serverRequest.abort();
+	    // this.serverRequest.abort();
 	  },
 	  render: function render() {
 	    var year = this.props.year;
@@ -33232,6 +33230,45 @@
 	        { className: 'month-label' },
 	        monthName
 	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'weekdays-labels' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekend-label' },
+	          'Dim'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Lun'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Mar'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Mer'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Jeu'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Ven'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekend-label' },
+	          'Sam'
+	        )
+	      ),
 	      calendarWeeks
 	    );
 	  }
@@ -33266,6 +33303,7 @@
 	  displayName: 'ViewCalendarWeek',
 	
 	  render: function render() {
+	    var weekdayClass = ["weekend", "weekday", "weekday", "weekday", "weekday", "weekday", "weekend"];
 	    var firstDay = new Date(this.props.year, this.props.month - 1, 1);
 	    var weeksInMonth = firstDay.countWeeksOfMonth();
 	    var indexOfFirstWeek = firstDay.getWeekNumber();
@@ -33286,7 +33324,7 @@
 	          month: leadingZeros(previousMonthNumber(this.props.month)),
 	          day: leadingZeros(dayNumber),
 	          viewMode: this.props.viewMode,
-	          'class': 'day previous-month'
+	          'class': "day previous-month " + weekdayClass[i]
 	        }));
 	      }
 	      // For the last calendar week of the month
@@ -33299,7 +33337,7 @@
 	            month: leadingZeros(nextMonthNumber(this.props.month)),
 	            day: leadingZeros(dayNumber),
 	            viewMode: this.props.viewMode,
-	            'class': 'day next-month'
+	            'class': "day next-month " + weekdayClass[i]
 	          }));
 	        }
 	        // For all other weeks of the month
@@ -33312,7 +33350,7 @@
 	              month: leadingZeros(this.props.month),
 	              day: leadingZeros(dayNumber),
 	              viewMode: this.props.viewMode,
-	              'class': 'day'
+	              'class': "day " + weekdayClass[i]
 	            }));
 	          }
 	    }
@@ -33458,6 +33496,18 @@
 	    // Return all events for this day
 	    var eventsForThisDate = this.filterEventsForThisDate();
 	
+	    // Don't forget month is zero-indexed for Date().
+	    var today = new Date();
+	    today.setHours(0, 0, 0, 0);
+	
+	    var dayClass = "";
+	
+	    // Add class if day has events
+	    dayClass += eventsForThisDate.length > 0 ? " has-events" : "";
+	
+	    // Add class if day is today
+	    dayClass += today.getFullYear() == this.props.year && today.getMonth() == this.props.month - 1 && today.getDate() == this.props.day ? " today" : "";
+	
 	    if (this.props.viewMode == _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH) {
 	      // Fetch action passed down from props
 	      var viewEventsForThisDate = function viewEventsForThisDate() {
@@ -33471,13 +33521,8 @@
 	          onClick: viewEventsForThisDate },
 	        _react2.default.createElement(
 	          'span',
-	          { className: 'day-label' },
-	          this.props.day
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'day-label' },
-	          JSON.stringify(eventsForThisDate)
+	          { className: "day-label" + dayClass },
+	          parseInt(this.props.day)
 	        )
 	      );
 	    }
@@ -33508,11 +33553,6 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'dayView' },
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          formattedDateTime
-	        ),
 	        viewEventsForThisDate
 	      );
 	    }
@@ -33600,16 +33640,6 @@
 	      { className: 'event-container', id: "eventID-" + this.props.id },
 	      _react2.default.createElement(
 	        'span',
-	        { className: 'event-category' },
-	        this.props.category
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        { className: 'event-title' },
-	        this.props.title
-	      ),
-	      _react2.default.createElement(
-	        'span',
 	        { className: 'event-time' },
 	        _react2.default.createElement(
 	          'span',
@@ -33623,11 +33653,21 @@
 	          eventEndTime
 	        )
 	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-title' },
+	        this.props.title
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-category' },
+	        this.props.category
+	      ),
 	      _react2.default.createElement('p', { className: 'event-description', dangerouslySetInnerHTML: this.formatHTML(this.props.description) }),
 	      _react2.default.createElement(
 	        'span',
 	        { className: 'button add-event', onClick: addToCalendar },
-	        'Ajouter à mon calendrier'
+	        'Ajouter'
 	      )
 	    );
 	  }
@@ -33782,50 +33822,152 @@
 /***/ },
 /* 511 */
 /*!******************************!*\
-  !*** ./src/js/ViewEvent.jsx ***!
+  !*** ./src/js/DataLoader.js ***!
   \******************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	var DataLoader = {
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	  connectionState: function connectionState() {
+	    // This uses the cordova-plugin-network-information plugin.
+	    var networkState = navigator.connection.type;
 	
-	var _react = __webpack_require__(/*! react */ 299);
+	    var states = {};
+	    states[Connection.UNKNOWN] = 'Unknown connection';
+	    states[Connection.ETHERNET] = 'Ethernet connection';
+	    states[Connection.WIFI] = 'WiFi connection';
+	    states[Connection.CELL_2G] = 'Cell 2G connection';
+	    states[Connection.CELL_3G] = 'Cell 3G connection';
+	    states[Connection.CELL_4G] = 'Cell 4G connection';
+	    states[Connection.CELL] = 'Cell generic connection';
+	    states[Connection.NONE] = 'No network connection';
 	
-	var _react2 = _interopRequireDefault(_react);
+	    return states[networkState];
+	  },
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	  loadEvents: function loadEvents(year, month, loadDataIntoStateMachine) {
+	    var loadedEvents = [];
+	    var remoteEvents = [];
+	    var deviceEvents = this.loadEventsFromDevice(year, month);
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	    // Keep scope
+	    this.loadDataIntoStateMachine = loadDataIntoStateMachine;
 	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	    console.log("this.connectionState(): " + this.connectionState());
+	    console.log("this.needsUpdating(year, month): " + this.needsUpdating(year, month));
+	    console.log("deviceEvents: " + deviceEvents);
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var ViewEvent = function (_React$Component) {
-	  _inherits(ViewEvent, _React$Component);
-	
-	  function ViewEvent() {
-	    _classCallCheck(this, ViewEvent);
-	
-	    return _possibleConstructorReturn(this, (ViewEvent.__proto__ || Object.getPrototypeOf(ViewEvent)).apply(this, arguments));
-	  }
-	
-	  _createClass(ViewEvent, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement('div', null);
+	    if (this.needsUpdating(year, month)) {
+	      switch (this.connectionState()) {
+	        case 'No network connection':
+	          this.registerEvents(deviceEvents, year, month);
+	          console.log("warning: no network connection");
+	          break;
+	        case 'Unknown connection':
+	          this.loadEventsFromServer(year, month);
+	          console.log("warning: connection status unknown");
+	          break;
+	        default:
+	          this.loadEventsFromServer(year, month);
+	          console.log("all good: device is connected");
+	      }
+	    } else {
+	      this.registerEvents(deviceEvents, year, month);
 	    }
-	  }]);
 	
-	  return ViewEvent;
-	}(_react2.default.Component);
+	    console.log("this.serverRequest: " + this.serverRequest);
+	  },
 	
-	exports.default = ViewEvent;
+	  loadEventsFromServer: function loadEventsFromServer(year, month) {
+	    var apiURL = "http://feecum.ca/dev/backend.php?year=" + year + "&month=" + parseInt(month);
+	
+	    this.serverRequest = $.ajax({
+	      url: apiURL,
+	      dataType: 'json',
+	      cache: false,
+	      async: true,
+	      success: function (data) {
+	        this.eraseEventsFromDevice(year, month);
+	        this.registerEvents(data.events, year, month);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(apiURL, status, err.toString());
+	        console.warn(xhr.responseText);
+	      }.bind(this)
+	    });
+	  },
+	
+	  abortConnection: function abortConnection() {
+	    this.serverRequest.abort();
+	  },
+	
+	  loadEventsFromDevice: function loadEventsFromDevice(year, month) {
+	    var storage = window.localStorage;
+	    var key = year + "-" + leadingZeros(month);
+	    console.log(key);
+	    console.log(JSON.parse(storage.getItem(key)));
+	
+	    return JSON.parse(storage.getItem(key));
+	  },
+	
+	  needsUpdating: function needsUpdating(year, month) {
+	    var storage = window.localStorage;
+	    var lastUpdatedKey = year + "-" + leadingZeros(month) + "-" + "lastUpdated";
+	    var timestamp = Math.floor(+new Date() / 1000);
+	
+	    console.log("lastUpdatedKey: " + lastUpdatedKey);
+	    console.log("timestamp: " + timestamp);
+	
+	    // Check if app has cached data.
+	    var appHasCachedData = storage.getItem(lastUpdatedKey) != null;
+	    console.log("appHasCachedData: " + appHasCachedData);
+	
+	    // Check if data is less than an hour old.
+	    var appHasRecentData = timestamp - storage.getItem(lastUpdatedKey) <= 216000;
+	    console.log("appHasRecentData: " + appHasRecentData);
+	
+	    // App needs updating if there is no data or if data is old.
+	    return !appHasCachedData || !appHasRecentData;
+	  },
+	
+	  registerEvents: function registerEvents(monthlyEvents, year, month) {
+	    var data = {
+	      events: monthlyEvents,
+	      calYear: year,
+	      calMonth: month
+	    };
+	
+	    this.writeEventsToDevice(data);
+	    this.loadDataIntoStateMachine(data);
+	  },
+	
+	  writeEventsToDevice: function writeEventsToDevice(data) {
+	    var storage = window.localStorage;
+	    var key = data.calYear + "-" + leadingZeros(data.calMonth);
+	    var lastUpdatedKey = key + "-" + "lastUpdated";
+	    var value = JSON.stringify(data.events);
+	    var timestamp = Math.floor(+new Date() / 1000);
+	
+	    storage.setItem(key, value);
+	    storage.setItem(lastUpdatedKey, timestamp);
+	  },
+	
+	  eraseEventsFromDevice: function eraseEventsFromDevice(year, month) {
+	    var storage = window.localStorage;
+	    var key = year + "-" + leadingZeros(month);
+	    var lastUpdatedKey = key + "-" + "lastUpdated";
+	
+	    storage.removeItem(key);
+	    storage.removeItem(lastUpdatedKey);
+	  }
+	};
+	
+	exports.default = DataLoader;
 
 /***/ },
 /* 512 */
@@ -33947,26 +34089,22 @@
 	            { key: '1', id: 'ctrl-left-button' },
 	            _react2.default.createElement(
 	              'span',
-	              { onClick: previousPage },
-	              '«'
+	              { className: 'menu-button-drawer' },
+	              _react2.default.createElement('img', { src: 'img/menu_icon.png', alt: 'Menu' })
 	            )
 	          ));
 	          titleBar.push(_react2.default.createElement(
 	            'div',
 	            { key: '2', id: 'ctrl-title-bar' },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'FÉÉCUM'
-	            )
+	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'FÉÉCUM' })
 	          ));
 	          rightButton.push(_react2.default.createElement(
 	            'div',
 	            { key: '3', id: 'ctrl-right-button' },
 	            _react2.default.createElement(
 	              'span',
-	              { onClick: nextPage },
-	              '»'
+	              { className: 'settings-button' },
+	              _react2.default.createElement('img', { src: 'img/controls_cog.png', alt: 'Settings' })
 	            )
 	          ));
 	          break;
@@ -33977,7 +34115,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              { onClick: exitDayMode },
-	              "« " + monthNumber(this.props.month).substring(0, 3)
+	              "◀︎ " + monthNumber(previousMonthNumber(this.props.month) - 1).substring(0, 3)
 	            )
 	          ));
 	          titleBar.push(_react2.default.createElement(

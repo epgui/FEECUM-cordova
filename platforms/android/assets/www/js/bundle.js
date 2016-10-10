@@ -32952,6 +32952,7 @@
 	            key: 1,
 	            year: this.props.setTime.calYear,
 	            month: this.props.setTime.calMonth,
+	            day: this.props.setTime.viewDay,
 	            viewMode: this.props.view
 	          }));
 	          break;
@@ -32990,7 +32991,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'interface' },
-	        controls,
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'header' },
+	          controls
+	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { id: 'views' },
@@ -33030,6 +33035,8 @@
 	
 	var _ContainerCalendarDay2 = _interopRequireDefault(_ContainerCalendarDay);
 	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ViewCalendar = _react2.default.createClass({
@@ -33038,8 +33045,11 @@
 	  render: function render() {
 	    var year = this.props.year;
 	    var month = this.props.month;
+	    var today = new Date();
+	    var today = today.getDate();
 	
 	    var calendarPages = [];
+	    var todayInBrief = [];
 	
 	    if (this.props.viewMode == 'calendar-month') {
 	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
@@ -33047,6 +33057,30 @@
 	        year: year,
 	        month: month,
 	        viewMode: this.props.viewMode
+	      }));
+	
+	      var title = "Prochains évènements";
+	      var subtitle = "Plus tard aujourd'hui";
+	      //
+	
+	      todayInBrief.push(_react2.default.createElement(
+	        'span',
+	        { key: 1, className: 'title' },
+	        title
+	      ));
+	      todayInBrief.push(_react2.default.createElement(
+	        'span',
+	        { key: 2, className: 'subtitle' },
+	        subtitle
+	      ));
+	
+	      todayInBrief.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
+	        key: 3,
+	        year: year,
+	        month: month,
+	        day: leadingZeros(today),
+	        viewMode: _StateMachineDefinitions.VIEW_STATE.CALENDAR_DAY,
+	        'class': 'day'
 	      }));
 	    }
 	    if (this.props.viewMode == 'calendar-day') {
@@ -33061,9 +33095,23 @@
 	    }
 	
 	    return _react2.default.createElement(
-	      'time',
-	      { dateTime: year, className: 'year' },
-	      calendarPages
+	      'div',
+	      { id: 'view-calendar' },
+	      _react2.default.createElement(
+	        'time',
+	        { dateTime: year, className: 'year' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'year-label' },
+	          this.props.year
+	        ),
+	        calendarPages
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { id: 'view-today-in-brief' },
+	        todayInBrief
+	      )
 	    );
 	  }
 	});
@@ -33232,6 +33280,45 @@
 	        { className: 'month-label' },
 	        monthName
 	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'weekdays-labels' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekend-label' },
+	          'Dim'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Lun'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Mar'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Mer'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Jeu'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekday-label' },
+	          'Ven'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'weekend-label' },
+	          'Sam'
+	        )
+	      ),
 	      calendarWeeks
 	    );
 	  }
@@ -33266,6 +33353,7 @@
 	  displayName: 'ViewCalendarWeek',
 	
 	  render: function render() {
+	    var weekdayClass = ["weekend", "weekday", "weekday", "weekday", "weekday", "weekday", "weekend"];
 	    var firstDay = new Date(this.props.year, this.props.month - 1, 1);
 	    var weeksInMonth = firstDay.countWeeksOfMonth();
 	    var indexOfFirstWeek = firstDay.getWeekNumber();
@@ -33286,7 +33374,7 @@
 	          month: leadingZeros(previousMonthNumber(this.props.month)),
 	          day: leadingZeros(dayNumber),
 	          viewMode: this.props.viewMode,
-	          'class': 'day previous-month'
+	          'class': "day previous-month " + weekdayClass[i]
 	        }));
 	      }
 	      // For the last calendar week of the month
@@ -33299,7 +33387,7 @@
 	            month: leadingZeros(nextMonthNumber(this.props.month)),
 	            day: leadingZeros(dayNumber),
 	            viewMode: this.props.viewMode,
-	            'class': 'day next-month'
+	            'class': "day next-month " + weekdayClass[i]
 	          }));
 	        }
 	        // For all other weeks of the month
@@ -33312,7 +33400,7 @@
 	              month: leadingZeros(this.props.month),
 	              day: leadingZeros(dayNumber),
 	              viewMode: this.props.viewMode,
-	              'class': 'day'
+	              'class': "day " + weekdayClass[i]
 	            }));
 	          }
 	    }
@@ -33458,6 +33546,25 @@
 	    // Return all events for this day
 	    var eventsForThisDate = this.filterEventsForThisDate();
 	
+	    // Don't forget month is zero-indexed for Date().
+	    var today = new Date();
+	    today.setHours(0, 0, 0, 0);
+	
+	    var dayClass = "";
+	
+	    // Add class if day has events
+	    dayClass += eventsForThisDate.length > 0 ? " has-events" : "";
+	
+	    console.log("this.props.year == " + this.props.year);
+	    console.log("today.getFullYear() == " + today.getFullYear());
+	    console.log(today.getFullYear() == this.props.year);
+	    console.log(today.getMonth() == this.props.month - 1);
+	    console.log(today.getDate() == this.props.day);
+	    console.log(".");
+	
+	    // Add class if day is today
+	    dayClass += today.getFullYear() == this.props.year && today.getMonth() == this.props.month - 1 && today.getDate() == this.props.day ? " today" : "";
+	
 	    if (this.props.viewMode == _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH) {
 	      // Fetch action passed down from props
 	      var viewEventsForThisDate = function viewEventsForThisDate() {
@@ -33471,13 +33578,8 @@
 	          onClick: viewEventsForThisDate },
 	        _react2.default.createElement(
 	          'span',
-	          { className: 'day-label' },
-	          this.props.day
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'day-label' },
-	          JSON.stringify(eventsForThisDate)
+	          { className: "day-label" + dayClass },
+	          parseInt(this.props.day)
 	        )
 	      );
 	    }
@@ -33508,11 +33610,6 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'dayView' },
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          formattedDateTime
-	        ),
 	        viewEventsForThisDate
 	      );
 	    }
@@ -33600,16 +33697,6 @@
 	      { className: 'event-container', id: "eventID-" + this.props.id },
 	      _react2.default.createElement(
 	        'span',
-	        { className: 'event-category' },
-	        this.props.category
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        { className: 'event-title' },
-	        this.props.title
-	      ),
-	      _react2.default.createElement(
-	        'span',
 	        { className: 'event-time' },
 	        _react2.default.createElement(
 	          'span',
@@ -33623,11 +33710,21 @@
 	          eventEndTime
 	        )
 	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-title' },
+	        this.props.title
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { className: 'event-category' },
+	        this.props.category
+	      ),
 	      _react2.default.createElement('p', { className: 'event-description', dangerouslySetInnerHTML: this.formatHTML(this.props.description) }),
 	      _react2.default.createElement(
 	        'span',
 	        { className: 'button add-event', onClick: addToCalendar },
-	        'Ajouter à mon calendrier'
+	        'Ajouter'
 	      )
 	    );
 	  }
@@ -33947,26 +34044,22 @@
 	            { key: '1', id: 'ctrl-left-button' },
 	            _react2.default.createElement(
 	              'span',
-	              { onClick: previousPage },
-	              '«'
+	              { className: 'menu-button-drawer' },
+	              _react2.default.createElement('img', { src: 'img/menu_icon.png', alt: 'Menu' })
 	            )
 	          ));
 	          titleBar.push(_react2.default.createElement(
 	            'div',
 	            { key: '2', id: 'ctrl-title-bar' },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'FÉÉCUM'
-	            )
+	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'FÉÉCUM' })
 	          ));
 	          rightButton.push(_react2.default.createElement(
 	            'div',
 	            { key: '3', id: 'ctrl-right-button' },
 	            _react2.default.createElement(
 	              'span',
-	              { onClick: nextPage },
-	              '»'
+	              { className: 'settings-button' },
+	              _react2.default.createElement('img', { src: 'img/controls_cog.png', alt: 'Settings' })
 	            )
 	          ));
 	          break;
@@ -33977,7 +34070,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              { onClick: exitDayMode },
-	              "« " + monthNumber(this.props.month).substring(0, 3)
+	              "◀︎ " + monthNumber(previousMonthNumber(this.props.month) - 1).substring(0, 3)
 	            )
 	          ));
 	          titleBar.push(_react2.default.createElement(

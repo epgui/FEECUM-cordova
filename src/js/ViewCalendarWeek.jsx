@@ -5,6 +5,7 @@ var ViewCalendarWeek = React.createClass(
 {
   render: function()
   {
+    var weekdayClass     = ["weekend", "weekday", "weekday", "weekday", "weekday", "weekday", "weekend"];
     var firstDay         = new Date(this.props.year, this.props.month - 1, 1);
     var weeksInMonth     = firstDay.countWeeksOfMonth();
     var indexOfFirstWeek = firstDay.getWeekNumber();
@@ -27,7 +28,7 @@ var ViewCalendarWeek = React.createClass(
                         month={leadingZeros(previousMonthNumber(this.props.month))}
                         day={leadingZeros(dayNumber)}
                         viewMode={this.props.viewMode}
-                        class="day previous-month"
+                        class={"day previous-month " + weekdayClass[i]}
                       />);
       }
       // For the last calendar week of the month
@@ -41,7 +42,7 @@ var ViewCalendarWeek = React.createClass(
                         month={leadingZeros(nextMonthNumber(this.props.month))}
                         day={leadingZeros(dayNumber)}
                         viewMode={this.props.viewMode}
-                        class="day next-month"
+                        class={"day next-month " + weekdayClass[i]}
                       />);
       }
       // For all other weeks of the month
@@ -55,7 +56,7 @@ var ViewCalendarWeek = React.createClass(
                         month={leadingZeros(this.props.month)}
                         day={leadingZeros(dayNumber)}
                         viewMode={this.props.viewMode}
-                        class="day"
+                        class={"day " + weekdayClass[i]}
                       />);
       }
     }
