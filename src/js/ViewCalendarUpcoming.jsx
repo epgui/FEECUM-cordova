@@ -54,18 +54,38 @@ var ViewCalendarUpcoming = React.createClass(
   render: function()
   {
     // Return all events for this day
-    var upcomingEvents     = this.getUpcomingEvents(5);
-    var viewUpcomingEvents = [];
+    var numberOfEventsToGet = 5;
+    var upcomingEvents      = this.getUpcomingEvents(numberOfEventsToGet);
+    var viewUpcomingEvents  = [];
 
     // Don't forget month is zero-indexed for Date().
     var today = new Date();
     today.setHours(0, 0, 0, 0);
+
+    var dateIndex = today;
 
     if (upcomingEvents.length > 0)
     {
       for (var i = 0, len = upcomingEvents.length; i < len; i++)
       {
         var event = upcomingEvents[i];
+
+        // See calendar-functions.js
+        var eventYear  = event.t_start.getYear();
+        var eventMonth = event.t_start.getMonth();
+        var eventDay   = event.t_start.getDay();
+        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
+        eventDate.setHours(0, 0, 0, 0);
+
+        if (eventDate > dateIndex)
+        {
+          var weekDay  = dayNumber(eventDate.getDay()).capitalizeFirstLetter();
+          var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth() - 1) + " " + eventDate.getFullYear();
+
+          viewUpcomingEvents.push(<span key={i+numberOfEventsToGet} className="subtitle">{subtitle}</span>);
+
+          dateIndex = eventDate;
+        }
 
         viewUpcomingEvents.push(<ViewCalendarEvent
                               key={i}

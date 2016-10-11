@@ -33035,6 +33035,29 @@
 	var ViewCalendar = _react2.default.createClass({
 	  displayName: 'ViewCalendar',
 	
+	  pan: function pan() {
+	    console.log("panned");
+	  },
+	
+	  componentDidMount: function componentDidMount() {
+	    this.touchControl = new Hammer.Manager(document.getElementById("view-calendar"));
+	    this.touchControl.add(new Hammer.Pan({
+	      event: 'pan',
+	      pointers: 0,
+	      threshold: 0,
+	      direction: Hammer.DIRECTION_HORIZONTAL
+	    }));
+	    this.touchControl.get('pan').set({ enable: true });
+	
+	    this.touchControl.on("panleft panright tap press", function (ev) {
+	      console.log(ev.type + " gesture detected.");
+	    });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.touchControl.off('pan', this.pan);
+	  },
+	
 	  render: function render() {
 	    var year = this.props.year;
 	    var month = this.props.month;
@@ -33088,16 +33111,15 @@
 	
 	    return _react2.default.createElement(
 	      'div',
-	      { id: 'view-calendar' },
+	      { id: 'view-calendar-and-upcoming-events' },
 	      _react2.default.createElement(
-	        'time',
-	        { dateTime: year, className: 'year' },
+	        'div',
+	        { id: 'view-calendar' },
 	        _react2.default.createElement(
-	          'span',
-	          { className: 'year-label' },
-	          this.props.year
-	        ),
-	        calendarPages
+	          'time',
+	          { dateTime: year, className: 'year' },
+	          calendarPages
+	        )
 	      ),
 	      _react2.default.createElement(
 	        'div',
@@ -33201,7 +33223,7 @@
 	    var month = this.props.month;
 	
 	    // Calculate how many weeks in the currently displayed month
-	    var monthName = monthNumber(month - 1);
+	    var monthName = monthNumber(month - 1).capitalizeFirstLetter();
 	    var firstDay = new Date(year, month - 1, 1);
 	    var weeksInMonth = firstDay.countWeeksOfMonth();
 	    var indexOfFirstWeek = firstDay.getWeekNumber();
@@ -33223,53 +33245,62 @@
 	    }
 	
 	    return _react2.default.createElement(
-	      'time',
-	      { dateTime: year + "-" + leadingZeros(month), className: "month " + displayClass },
+	      'div',
+	      null,
 	      _react2.default.createElement(
 	        'span',
-	        { className: 'month-label' },
-	        monthName
+	        { className: 'year-label' },
+	        this.props.year
 	      ),
 	      _react2.default.createElement(
-	        'div',
-	        { className: 'weekdays-labels' },
+	        'time',
+	        { dateTime: year + "-" + leadingZeros(month), className: "month " + displayClass },
 	        _react2.default.createElement(
 	          'span',
-	          { className: 'weekend-label' },
-	          'Dim'
+	          { className: 'month-label' },
+	          monthName
 	        ),
 	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Lun'
+	          'div',
+	          { className: 'weekdays-labels' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekend-label' },
+	            'Dim'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Lun'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Mar'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Mer'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Jeu'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Ven'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekend-label' },
+	            'Sam'
+	          )
 	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Mar'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Mer'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Jeu'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Ven'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekend-label' },
-	          'Sam'
-	        )
-	      ),
-	      calendarWeeks
+	        calendarWeeks
+	      )
 	    );
 	  }
 	});
@@ -33933,22 +33964,22 @@
 	    this.eraseEventsFromDevice(year, month);
 	    this.writeEventsToDevice(data);
 	
+	    if (this.applicationStateNeedsUpdating(year, month)) {
+	      this.loadDataIntoStateMachine(data);
+	    }
+	  },
+	
+	  applicationStateNeedsUpdating: function applicationStateNeedsUpdating(year, month) {
 	    if (this.applicationState.length > 0) {
-	      var stateNeedsUpdating = false;
-	
 	      for (var i = 0, len = this.applicationState.length; i < len; i++) {
-	        var entry = this.applicationState[i];
-	
-	        console.log("entry.month: " + entry.month);
-	        console.log("entry.year: " + entry.year);
-	
-	        if (entry.year != year || entry.month != month) {
-	          this.loadDataIntoStateMachine(data);
+	        if (this.applicationState[i].year != year || this.applicationState[i].month != month) {
+	          return true;
 	        }
 	      }
 	    } else {
-	      this.loadDataIntoStateMachine(data);
+	      return true;
 	    }
+	    return false;
 	  },
 	
 	  loadApplicationState: function loadApplicationState(data) {
@@ -34097,16 +34128,39 @@
 	
 	  render: function render() {
 	    // Return all events for this day
-	    var upcomingEvents = this.getUpcomingEvents(5);
+	    var numberOfEventsToGet = 5;
+	    var upcomingEvents = this.getUpcomingEvents(numberOfEventsToGet);
 	    var viewUpcomingEvents = [];
 	
 	    // Don't forget month is zero-indexed for Date().
 	    var today = new Date();
 	    today.setHours(0, 0, 0, 0);
 	
+	    var dateIndex = today;
+	
 	    if (upcomingEvents.length > 0) {
 	      for (var i = 0, len = upcomingEvents.length; i < len; i++) {
 	        var event = upcomingEvents[i];
+	
+	        // See calendar-functions.js
+	        var eventYear = event.t_start.getYear();
+	        var eventMonth = event.t_start.getMonth();
+	        var eventDay = event.t_start.getDay();
+	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
+	        eventDate.setHours(0, 0, 0, 0);
+	
+	        if (eventDate > dateIndex) {
+	          var weekDay = dayNumber(eventDate.getDay()).capitalizeFirstLetter();
+	          var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth() - 1) + " " + eventDate.getFullYear();
+	
+	          viewUpcomingEvents.push(_react2.default.createElement(
+	            'span',
+	            { key: i + numberOfEventsToGet, className: 'subtitle' },
+	            subtitle
+	          ));
+	
+	          dateIndex = eventDate;
+	        }
 	
 	        viewUpcomingEvents.push(_react2.default.createElement(_ViewCalendarEvent2.default, {
 	          key: i,

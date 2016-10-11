@@ -4,7 +4,38 @@ import ContainerCalendarDay      from './ContainerCalendarDay.jsx';
 import ContainerCalendarUpcoming from './ContainerCalendarUpcoming.jsx';
 import { VIEW_STATE }            from './StateMachineDefinitions.js';
 
-var ViewCalendar = React.createClass({
+var ViewCalendar = React.createClass(
+{
+  pan: function()
+  {
+    console.log("panned");
+  },
+
+  componentDidMount: function()
+  {
+    this.touchControl = new Hammer.Manager(document.getElementById("view-calendar"));
+
+    panOptions = {
+      event: 'pan',
+      pointers: 0,
+      threshold: 0,
+      direction: Hammer.DIRECTION_HORIZONTAL
+    }
+
+    this.touchControl.add(new Hammer.Pan(panOptions));
+    this.touchControl.get('pan').set({ enable: true });
+
+    this.touchControl.on("panleft panright", function(ev)
+    {
+      console.log(ev.type + " gesture detected.");
+    });
+
+  },
+
+  componentWillUnmount: function() {
+    this.touchControl.off('pan', this.pan);
+  },
+
   render: function()
   {
     var year  = this.props.year;
@@ -52,11 +83,12 @@ var ViewCalendar = React.createClass({
     }
 
     return (
-      <div id="view-calendar">
-        <time dateTime={year} className="year">
-          <span className="year-label">{this.props.year}</span>
-          {calendarPages}
-        </time>
+      <div id="view-calendar-and-upcoming-events">
+        <div id="view-calendar">
+          <time dateTime={year} className="year">
+            {calendarPages}
+          </time>
+        </div>
         <div id="view-upcoming-events">
           {upcomingEvents}
         </div>

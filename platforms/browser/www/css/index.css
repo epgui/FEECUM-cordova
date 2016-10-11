@@ -19,7 +19,7 @@ body {
     -webkit-user-select: none;      /* prevent copy paste, to allow, change 'none' to 'text' */
 }
 
-#app, #interface { bottom: 0; left: 0; position: absolute; right: 0; top: 0; }
+#app, #interface { bottom: 0; left: 0; overflow-x: hidden; position: absolute; right: 0; top: 0; }
 
 #header { height: 55px; left: 0; position: absolute; right: 0; top: 0; z-index: 2; }
 #header #controls { background: #F8B629; overflow: hidden; position: absolute; width: 100%; }
@@ -42,7 +42,7 @@ body {
 
 #views { bottom: 0; left: 0; padding: 55px 0 0; position: absolute; right: 0; top: 0; z-index: 1; }
 
-#view-calendar { width: 100%; }
+#view-calendar { overflow-x: scroll; width: 100%; }
 #view-calendar time.year { display: block; margin: 0; padding: 0; width: 100%; }
 #view-calendar .year-label { background: #F8B629; color: #BF8B1A; display: block; font-size: 20px; height: 24px; line-height: 24px; margin: 0; padding: 22px 12px 5px; }
 #view-calendar time.month { display: block; margin: 0; padding: 0; width: 100%; }
@@ -67,7 +67,8 @@ body {
 
 #view-upcoming-events { background: #FFFFFF; width: 100%; }
 #view-upcoming-events .title { color: #AAAAAA; display: block; font-family: 'HelveticaNeue-Thin'; font-size: 36px; height: 55px; line-height: 55px; padding: 26px 10px 0; }
-#view-upcoming-events .subtitle { color: #444444; display: block; font-family: 'HelveticaNeue-Bold'; font-size: 18px; height: 32px; line-height: 32px; padding: 5px 10px 10px; }
+#view-upcoming-events .subtitle { border-bottom: 1px solid #EEE; color: #444444; display: block; font-family: 'HelveticaNeue-Bold'; font-size: 18px; height: 32px; line-height: 32px; padding: 5px 10px 10px; }
+#view-upcoming-events #dayView .subtitle { background: #FFF; border-top: 15px solid #CCC; padding: 10px 10px 10px; }
 
 #dayView { background-color: #E4E4E4; background-image: linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%); background-image: -webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%); background-image: -ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #A7A7A7), color-stop(0.51, #E4E4E4)); background-attachment: fixed; padding: 0; }
 #dayView li.event-container { background: #FFF; border-bottom: 1px solid #EEE; border-left; 0; border-right: 0; border-top: 1px solid #CCC; display: block; list-style-type: none; margin: 0; overflow: hidden; padding: 0 0 10px; }
@@ -77,6 +78,7 @@ body {
 #dayView .event-description { display: block; font-size: 14px; line-height: 18px; padding: 0 10px; }
 #dayView .button.add-event { background: transparent url("../img/add_to_calendar_icon.png") no-repeat 5px center; float: right; margin-right: 10px; width: 100px; }
 #dayView .button.remove-event { background: transparent url("../img/remove_from_calendar_icon.png") no-repeat 5px center; float: right; margin-right: 10px; width: 100px; }
+
 
 .button { color: #2196F3; text-decoration: none; text-align: center; display: block; border-radius: 2px; line-height: 36px; box-sizing: border-box; -webkit-appearance: none; -moz-appearance: none; -ms-appearance: none; appearance: none; background: 0 0; padding: 0 10px 0 20px; margin: 0; height: 36px; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; text-transform: uppercase; font-family: 'HelveticaNeue'; cursor: pointer; min-width: 64px; position: relative; overflow: hidden; outline: 0; border: none; -webkit-transition-duration: .3s; transition-duration: .3s; -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0); -webkit-user-select: none; -webkit-box-flex: 1; -ms-flex: 1; }
 .button.red { color: #F3214D; }

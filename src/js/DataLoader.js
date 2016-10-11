@@ -113,27 +113,29 @@ var DataLoader = {
     this.eraseEventsFromDevice(year, month)
     this.writeEventsToDevice(data);
 
+    if (this.applicationStateNeedsUpdating(year, month))
+    {
+      this.loadDataIntoStateMachine(data);
+    }
+  },
+
+  applicationStateNeedsUpdating: function(year, month)
+  {
     if (this.applicationState.length > 0)
     {
-      var stateNeedsUpdating = false;
-
       for (var i = 0, len = this.applicationState.length; i < len; i++)
       {
-        var entry = this.applicationState[i];
-
-        console.log("entry.month: " + entry.month);
-        console.log("entry.year: " + entry.year);
-
-        if ((entry.year != year) || (entry.month != month))
+        if ((this.applicationState[i].year != year) || (this.applicationState[i].month != month))
         {
-          this.loadDataIntoStateMachine(data);
+          return true;
         }
       }
     }
     else
     {
-      this.loadDataIntoStateMachine(data);
+      return true;
     }
+    return false;
   },
 
   loadApplicationState: function(data)

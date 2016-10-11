@@ -14,20 +14,39 @@ function monthNumber(month)
     case "Octobre":   return 9;
     case "Novembre":  return 10;
     case "Décembre":  return 11;
-    case 0:           return "Janvier";
-    case 1:           return "Février";
-    case 2:           return "Mars";
-    case 3:           return "Avril";
-    case 4:           return "Mai";
-    case 5:           return "Juin";
-    case 6:           return "Juillet";
-    case 7:           return "Aout";
-    case 8:           return "Septembre";
-    case 9:           return "Octobre";
-    case 10:          return "Novembre";
-    case 11:          return "Décembre";
+    case 0:           return "janvier";
+    case 1:           return "février";
+    case 2:           return "mars";
+    case 3:           return "avril";
+    case 4:           return "mai";
+    case 5:           return "juin";
+    case 6:           return "juillet";
+    case 7:           return "aout";
+    case 8:           return "septembre";
+    case 9:           return "octobre";
+    case 10:          return "novembre";
+    case 11:          return "décembre";
     default:          throw "Month name could not be converted to month number.";
   }
+}
+
+function dayNumber(day)
+{
+  switch(day)
+  {
+    case 0: return "dimanche";
+    case 1: return "lundi";
+    case 2: return "mardi";
+    case 3: return "mercredi";
+    case 4: return "jeudi";
+    case 5: return "vendredi";
+    case 6: return "samedi";
+  }
+}
+
+String.prototype.capitalizeFirstLetter = function()
+{
+  return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
 function leadingZeros(number)

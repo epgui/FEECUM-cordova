@@ -19,7 +19,7 @@ var ViewCalendarMonth = React.createClass(
     var month = this.props.month;
 
     // Calculate how many weeks in the currently displayed month
-    var monthName        = monthNumber(month - 1);
+    var monthName        = monthNumber(month - 1).capitalizeFirstLetter();
     var firstDay         = new Date(year, month - 1, 1);
     var weeksInMonth     = firstDay.countWeeksOfMonth();
     var indexOfFirstWeek = firstDay.getWeekNumber();
@@ -43,19 +43,22 @@ var ViewCalendarMonth = React.createClass(
     }
 
     return (
-      <time dateTime={year + "-" + leadingZeros(month)} className={"month " + displayClass}>
-        <span className="month-label">{monthName}</span>
-        <div className="weekdays-labels">
-          <span className="weekend-label">Dim</span>
-          <span className="weekday-label">Lun</span>
-          <span className="weekday-label">Mar</span>
-          <span className="weekday-label">Mer</span>
-          <span className="weekday-label">Jeu</span>
-          <span className="weekday-label">Ven</span>
-          <span className="weekend-label">Sam</span>
-        </div>
-        {calendarWeeks}
-      </time>
+      <div>
+        <span className="year-label">{this.props.year}</span>
+        <time dateTime={year + "-" + leadingZeros(month)} className={"month " + displayClass}>
+          <span className="month-label">{monthName}</span>
+          <div className="weekdays-labels">
+            <span className="weekend-label">Dim</span>
+            <span className="weekday-label">Lun</span>
+            <span className="weekday-label">Mar</span>
+            <span className="weekday-label">Mer</span>
+            <span className="weekday-label">Jeu</span>
+            <span className="weekday-label">Ven</span>
+            <span className="weekend-label">Sam</span>
+          </div>
+          {calendarWeeks}
+        </time>
+      </div>
     );
   }
 });
