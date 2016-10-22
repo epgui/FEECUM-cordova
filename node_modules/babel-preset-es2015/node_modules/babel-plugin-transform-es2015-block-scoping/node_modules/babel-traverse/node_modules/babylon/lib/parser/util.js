@@ -1,5 +1,7 @@
 "use strict";
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _types = require("../tokenizer/types");
 
 var _index = require("./index");
@@ -35,7 +37,7 @@ pp.expectRelational = function (op) {
   if (this.isRelational(op)) {
     this.next();
   } else {
-    this.unexpected();
+    this.unexpected(null, _types.types.relational);
   }
 };
 
@@ -73,20 +75,24 @@ pp.isLineTerminator = function () {
 // pretend that there is a semicolon at this position.
 
 pp.semicolon = function () {
-  if (!this.isLineTerminator()) this.unexpected();
+  if (!this.isLineTerminator()) this.unexpected(null, _types.types.semi);
 };
 
 // Expect a token of a given type. If found, consume it, otherwise,
 // raise an unexpected token error at given pos.
 
 pp.expect = function (type, pos) {
-  return this.eat(type) || this.unexpected(pos);
+  return this.eat(type) || this.unexpected(pos, type);
 };
 
-// Raise an unexpected token error.
+// Raise an unexpected token error. Can take the expected token type
+// instead of a message string.
 
 pp.unexpected = function (pos) {
-  var message = arguments.length <= 1 || arguments[1] === undefined ? "Unexpected token" : arguments[1];
+  var messageOrType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "Unexpected token";
 
-  this.raise(pos != null ? pos : this.state.start, message);
+  if (messageOrType && (typeof messageOrType === "undefined" ? "undefined" : _typeof(messageOrType)) === "object" && messageOrType.label) {
+    messageOrType = "Unexpected token, expected " + messageOrType.label;
+  }
+  this.raise(pos != null ? pos : this.state.start, messageOrType);
 };
