@@ -145,7 +145,7 @@ $ npm install -g ios-deploy
 
 If ios-deploy fails to install on El Capitan, try:
 ```
-$ npm install --global --unsafe-perm ios-deploy
+$ npm install --global --unsafe-perm=true ios-deploy
 ```
 
 

@@ -1,15 +1,8 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.keywords = exports.types = exports.TokenType = undefined;
+exports.__esModule = true;
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 // ## Token types
 
@@ -30,8 +23,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // continue jumps to that label.
 
 var TokenType = exports.TokenType = function TokenType(label) {
-  var conf = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-  (0, _classCallCheck3.default)(this, TokenType);
+  var conf = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, TokenType);
 
   this.label = label;
   this.keyword = conf.keyword;
@@ -63,7 +57,9 @@ var types = exports.types = {
   bracketL: new TokenType("[", { beforeExpr: true, startsExpr: true }),
   bracketR: new TokenType("]"),
   braceL: new TokenType("{", { beforeExpr: true, startsExpr: true }),
+  braceBarL: new TokenType("{|", { beforeExpr: true, startsExpr: true }),
   braceR: new TokenType("}"),
+  braceBarR: new TokenType("|}"),
   parenL: new TokenType("(", { beforeExpr: true, startsExpr: true }),
   parenR: new TokenType(")"),
   comma: new TokenType(",", beforeExpr),
@@ -118,7 +114,7 @@ var keywords = exports.keywords = {};
 
 // Succinct definitions of keyword token types
 function kw(name) {
-  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   options.keyword = name;
   keywords[name] = types["_" + name] = new TokenType(name, options);
