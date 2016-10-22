@@ -33035,26 +33035,30 @@
 	var ViewCalendar = _react2.default.createClass({
 	  displayName: 'ViewCalendar',
 	
-	  pan: function pan() {
-	    console.log("panned");
+	  pan: function pan(event) {
+	    var elementToPan = document.getElementById("view-calendar");
+	
+	    elementToPan.style.left = event.deltaX + "px";
+	    event.srcEvent.preventDefault();
 	  },
 	
 	  componentDidMount: function componentDidMount() {
 	    this.touchControl = new Hammer.Manager(document.getElementById("view-calendar"));
-	    this.touchControl.add(new Hammer.Pan({
+	
+	    var panOptions = {
 	      event: 'pan',
 	      pointers: 0,
 	      threshold: 0,
 	      direction: Hammer.DIRECTION_HORIZONTAL
-	    }));
-	    this.touchControl.get('pan').set({ enable: true });
+	    };
 	
-	    this.touchControl.on("panleft panright tap press", function (ev) {
-	      console.log(ev.type + " gesture detected.");
-	    });
+	    this.touchControl.add(new Hammer.Pan(panOptions));
+	    this.touchControl.get('pan').set({ enable: true });
+	    this.touchControl.on("panleft panright", this.pan);
 	  },
 	
 	  componentWillUnmount: function componentWillUnmount() {
+	    console.log("unmounted");
 	    this.touchControl.off('pan', this.pan);
 	  },
 	
@@ -34134,7 +34138,6 @@
 	
 	    // Don't forget month is zero-indexed for Date().
 	    var today = new Date();
-	    today.setHours(0, 0, 0, 0);
 	
 	    var dateIndex = today;
 	
@@ -34146,10 +34149,14 @@
 	        var eventYear = event.t_start.getYear();
 	        var eventMonth = event.t_start.getMonth();
 	        var eventDay = event.t_start.getDay();
-	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
-	        eventDate.setHours(0, 0, 0, 0);
+	        var eventHours = event.t_start.getHours();
+	        var eventMinutes = event.t_start.getMinutes();
+	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay, eventHours, eventMinutes, 0, 0);
 	
-	        if (eventDate > dateIndex) {
+	        console.log("eventDate: " + eventDate);
+	        console.log("dateIndex: " + dateIndex);
+	
+	        if (eventDate.getTime() > dateIndex.getTime()) {
 	          var weekDay = dayNumber(eventDate.getDay()).capitalizeFirstLetter();
 	          var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth() - 1) + " " + eventDate.getFullYear();
 	

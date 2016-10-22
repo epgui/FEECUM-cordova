@@ -6,16 +6,19 @@ import { VIEW_STATE }            from './StateMachineDefinitions.js';
 
 var ViewCalendar = React.createClass(
 {
-  pan: function()
+  pan: function(event)
   {
-    console.log("panned");
+    var elementToPan = document.getElementById("view-calendar");
+
+    elementToPan.style.left = event.deltaX + "px";
+    event.srcEvent.preventDefault();
   },
 
   componentDidMount: function()
   {
     this.touchControl = new Hammer.Manager(document.getElementById("view-calendar"));
 
-    panOptions = {
+    var panOptions = {
       event: 'pan',
       pointers: 0,
       threshold: 0,
@@ -24,15 +27,12 @@ var ViewCalendar = React.createClass(
 
     this.touchControl.add(new Hammer.Pan(panOptions));
     this.touchControl.get('pan').set({ enable: true });
-
-    this.touchControl.on("panleft panright", function(ev)
-    {
-      console.log(ev.type + " gesture detected.");
-    });
-
+    this.touchControl.on("panleft panright", this.pan);
   },
 
-  componentWillUnmount: function() {
+  componentWillUnmount: function()
+  {
+    console.log("unmounted");
     this.touchControl.off('pan', this.pan);
   },
 
