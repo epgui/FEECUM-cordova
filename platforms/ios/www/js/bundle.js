@@ -48,7 +48,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! babel-polyfill */1);
-	module.exports = __webpack_require__(/*! /Users/Guillaume/Developer/FEECUM-cordova/src/js/index.jsx */298);
+	module.exports = __webpack_require__(/*! /Users/GP/Developer/FEECUM-cordova/src/js/index.jsx */298);
 
 
 /***/ },
@@ -8856,25 +8856,40 @@
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 	
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
 	    try {
-	        cachedSetTimeout = setTimeout;
-	    } catch (e) {
-	        cachedSetTimeout = function () {
-	            throw new Error('setTimeout is not defined');
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
 	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
 	    }
 	    try {
-	        cachedClearTimeout = clearTimeout;
-	    } catch (e) {
-	        cachedClearTimeout = function () {
-	            throw new Error('clearTimeout is not defined');
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
 	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
 	} ())
 	function runTimeout(fun) {
 	    if (cachedSetTimeout === setTimeout) {
 	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
 	        return setTimeout(fun, 0);
 	    }
 	    try {
@@ -8895,6 +8910,11 @@
 	function runClearTimeout(marker) {
 	    if (cachedClearTimeout === clearTimeout) {
 	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
 	        return clearTimeout(marker);
 	    }
 	    try {
@@ -9081,7 +9101,7 @@
 	//   "...mobile browsers will wait approximately 300ms from the time that you
 	//   tap the button to fire the click event. The reason for this is that the
 	//   browser is waiting to see if you are actually performing a double tap."
-	var FastClick = __webpack_require__(/*! fastclick */ 514);
+	var FastClick = __webpack_require__(/*! fastclick */ 516);
 	
 	$(function () {
 	  // The script must be loaded prior to instantiating FastClick on any element of the page.
@@ -9929,14 +9949,6 @@
 	  var source = null;
 	
 	  if (config != null) {
-	    if (process.env.NODE_ENV !== 'production') {
-	      process.env.NODE_ENV !== 'production' ? warning(
-	      /* eslint-disable no-proto */
-	      config.__proto__ == null || config.__proto__ === Object.prototype,
-	      /* eslint-enable no-proto */
-	      'React.createElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
-	    }
-	
 	    if (hasValidRef(config)) {
 	      ref = config.ref;
 	    }
@@ -10037,14 +10049,6 @@
 	  var owner = element._owner;
 	
 	  if (config != null) {
-	    if (process.env.NODE_ENV !== 'production') {
-	      process.env.NODE_ENV !== 'production' ? warning(
-	      /* eslint-disable no-proto */
-	      config.__proto__ == null || config.__proto__ === Object.prototype,
-	      /* eslint-enable no-proto */
-	      'React.cloneElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
-	    }
-	
 	    if (hasValidRef(config)) {
 	      // Silently steal the ref from the parent.
 	      ref = config.ref;
@@ -13147,7 +13151,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.3.1';
+	module.exports = '15.3.2';
 
 /***/ },
 /* 330 */
@@ -14153,8 +14157,10 @@
 	function getFallbackBeforeInputChars(topLevelType, nativeEvent) {
 	  // If we are currently composing (IME) and using a fallback to do so,
 	  // try to extract the composed characters from the fallback object.
+	  // If composition event is available, we extract a string only at
+	  // compositionevent, otherwise extract it at fallback events.
 	  if (currentComposition) {
-	    if (topLevelType === topLevelTypes.topCompositionEnd || isFallbackCompositionEnd(topLevelType, nativeEvent)) {
+	    if (topLevelType === topLevelTypes.topCompositionEnd || !canUseCompositionEvent && isFallbackCompositionEnd(topLevelType, nativeEvent)) {
 	      var chars = currentComposition.getData();
 	      FallbackCompositionState.release(currentComposition);
 	      currentComposition = null;
@@ -15802,7 +15808,8 @@
 	
 	    if (event.preventDefault) {
 	      event.preventDefault();
-	    } else {
+	    } else if (typeof event.returnValue !== 'unknown') {
+	      // eslint-disable-line valid-typeof
 	      event.returnValue = false;
 	    }
 	    this.isDefaultPrevented = emptyFunction.thatReturnsTrue;
@@ -16065,7 +16072,7 @@
 	var doesChangeEventBubble = false;
 	if (ExecutionEnvironment.canUseDOM) {
 	  // See `handleChange` comment below
-	  doesChangeEventBubble = isEventSupported('change') && (!('documentMode' in document) || document.documentMode > 8);
+	  doesChangeEventBubble = isEventSupported('change') && (!document.documentMode || document.documentMode > 8);
 	}
 	
 	function manualDispatchChangeEvent(nativeEvent) {
@@ -16131,7 +16138,7 @@
 	  // deleting text, so we ignore its input events.
 	  // IE10+ fire input events to often, such when a placeholder
 	  // changes or when an input with a placeholder is focused.
-	  isInputEventSupported = isEventSupported('input') && (!('documentMode' in document) || document.documentMode > 11);
+	  isInputEventSupported = isEventSupported('input') && (!document.documentMode || document.documentMode > 11);
 	}
 	
 	/**
@@ -17384,12 +17391,6 @@
 	    endLifeCycleTimer(debugID, timerType);
 	    emitEvent('onEndLifeCycleTimer', debugID, timerType);
 	  },
-	  onError: function (debugID) {
-	    if (currentTimerDebugID != null) {
-	      endLifeCycleTimer(currentTimerDebugID, currentTimerType);
-	    }
-	    emitEvent('onError', debugID);
-	  },
 	  onBeginProcessingChildContext: function () {
 	    emitEvent('onBeginProcessingChildContext');
 	  },
@@ -18511,6 +18512,8 @@
 	    allowFullScreen: HAS_BOOLEAN_VALUE,
 	    allowTransparency: 0,
 	    alt: 0,
+	    // specifies target context for links with `preload` type
+	    as: 0,
 	    async: HAS_BOOLEAN_VALUE,
 	    autoComplete: 0,
 	    // autoFocus is polyfilled/normalized by AutoFocusUtils
@@ -18591,6 +18594,7 @@
 	    optimum: 0,
 	    pattern: 0,
 	    placeholder: 0,
+	    playsInline: HAS_BOOLEAN_VALUE,
 	    poster: 0,
 	    preload: 0,
 	    profile: 0,
@@ -19128,9 +19132,9 @@
 	  if (node.namespaceURI === DOMNamespaces.svg && !('innerHTML' in node)) {
 	    reusableSVGContainer = reusableSVGContainer || document.createElement('div');
 	    reusableSVGContainer.innerHTML = '<svg>' + html + '</svg>';
-	    var newNodes = reusableSVGContainer.firstChild.childNodes;
-	    for (var i = 0; i < newNodes.length; i++) {
-	      node.appendChild(newNodes[i]);
+	    var svgNode = reusableSVGContainer.firstChild;
+	    while (svgNode.firstChild) {
+	      node.appendChild(svgNode.firstChild);
 	    }
 	  } else {
 	    node.innerHTML = html;
@@ -20088,9 +20092,9 @@
 	  ReactDOMOption.postMountWrapper(inst);
 	}
 	
-	var setContentChildForInstrumentation = emptyFunction;
+	var setAndValidateContentChildDev = emptyFunction;
 	if (process.env.NODE_ENV !== 'production') {
-	  setContentChildForInstrumentation = function (content) {
+	  setAndValidateContentChildDev = function (content) {
 	    var hasExistingContent = this._contentDebugID != null;
 	    var debugID = this._debugID;
 	    // This ID represents the inlined child that has no backing instance:
@@ -20104,6 +20108,7 @@
 	      return;
 	    }
 	
+	    validateDOMNesting(null, String(content), this, this._ancestorInfo);
 	    this._contentDebugID = contentDebugID;
 	    if (hasExistingContent) {
 	      ReactInstrumentation.debugTool.onBeforeUpdateComponent(contentDebugID, content);
@@ -20278,7 +20283,7 @@
 	  this._flags = 0;
 	  if (process.env.NODE_ENV !== 'production') {
 	    this._ancestorInfo = null;
-	    setContentChildForInstrumentation.call(this, null);
+	    setAndValidateContentChildDev.call(this, null);
 	  }
 	}
 	
@@ -20378,7 +20383,7 @@
 	      if (parentInfo) {
 	        // parentInfo should always be present except for the top-level
 	        // component when server rendering
-	        validateDOMNesting(this._tag, this, parentInfo);
+	        validateDOMNesting(this._tag, null, this, parentInfo);
 	      }
 	      this._ancestorInfo = validateDOMNesting.updatedAncestorInfo(parentInfo, this._tag, this);
 	    }
@@ -20547,7 +20552,7 @@
 	        // TODO: Validate that text is allowed as a child of this node
 	        ret = escapeTextContentForBrowser(contentToUse);
 	        if (process.env.NODE_ENV !== 'production') {
-	          setContentChildForInstrumentation.call(this, contentToUse);
+	          setAndValidateContentChildDev.call(this, contentToUse);
 	        }
 	      } else if (childrenToUse != null) {
 	        var mountImages = this.mountChildren(childrenToUse, transaction, context);
@@ -20584,7 +20589,7 @@
 	      if (contentToUse != null) {
 	        // TODO: Validate that text is allowed as a child of this node
 	        if (process.env.NODE_ENV !== 'production') {
-	          setContentChildForInstrumentation.call(this, contentToUse);
+	          setAndValidateContentChildDev.call(this, contentToUse);
 	        }
 	        DOMLazyTree.queueText(lazyTree, contentToUse);
 	      } else if (childrenToUse != null) {
@@ -20816,7 +20821,7 @@
 	      if (lastContent !== nextContent) {
 	        this.updateTextContent('' + nextContent);
 	        if (process.env.NODE_ENV !== 'production') {
-	          setContentChildForInstrumentation.call(this, nextContent);
+	          setAndValidateContentChildDev.call(this, nextContent);
 	        }
 	      }
 	    } else if (nextHtml != null) {
@@ -20828,7 +20833,7 @@
 	      }
 	    } else if (nextChildren != null) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        setContentChildForInstrumentation.call(this, null);
+	        setAndValidateContentChildDev.call(this, null);
 	      }
 	
 	      this.updateChildren(nextChildren, transaction, context);
@@ -20883,7 +20888,7 @@
 	    this._wrapperState = null;
 	
 	    if (process.env.NODE_ENV !== 'production') {
-	      setContentChildForInstrumentation.call(this, null);
+	      setAndValidateContentChildDev.call(this, null);
 	    }
 	  },
 	
@@ -22195,6 +22200,19 @@
 	  },
 	
 	  /**
+	   * Protect against document.createEvent() returning null
+	   * Some popup blocker extensions appear to do this:
+	   * https://github.com/facebook/react/issues/6887
+	   */
+	  supportsEventPageXY: function () {
+	    if (!document.createEvent) {
+	      return false;
+	    }
+	    var ev = document.createEvent('MouseEvent');
+	    return ev != null && 'pageX' in ev;
+	  },
+	
+	  /**
 	   * Listens to window scroll and resize events. We cache scroll values so that
 	   * application code can access them without triggering reflows.
 	   *
@@ -22207,7 +22225,7 @@
 	   */
 	  ensureScrollValueMonitoring: function () {
 	    if (hasEventPageXY === undefined) {
-	      hasEventPageXY = document.createEvent && 'pageX' in document.createEvent('MouseEvent');
+	      hasEventPageXY = ReactBrowserEventEmitter.supportsEventPageXY();
 	    }
 	    if (!hasEventPageXY && !isMonitoringScrollValue) {
 	      var refresh = ViewportMetrics.refreshScrollValues;
@@ -22508,7 +22526,7 @@
 	
 	function isControlled(props) {
 	  var usesChecked = props.type === 'checkbox' || props.type === 'radio';
-	  return usesChecked ? props.checked !== undefined : props.value !== undefined;
+	  return usesChecked ? props.checked != null : props.value != null;
 	}
 	
 	/**
@@ -24311,34 +24329,29 @@
 	  }
 	}
 	
-	function invokeComponentDidMountWithTimer() {
-	  var publicInstance = this._instance;
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidMount');
-	  }
-	  publicInstance.componentDidMount();
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidMount');
-	  }
-	}
-	
-	function invokeComponentDidUpdateWithTimer(prevProps, prevState, prevContext) {
-	  var publicInstance = this._instance;
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidUpdate');
-	  }
-	  publicInstance.componentDidUpdate(prevProps, prevState, prevContext);
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidUpdate');
-	  }
-	}
-	
 	function shouldConstruct(Component) {
 	  return !!(Component.prototype && Component.prototype.isReactComponent);
 	}
 	
 	function isPureComponent(Component) {
 	  return !!(Component.prototype && Component.prototype.isPureReactComponent);
+	}
+	
+	// Separated into a function to contain deoptimizations caused by try/finally.
+	function measureLifeCyclePerf(fn, debugID, timerType) {
+	  if (debugID === 0) {
+	    // Top-level wrappers (see ReactMount) and empty components (see
+	    // ReactDOMEmptyComponent) are invisible to hooks and devtools.
+	    // Both are implementation details that should go away in the future.
+	    return fn();
+	  }
+	
+	  ReactInstrumentation.debugTool.onBeginLifeCycleTimer(debugID, timerType);
+	  try {
+	    return fn();
+	  } finally {
+	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(debugID, timerType);
+	  }
 	}
 	
 	/**
@@ -24432,6 +24445,8 @@
 	   * @internal
 	   */
 	  mountComponent: function (transaction, hostParent, hostContainerInfo, context) {
+	    var _this = this;
+	
 	    this._context = context;
 	    this._mountOrder = nextMountID++;
 	    this._hostParent = hostParent;
@@ -24521,7 +24536,11 @@
 	
 	    if (inst.componentDidMount) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        transaction.getReactMountReady().enqueue(invokeComponentDidMountWithTimer, this);
+	        transaction.getReactMountReady().enqueue(function () {
+	          measureLifeCyclePerf(function () {
+	            return inst.componentDidMount();
+	          }, _this._debugID, 'componentDidMount');
+	        });
 	      } else {
 	        transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
 	      }
@@ -24545,35 +24564,26 @@
 	
 	  _constructComponentWithoutOwner: function (doConstruct, publicProps, publicContext, updateQueue) {
 	    var Component = this._currentElement.type;
-	    var instanceOrElement;
+	
 	    if (doConstruct) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'ctor');
-	        }
-	      }
-	      instanceOrElement = new Component(publicProps, publicContext, updateQueue);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'ctor');
-	        }
-	      }
-	    } else {
-	      // This can still be an instance in case of factory components
-	      // but we'll count this as time spent rendering as the more common case.
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
-	        }
-	      }
-	      instanceOrElement = Component(publicProps, publicContext, updateQueue);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
-	        }
+	        return measureLifeCyclePerf(function () {
+	          return new Component(publicProps, publicContext, updateQueue);
+	        }, this._debugID, 'ctor');
+	      } else {
+	        return new Component(publicProps, publicContext, updateQueue);
 	      }
 	    }
-	    return instanceOrElement;
+	
+	    // This can still be an instance in case of factory components
+	    // but we'll count this as time spent rendering as the more common case.
+	    if (process.env.NODE_ENV !== 'production') {
+	      return measureLifeCyclePerf(function () {
+	        return Component(publicProps, publicContext, updateQueue);
+	      }, this._debugID, 'render');
+	    } else {
+	      return Component(publicProps, publicContext, updateQueue);
+	    }
 	  },
 	
 	  performInitialMountWithErrorHandling: function (renderedElement, hostParent, hostContainerInfo, transaction, context) {
@@ -24582,11 +24592,6 @@
 	    try {
 	      markup = this.performInitialMount(renderedElement, hostParent, hostContainerInfo, transaction, context);
 	    } catch (e) {
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onError();
-	        }
-	      }
 	      // Roll back to checkpoint, handle error (which may add items to the transaction), and take a new checkpoint
 	      transaction.rollback(checkpoint);
 	      this._instance.unstable_handleError(e);
@@ -24607,17 +24612,19 @@
 	
 	  performInitialMount: function (renderedElement, hostParent, hostContainerInfo, transaction, context) {
 	    var inst = this._instance;
+	
+	    var debugID = 0;
+	    if (process.env.NODE_ENV !== 'production') {
+	      debugID = this._debugID;
+	    }
+	
 	    if (inst.componentWillMount) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillMount');
-	        }
-	      }
-	      inst.componentWillMount();
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillMount');
-	        }
+	        measureLifeCyclePerf(function () {
+	          return inst.componentWillMount();
+	        }, debugID, 'componentWillMount');
+	      } else {
+	        inst.componentWillMount();
 	      }
 	      // When mounting, calls to `setState` by `componentWillMount` will set
 	      // `this._pendingStateQueue` without triggering a re-render.
@@ -24637,15 +24644,12 @@
 	    );
 	    this._renderedComponent = child;
 	
-	    var selfDebugID = 0;
-	    if (process.env.NODE_ENV !== 'production') {
-	      selfDebugID = this._debugID;
-	    }
-	    var markup = ReactReconciler.mountComponent(child, transaction, hostParent, hostContainerInfo, this._processChildContext(context), selfDebugID);
+	    var markup = ReactReconciler.mountComponent(child, transaction, hostParent, hostContainerInfo, this._processChildContext(context), debugID);
 	
 	    if (process.env.NODE_ENV !== 'production') {
-	      if (this._debugID !== 0) {
-	        ReactInstrumentation.debugTool.onSetChildren(this._debugID, child._debugID !== 0 ? [child._debugID] : []);
+	      if (debugID !== 0) {
+	        var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
+	        ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
 	      }
 	    }
 	
@@ -24666,24 +24670,22 @@
 	    if (!this._renderedComponent) {
 	      return;
 	    }
+	
 	    var inst = this._instance;
 	
 	    if (inst.componentWillUnmount && !inst._calledComponentWillUnmount) {
 	      inst._calledComponentWillUnmount = true;
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUnmount');
-	        }
-	      }
+	
 	      if (safely) {
 	        var name = this.getName() + '.componentWillUnmount()';
 	        ReactErrorUtils.invokeGuardedCallback(name, inst.componentWillUnmount.bind(inst));
 	      } else {
-	        inst.componentWillUnmount();
-	      }
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUnmount');
+	        if (process.env.NODE_ENV !== 'production') {
+	          measureLifeCyclePerf(function () {
+	            return inst.componentWillUnmount();
+	          }, this._debugID, 'componentWillUnmount');
+	        } else {
+	          inst.componentWillUnmount();
 	        }
 	      }
 	    }
@@ -24770,13 +24772,21 @@
 	  _processChildContext: function (currentContext) {
 	    var Component = this._currentElement.type;
 	    var inst = this._instance;
-	    if (process.env.NODE_ENV !== 'production') {
-	      ReactInstrumentation.debugTool.onBeginProcessingChildContext();
+	    var childContext;
+	
+	    if (inst.getChildContext) {
+	      if (process.env.NODE_ENV !== 'production') {
+	        ReactInstrumentation.debugTool.onBeginProcessingChildContext();
+	        try {
+	          childContext = inst.getChildContext();
+	        } finally {
+	          ReactInstrumentation.debugTool.onEndProcessingChildContext();
+	        }
+	      } else {
+	        childContext = inst.getChildContext();
+	      }
 	    }
-	    var childContext = inst.getChildContext && inst.getChildContext();
-	    if (process.env.NODE_ENV !== 'production') {
-	      ReactInstrumentation.debugTool.onEndProcessingChildContext();
-	    }
+	
 	    if (childContext) {
 	      !(typeof Component.childContextTypes === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getChildContext(): childContextTypes must be defined in order to use getChildContext().', this.getName() || 'ReactCompositeComponent') : _prodInvariant('107', this.getName() || 'ReactCompositeComponent') : void 0;
 	      if (process.env.NODE_ENV !== 'production') {
@@ -24871,15 +24881,11 @@
 	    // immediately reconciled instead of waiting for the next batch.
 	    if (willReceive && inst.componentWillReceiveProps) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
-	        }
-	      }
-	      inst.componentWillReceiveProps(nextProps, nextContext);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
-	        }
+	        measureLifeCyclePerf(function () {
+	          return inst.componentWillReceiveProps(nextProps, nextContext);
+	        }, this._debugID, 'componentWillReceiveProps');
+	      } else {
+	        inst.componentWillReceiveProps(nextProps, nextContext);
 	      }
 	    }
 	
@@ -24889,15 +24895,11 @@
 	    if (!this._pendingForceUpdate) {
 	      if (inst.shouldComponentUpdate) {
 	        if (process.env.NODE_ENV !== 'production') {
-	          if (this._debugID !== 0) {
-	            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
-	          }
-	        }
-	        shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);
-	        if (process.env.NODE_ENV !== 'production') {
-	          if (this._debugID !== 0) {
-	            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
-	          }
+	          shouldUpdate = measureLifeCyclePerf(function () {
+	            return inst.shouldComponentUpdate(nextProps, nextState, nextContext);
+	          }, this._debugID, 'shouldComponentUpdate');
+	        } else {
+	          shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);
 	        }
 	      } else {
 	        if (this._compositeType === CompositeTypes.PureClass) {
@@ -24963,6 +24965,8 @@
 	   * @private
 	   */
 	  _performComponentUpdate: function (nextElement, nextProps, nextState, nextContext, transaction, unmaskedContext) {
+	    var _this2 = this;
+	
 	    var inst = this._instance;
 	
 	    var hasComponentDidUpdate = Boolean(inst.componentDidUpdate);
@@ -24977,15 +24981,11 @@
 	
 	    if (inst.componentWillUpdate) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUpdate');
-	        }
-	      }
-	      inst.componentWillUpdate(nextProps, nextState, nextContext);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUpdate');
-	        }
+	        measureLifeCyclePerf(function () {
+	          return inst.componentWillUpdate(nextProps, nextState, nextContext);
+	        }, this._debugID, 'componentWillUpdate');
+	      } else {
+	        inst.componentWillUpdate(nextProps, nextState, nextContext);
 	      }
 	    }
 	
@@ -24999,7 +24999,9 @@
 	
 	    if (hasComponentDidUpdate) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        transaction.getReactMountReady().enqueue(invokeComponentDidUpdateWithTimer.bind(this, prevProps, prevState, prevContext), this);
+	        transaction.getReactMountReady().enqueue(function () {
+	          measureLifeCyclePerf(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), _this2._debugID, 'componentDidUpdate');
+	        });
 	      } else {
 	        transaction.getReactMountReady().enqueue(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), inst);
 	      }
@@ -25016,6 +25018,12 @@
 	    var prevComponentInstance = this._renderedComponent;
 	    var prevRenderedElement = prevComponentInstance._currentElement;
 	    var nextRenderedElement = this._renderValidatedComponent();
+	
+	    var debugID = 0;
+	    if (process.env.NODE_ENV !== 'production') {
+	      debugID = this._debugID;
+	    }
+	
 	    if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
 	      ReactReconciler.receiveComponent(prevComponentInstance, nextRenderedElement, transaction, this._processChildContext(context));
 	    } else {
@@ -25028,15 +25036,12 @@
 	      );
 	      this._renderedComponent = child;
 	
-	      var selfDebugID = 0;
-	      if (process.env.NODE_ENV !== 'production') {
-	        selfDebugID = this._debugID;
-	      }
-	      var nextMarkup = ReactReconciler.mountComponent(child, transaction, this._hostParent, this._hostContainerInfo, this._processChildContext(context), selfDebugID);
+	      var nextMarkup = ReactReconciler.mountComponent(child, transaction, this._hostParent, this._hostContainerInfo, this._processChildContext(context), debugID);
 	
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onSetChildren(this._debugID, child._debugID !== 0 ? [child._debugID] : []);
+	        if (debugID !== 0) {
+	          var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
+	          ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
 	        }
 	      }
 	
@@ -25058,17 +25063,14 @@
 	   */
 	  _renderValidatedComponentWithoutOwnerOrContext: function () {
 	    var inst = this._instance;
+	    var renderedComponent;
 	
 	    if (process.env.NODE_ENV !== 'production') {
-	      if (this._debugID !== 0) {
-	        ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
-	      }
-	    }
-	    var renderedComponent = inst.render();
-	    if (process.env.NODE_ENV !== 'production') {
-	      if (this._debugID !== 0) {
-	        ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
-	      }
+	      renderedComponent = measureLifeCyclePerf(function () {
+	        return inst.render();
+	      }, this._debugID, 'render');
+	    } else {
+	      renderedComponent = inst.render();
 	    }
 	
 	    if (process.env.NODE_ENV !== 'production') {
@@ -25119,7 +25121,7 @@
 	    var publicComponentInstance = component.getPublicInstance();
 	    if (process.env.NODE_ENV !== 'production') {
 	      var componentName = component && component.getName ? component.getName() : 'a component';
-	      process.env.NODE_ENV !== 'production' ? warning(publicComponentInstance != null, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
+	      process.env.NODE_ENV !== 'production' ? warning(publicComponentInstance != null || component._compositeType !== CompositeTypes.StatelessFunctional, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
 	    }
 	    var refs = inst.refs === emptyObject ? inst.refs = {} : inst.refs;
 	    refs[ref] = publicComponentInstance;
@@ -25262,7 +25264,8 @@
 	  if (x === y) {
 	    // Steps 1-5, 7-10
 	    // Steps 6.b-6.e: +0 != -0
-	    return x !== 0 || 1 / x === 1 / y;
+	    // Added the nonzero y check to make Flow happy, but it is redundant
+	    return x !== 0 || y !== 0 || 1 / x === 1 / y;
 	  } else {
 	    // Step 6.a: NaN == NaN
 	    return x !== x && y !== y;
@@ -26340,10 +26343,15 @@
 	
 	  var didWarn = {};
 	
-	  validateDOMNesting = function (childTag, childInstance, ancestorInfo) {
+	  validateDOMNesting = function (childTag, childText, childInstance, ancestorInfo) {
 	    ancestorInfo = ancestorInfo || emptyAncestorInfo;
 	    var parentInfo = ancestorInfo.current;
 	    var parentTag = parentInfo && parentInfo.tag;
+	
+	    if (childText != null) {
+	      process.env.NODE_ENV !== 'production' ? warning(childTag == null, 'validateDOMNesting: when childText is passed, childTag should be null') : void 0;
+	      childTag = '#text';
+	    }
 	
 	    var invalidParent = isTagValidWithParent(childTag, parentTag) ? null : parentInfo;
 	    var invalidAncestor = invalidParent ? null : findInvalidAncestorForTag(childTag, ancestorInfo);
@@ -26392,7 +26400,15 @@
 	      didWarn[warnKey] = true;
 	
 	      var tagDisplayName = childTag;
-	      if (childTag !== '#text') {
+	      var whitespaceInfo = '';
+	      if (childTag === '#text') {
+	        if (/\S/.test(childText)) {
+	          tagDisplayName = 'Text nodes';
+	        } else {
+	          tagDisplayName = 'Whitespace text nodes';
+	          whitespaceInfo = ' Make sure you don\'t have any extra whitespace between tags on ' + 'each line of your source code.';
+	        }
+	      } else {
 	        tagDisplayName = '<' + childTag + '>';
 	      }
 	
@@ -26401,7 +26417,7 @@
 	        if (ancestorTag === 'table' && childTag === 'tr') {
 	          info += ' Add a <tbody> to your code to match the DOM tree generated by ' + 'the browser.';
 	        }
-	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>. ' + 'See %s.%s', tagDisplayName, ancestorTag, ownerInfo, info) : void 0;
+	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>.%s ' + 'See %s.%s', tagDisplayName, ancestorTag, whitespaceInfo, ownerInfo, info) : void 0;
 	      } else {
 	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a descendant of ' + '<%s>. See %s.', tagDisplayName, ancestorTag, ownerInfo) : void 0;
 	      }
@@ -26717,7 +26733,7 @@
 	      if (parentInfo) {
 	        // parentInfo should always be present except for the top-level
 	        // component when server rendering
-	        validateDOMNesting('#text', this, parentInfo);
+	        validateDOMNesting(null, this._stringText, this, parentInfo);
 	      }
 	    }
 	
@@ -28355,7 +28371,7 @@
 	      bubbled: keyOf({ onSelect: null }),
 	      captured: keyOf({ onSelectCapture: null })
 	    },
-	    dependencies: [topLevelTypes.topBlur, topLevelTypes.topContextMenu, topLevelTypes.topFocus, topLevelTypes.topKeyDown, topLevelTypes.topMouseDown, topLevelTypes.topMouseUp, topLevelTypes.topSelectionChange]
+	    dependencies: [topLevelTypes.topBlur, topLevelTypes.topContextMenu, topLevelTypes.topFocus, topLevelTypes.topKeyDown, topLevelTypes.topKeyUp, topLevelTypes.topMouseDown, topLevelTypes.topMouseUp, topLevelTypes.topSelectionChange]
 	  }
 	};
 	
@@ -30984,7 +31000,7 @@
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 490);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 491);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
@@ -31424,27 +31440,27 @@
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 485);
+	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 486);
 	
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 	
-	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 487);
+	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 488);
 	
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 	
-	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 488);
+	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 489);
 	
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 	
-	var _compose = __webpack_require__(/*! ./compose */ 489);
+	var _compose = __webpack_require__(/*! ./compose */ 490);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 486);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 487);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	/*
 	* This is a dummy function to check if the function name has been altered by minification.
@@ -31453,14 +31469,14 @@
 	function isCrushed() {}
 	
 	if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
-	  (0, _warning2["default"])('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
+	  (0, _warning2['default'])('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
 	}
 	
-	exports.createStore = _createStore2["default"];
-	exports.combineReducers = _combineReducers2["default"];
-	exports.bindActionCreators = _bindActionCreators2["default"];
-	exports.applyMiddleware = _applyMiddleware2["default"];
-	exports.compose = _compose2["default"];
+	exports.createStore = _createStore2['default'];
+	exports.combineReducers = _combineReducers2['default'];
+	exports.bindActionCreators = _bindActionCreators2['default'];
+	exports.applyMiddleware = _applyMiddleware2['default'];
+	exports.compose = _compose2['default'];
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 294)))
 
 /***/ },
@@ -31474,17 +31490,17 @@
 	
 	exports.__esModule = true;
 	exports.ActionTypes = undefined;
-	exports["default"] = createStore;
+	exports['default'] = createStore;
 	
 	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 478);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 483);
+	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 482);
 	
 	var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	/**
 	 * These are private action types reserved by Redux.
@@ -31507,7 +31523,7 @@
 	 * @param {Function} reducer A function that returns the next state tree, given
 	 * the current state tree and the action to handle.
 	 *
-	 * @param {any} [initialState] The initial state. You may optionally specify it
+	 * @param {any} [preloadedState] The initial state. You may optionally specify it
 	 * to hydrate the state from the server in universal apps, or to restore a
 	 * previously serialized user session.
 	 * If you use `combineReducers` to produce the root reducer function, this must be
@@ -31521,12 +31537,12 @@
 	 * @returns {Store} A Redux store that lets you read the state, dispatch actions
 	 * and subscribe to changes.
 	 */
-	function createStore(reducer, initialState, enhancer) {
+	function createStore(reducer, preloadedState, enhancer) {
 	  var _ref2;
 	
-	  if (typeof initialState === 'function' && typeof enhancer === 'undefined') {
-	    enhancer = initialState;
-	    initialState = undefined;
+	  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
+	    enhancer = preloadedState;
+	    preloadedState = undefined;
 	  }
 	
 	  if (typeof enhancer !== 'undefined') {
@@ -31534,7 +31550,7 @@
 	      throw new Error('Expected the enhancer to be a function.');
 	    }
 	
-	    return enhancer(createStore)(reducer, initialState);
+	    return enhancer(createStore)(reducer, preloadedState);
 	  }
 	
 	  if (typeof reducer !== 'function') {
@@ -31542,7 +31558,7 @@
 	  }
 	
 	  var currentReducer = reducer;
-	  var currentState = initialState;
+	  var currentState = preloadedState;
 	  var currentListeners = [];
 	  var nextListeners = currentListeners;
 	  var isDispatching = false;
@@ -31634,7 +31650,7 @@
 	   * return something else (for example, a Promise you can await).
 	   */
 	  function dispatch(action) {
-	    if (!(0, _isPlainObject2["default"])(action)) {
+	    if (!(0, _isPlainObject2['default'])(action)) {
 	      throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
 	    }
 	
@@ -31699,7 +31715,6 @@
 	       * be used to unsubscribe the observable from the store, and prevent further
 	       * emission of values from the observable.
 	       */
-	
 	      subscribe: function subscribe(observer) {
 	        if (typeof observer !== 'object') {
 	          throw new TypeError('Expected the observer to be an object.');
@@ -31715,7 +31730,7 @@
 	        var unsubscribe = outerSubscribe(observeState);
 	        return { unsubscribe: unsubscribe };
 	      }
-	    }, _ref[_symbolObservable2["default"]] = function () {
+	    }, _ref[_symbolObservable2['default']] = function () {
 	      return this;
 	    }, _ref;
 	  }
@@ -31730,7 +31745,7 @@
 	    subscribe: subscribe,
 	    getState: getState,
 	    replaceReducer: replaceReducer
-	  }, _ref2[_symbolObservable2["default"]] = observable, _ref2;
+	  }, _ref2[_symbolObservable2['default']] = observable, _ref2;
 	}
 
 /***/ },
@@ -31741,8 +31756,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 479),
-	    isHostObject = __webpack_require__(/*! ./_isHostObject */ 481),
-	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 482);
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 481);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -31796,8 +31810,7 @@
 	 * // => true
 	 */
 	function isPlainObject(value) {
-	  if (!isObjectLike(value) ||
-	      objectToString.call(value) != objectTag || isHostObject(value)) {
+	  if (!isObjectLike(value) || objectToString.call(value) != objectTag) {
 	    return false;
 	  }
 	  var proto = getPrototype(value);
@@ -31853,35 +31866,6 @@
 
 /***/ },
 /* 481 */
-/*!*******************************************!*\
-  !*** ./~/redux/~/lodash/_isHostObject.js ***!
-  \*******************************************/
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is a host object in IE < 9.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
-	 */
-	function isHostObject(value) {
-	  // Many host objects are `Object` objects that can coerce to strings
-	  // despite having improperly defined `toString` methods.
-	  var result = false;
-	  if (value != null && typeof value.toString != 'function') {
-	    try {
-	      result = !!(value + '');
-	    } catch (e) {}
-	  }
-	  return result;
-	}
-	
-	module.exports = isHostObject;
-
-
-/***/ },
-/* 482 */
 /*!******************************************!*\
   !*** ./~/redux/~/lodash/isObjectLike.js ***!
   \******************************************/
@@ -31912,45 +31896,102 @@
 	 * // => false
 	 */
 	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
+	  return value != null && typeof value == 'object';
 	}
 	
 	module.exports = isObjectLike;
 
 
 /***/ },
-/* 483 */
+/* 482 */
 /*!**********************************************!*\
   !*** ./~/redux/~/symbol-observable/index.js ***!
   \**********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/* global window */
-	'use strict';
+	module.exports = __webpack_require__(/*! ./lib/index */ 483);
+
+
+/***/ },
+/* 483 */
+/*!**************************************************!*\
+  !*** ./~/redux/~/symbol-observable/lib/index.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global, module) {'use strict';
 	
-	module.exports = __webpack_require__(/*! ./ponyfill */ 484)(global || window || this);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	var _ponyfill = __webpack_require__(/*! ./ponyfill */ 485);
+	
+	var _ponyfill2 = _interopRequireDefault(_ponyfill);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var root; /* global window */
+	
+	
+	if (typeof self !== 'undefined') {
+	  root = self;
+	} else if (typeof window !== 'undefined') {
+	  root = window;
+	} else if (typeof global !== 'undefined') {
+	  root = global;
+	} else if (true) {
+	  root = module;
+	} else {
+	  root = Function('return this')();
+	}
+	
+	var result = (0, _ponyfill2['default'])(root);
+	exports['default'] = result;
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../../../../webpack/buildin/module.js */ 484)(module)))
 
 /***/ },
 /* 484 */
-/*!*************************************************!*\
-  !*** ./~/redux/~/symbol-observable/ponyfill.js ***!
-  \*************************************************/
+/*!***********************************!*\
+  !*** (webpack)/buildin/module.js ***!
+  \***********************************/
+/***/ function(module, exports) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+/* 485 */
+/*!*****************************************************!*\
+  !*** ./~/redux/~/symbol-observable/lib/ponyfill.js ***!
+  \*****************************************************/
 /***/ function(module, exports) {
 
 	'use strict';
 	
-	module.exports = function symbolObservablePonyfill(root) {
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports['default'] = symbolObservablePonyfill;
+	function symbolObservablePonyfill(root) {
 		var result;
-		var Symbol = root.Symbol;
+		var _Symbol = root.Symbol;
 	
-		if (typeof Symbol === 'function') {
-			if (Symbol.observable) {
-				result = Symbol.observable;
+		if (typeof _Symbol === 'function') {
+			if (_Symbol.observable) {
+				result = _Symbol.observable;
 			} else {
-				result = Symbol('observable');
-				Symbol.observable = result;
+				result = _Symbol('observable');
+				_Symbol.observable = result;
 			}
 		} else {
 			result = '@@observable';
@@ -31959,9 +32000,8 @@
 		return result;
 	};
 
-
 /***/ },
-/* 485 */
+/* 486 */
 /*!****************************************!*\
   !*** ./~/redux/lib/combineReducers.js ***!
   \****************************************/
@@ -31970,7 +32010,7 @@
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	exports.__esModule = true;
-	exports["default"] = combineReducers;
+	exports['default'] = combineReducers;
 	
 	var _createStore = __webpack_require__(/*! ./createStore */ 477);
 	
@@ -31978,11 +32018,11 @@
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 486);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 487);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	function getUndefinedStateErrorMessage(key, action) {
 	  var actionType = action && action.type;
@@ -31991,20 +32031,24 @@
 	  return 'Given action ' + actionName + ', reducer "' + key + '" returned undefined. ' + 'To ignore an action, you must explicitly return the previous state.';
 	}
 	
-	function getUnexpectedStateShapeWarningMessage(inputState, reducers, action) {
+	function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, unexpectedKeyCache) {
 	  var reducerKeys = Object.keys(reducers);
-	  var argumentName = action && action.type === _createStore.ActionTypes.INIT ? 'initialState argument passed to createStore' : 'previous state received by the reducer';
+	  var argumentName = action && action.type === _createStore.ActionTypes.INIT ? 'preloadedState argument passed to createStore' : 'previous state received by the reducer';
 	
 	  if (reducerKeys.length === 0) {
 	    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
 	  }
 	
-	  if (!(0, _isPlainObject2["default"])(inputState)) {
+	  if (!(0, _isPlainObject2['default'])(inputState)) {
 	    return 'The ' + argumentName + ' has unexpected type of "' + {}.toString.call(inputState).match(/\s([a-z|A-Z]+)/)[1] + '". Expected argument to be an object with the following ' + ('keys: "' + reducerKeys.join('", "') + '"');
 	  }
 	
 	  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
-	    return !reducers.hasOwnProperty(key);
+	    return !reducers.hasOwnProperty(key) && !unexpectedKeyCache[key];
+	  });
+	
+	  unexpectedKeys.forEach(function (key) {
+	    unexpectedKeyCache[key] = true;
 	  });
 	
 	  if (unexpectedKeys.length > 0) {
@@ -32049,11 +32093,22 @@
 	  var finalReducers = {};
 	  for (var i = 0; i < reducerKeys.length; i++) {
 	    var key = reducerKeys[i];
+	
+	    if (process.env.NODE_ENV !== 'production') {
+	      if (typeof reducers[key] === 'undefined') {
+	        (0, _warning2['default'])('No reducer provided for key "' + key + '"');
+	      }
+	    }
+	
 	    if (typeof reducers[key] === 'function') {
 	      finalReducers[key] = reducers[key];
 	    }
 	  }
 	  var finalReducerKeys = Object.keys(finalReducers);
+	
+	  if (process.env.NODE_ENV !== 'production') {
+	    var unexpectedKeyCache = {};
+	  }
 	
 	  var sanityError;
 	  try {
@@ -32071,9 +32126,9 @@
 	    }
 	
 	    if (process.env.NODE_ENV !== 'production') {
-	      var warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action);
+	      var warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action, unexpectedKeyCache);
 	      if (warningMessage) {
-	        (0, _warning2["default"])(warningMessage);
+	        (0, _warning2['default'])(warningMessage);
 	      }
 	    }
 	
@@ -32097,7 +32152,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 294)))
 
 /***/ },
-/* 486 */
+/* 487 */
 /*!**************************************!*\
   !*** ./~/redux/lib/utils/warning.js ***!
   \**************************************/
@@ -32106,7 +32161,7 @@
 	'use strict';
 	
 	exports.__esModule = true;
-	exports["default"] = warning;
+	exports['default'] = warning;
 	/**
 	 * Prints a warning in the console if it exists.
 	 *
@@ -32130,7 +32185,7 @@
 	}
 
 /***/ },
-/* 487 */
+/* 488 */
 /*!*******************************************!*\
   !*** ./~/redux/lib/bindActionCreators.js ***!
   \*******************************************/
@@ -32139,7 +32194,7 @@
 	'use strict';
 	
 	exports.__esModule = true;
-	exports["default"] = bindActionCreators;
+	exports['default'] = bindActionCreators;
 	function bindActionCreator(actionCreator, dispatch) {
 	  return function () {
 	    return dispatch(actionCreator.apply(undefined, arguments));
@@ -32189,7 +32244,7 @@
 	}
 
 /***/ },
-/* 488 */
+/* 489 */
 /*!****************************************!*\
   !*** ./~/redux/lib/applyMiddleware.js ***!
   \****************************************/
@@ -32201,13 +32256,13 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	exports["default"] = applyMiddleware;
+	exports['default'] = applyMiddleware;
 	
-	var _compose = __webpack_require__(/*! ./compose */ 489);
+	var _compose = __webpack_require__(/*! ./compose */ 490);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	/**
 	 * Creates a store enhancer that applies middleware to the dispatch method
@@ -32231,8 +32286,8 @@
 	  }
 	
 	  return function (createStore) {
-	    return function (reducer, initialState, enhancer) {
-	      var store = createStore(reducer, initialState, enhancer);
+	    return function (reducer, preloadedState, enhancer) {
+	      var store = createStore(reducer, preloadedState, enhancer);
 	      var _dispatch = store.dispatch;
 	      var chain = [];
 	
@@ -32245,7 +32300,7 @@
 	      chain = middlewares.map(function (middleware) {
 	        return middleware(middlewareAPI);
 	      });
-	      _dispatch = _compose2["default"].apply(undefined, chain)(store.dispatch);
+	      _dispatch = _compose2['default'].apply(undefined, chain)(store.dispatch);
 	
 	      return _extends({}, store, {
 	        dispatch: _dispatch
@@ -32255,7 +32310,7 @@
 	}
 
 /***/ },
-/* 489 */
+/* 490 */
 /*!********************************!*\
   !*** ./~/redux/lib/compose.js ***!
   \********************************/
@@ -32285,32 +32340,29 @@
 	    return function (arg) {
 	      return arg;
 	    };
-	  } else {
-	    var _ret = function () {
-	      var last = funcs[funcs.length - 1];
-	      var rest = funcs.slice(0, -1);
-	      return {
-	        v: function v() {
-	          return rest.reduceRight(function (composed, f) {
-	            return f(composed);
-	          }, last.apply(undefined, arguments));
-	        }
-	      };
-	    }();
-	
-	    if (typeof _ret === "object") return _ret.v;
 	  }
+	
+	  if (funcs.length === 1) {
+	    return funcs[0];
+	  }
+	
+	  var last = funcs[funcs.length - 1];
+	  var rest = funcs.slice(0, -1);
+	  return function () {
+	    return rest.reduceRight(function (composed, f) {
+	      return f(composed);
+	    }, last.apply(undefined, arguments));
+	  };
 	}
 
 /***/ },
-/* 490 */
+/* 491 */
 /*!*************************************************!*\
   !*** ./~/react-redux/~/lodash/isPlainObject.js ***!
   \*************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 491),
-	    isHostObject = __webpack_require__(/*! ./_isHostObject */ 493),
+	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 492),
 	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 494);
 	
 	/** `Object#toString` result references. */
@@ -32365,8 +32417,7 @@
 	 * // => true
 	 */
 	function isPlainObject(value) {
-	  if (!isObjectLike(value) ||
-	      objectToString.call(value) != objectTag || isHostObject(value)) {
+	  if (!isObjectLike(value) || objectToString.call(value) != objectTag) {
 	    return false;
 	  }
 	  var proto = getPrototype(value);
@@ -32382,13 +32433,13 @@
 
 
 /***/ },
-/* 491 */
+/* 492 */
 /*!*************************************************!*\
   !*** ./~/react-redux/~/lodash/_getPrototype.js ***!
   \*************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(/*! ./_overArg */ 492);
+	var overArg = __webpack_require__(/*! ./_overArg */ 493);
 	
 	/** Built-in value references. */
 	var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -32397,7 +32448,7 @@
 
 
 /***/ },
-/* 492 */
+/* 493 */
 /*!********************************************!*\
   !*** ./~/react-redux/~/lodash/_overArg.js ***!
   \********************************************/
@@ -32418,35 +32469,6 @@
 	}
 	
 	module.exports = overArg;
-
-
-/***/ },
-/* 493 */
-/*!*************************************************!*\
-  !*** ./~/react-redux/~/lodash/_isHostObject.js ***!
-  \*************************************************/
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is a host object in IE < 9.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
-	 */
-	function isHostObject(value) {
-	  // Many host objects are `Object` objects that can coerce to strings
-	  // despite having improperly defined `toString` methods.
-	  var result = false;
-	  if (value != null && typeof value.toString != 'function') {
-	    try {
-	      result = !!(value + '');
-	    } catch (e) {}
-	  }
-	  return result;
-	}
-	
-	module.exports = isHostObject;
 
 
 /***/ },
@@ -32481,7 +32503,7 @@
 	 * // => false
 	 */
 	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
+	  return value != null && typeof value == 'object';
 	}
 	
 	module.exports = isObjectLike;
@@ -32669,7 +32691,7 @@
 	
 	// The state machines are just Redux reducers
 	function StateMachine() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
 	  var action = arguments[1];
 	
 	  return {
@@ -32707,7 +32729,7 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	function ViewStateMachine() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH : arguments[0];
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _StateMachineDefinitions.VIEW_STATE.CALENDAR_MONTH;
 	  var action = arguments[1];
 	
 	  switch (action.type) {
@@ -32719,7 +32741,7 @@
 	}
 	
 	function TimeStateMachine() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  var action = arguments[1];
 	
 	  switch (action.type) {
@@ -32742,7 +32764,7 @@
 	}
 	
 	function DataStateMachine() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	  var action = arguments[1];
 	
 	  switch (action.type) {
@@ -32909,15 +32931,11 @@
 	
 	var _ViewCalendar2 = _interopRequireDefault(_ViewCalendar);
 	
-	var _ViewEvent = __webpack_require__(/*! ./ViewEvent.jsx */ 511);
-	
-	var _ViewEvent2 = _interopRequireDefault(_ViewEvent);
-	
-	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 512);
+	var _ViewSettings = __webpack_require__(/*! ./ViewSettings.jsx */ 514);
 	
 	var _ViewSettings2 = _interopRequireDefault(_ViewSettings);
 	
-	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 513);
+	var _ViewControls = __webpack_require__(/*! ./ViewControls.jsx */ 515);
 	
 	var _ViewControls2 = _interopRequireDefault(_ViewControls);
 	
@@ -32963,13 +32981,6 @@
 	            month: this.props.setTime.calMonth,
 	            day: this.props.setTime.viewDay,
 	            viewMode: this.props.view
-	          }));
-	          break;
-	        case _StateMachineDefinitions.VIEW_STATE.EVENT_DETAILS:
-	          views.push(_react2.default.createElement(_ViewEvent2.default, {
-	            key: 3,
-	            eventData: null,
-	            isElementHidden: true
 	          }));
 	          break;
 	        case _StateMachineDefinitions.VIEW_STATE.SETTINGS_PANEL:
@@ -33035,12 +33046,42 @@
 	
 	var _ContainerCalendarDay2 = _interopRequireDefault(_ContainerCalendarDay);
 	
+	var _ContainerCalendarUpcoming = __webpack_require__(/*! ./ContainerCalendarUpcoming.jsx */ 512);
+	
+	var _ContainerCalendarUpcoming2 = _interopRequireDefault(_ContainerCalendarUpcoming);
+	
 	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ViewCalendar = _react2.default.createClass({
 	  displayName: 'ViewCalendar',
+	
+	  pan: function pan() {
+	    console.log("panned");
+	  },
+	
+	  componentDidMount: function componentDidMount() {
+	    this.touchControl = new Hammer.Manager(document.getElementById("view-calendar"));
+	
+	    panOptions = {
+	      event: 'pan',
+	      pointers: 0,
+	      threshold: 0,
+	      direction: Hammer.DIRECTION_HORIZONTAL
+	    };
+	
+	    this.touchControl.add(new Hammer.Pan(panOptions));
+	    this.touchControl.get('pan').set({ enable: true });
+	
+	    this.touchControl.on("panleft panright", function (ev) {
+	      console.log(ev.type + " gesture detected.");
+	    });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.touchControl.off('pan', this.pan);
+	  },
 	
 	  render: function render() {
 	    var year = this.props.year;
@@ -33049,7 +33090,7 @@
 	    var today = today.getDate();
 	
 	    var calendarPages = [];
-	    var todayInBrief = [];
+	    var upcomingEvents = [];
 	
 	    if (this.props.viewMode == 'calendar-month') {
 	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
@@ -33061,20 +33102,19 @@
 	
 	      var title = "Prochains évènements";
 	      var subtitle = "Plus tard aujourd'hui";
-	      //
 	
-	      todayInBrief.push(_react2.default.createElement(
+	      upcomingEvents.push(_react2.default.createElement(
 	        'span',
 	        { key: 1, className: 'title' },
 	        title
 	      ));
-	      todayInBrief.push(_react2.default.createElement(
+	      upcomingEvents.push(_react2.default.createElement(
 	        'span',
 	        { key: 2, className: 'subtitle' },
 	        subtitle
 	      ));
 	
-	      todayInBrief.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
+	      upcomingEvents.push(_react2.default.createElement(_ContainerCalendarUpcoming2.default, {
 	        key: 3,
 	        year: year,
 	        month: month,
@@ -33096,21 +33136,20 @@
 	
 	    return _react2.default.createElement(
 	      'div',
-	      { id: 'view-calendar' },
+	      { id: 'view-calendar-and-upcoming-events' },
 	      _react2.default.createElement(
-	        'time',
-	        { dateTime: year, className: 'year' },
+	        'div',
+	        { id: 'view-calendar' },
 	        _react2.default.createElement(
-	          'span',
-	          { className: 'year-label' },
-	          this.props.year
-	        ),
-	        calendarPages
+	          'time',
+	          { dateTime: year, className: 'year' },
+	          calendarPages
+	        )
 	      ),
 	      _react2.default.createElement(
 	        'div',
-	        { id: 'view-today-in-brief' },
-	        todayInBrief
+	        { id: 'view-upcoming-events' },
+	        upcomingEvents
 	      )
 	    );
 	  }
@@ -33188,70 +33227,28 @@
 	
 	var _ViewCalendarWeek2 = _interopRequireDefault(_ViewCalendarWeek);
 	
+	var _DataLoader = __webpack_require__(/*! ./DataLoader.js */ 511);
+	
+	var _DataLoader2 = _interopRequireDefault(_DataLoader);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ViewCalendarMonth = _react2.default.createClass({
 	  displayName: 'ViewCalendarMonth',
 	
-	  loadEventsFromServer: function loadEventsFromServer() {
-	    var year = this.props.year;
-	    var month = this.props.month;
-	    var apiURL = "http://feecum.ca/dev/backend.php?year=" + year + "&month=" + parseInt(month);
-	
-	    this.serverRequest = $.ajax({
-	      url: apiURL,
-	      dataType: 'json',
-	      cache: false,
-	      async: true,
-	      success: function (data) {
-	
-	        var recordAlreadyExists = false;
-	
-	        for (var i = 0, len = this.props.data.length; i < len; i++) {
-	          if (year == this.props.data[i].year && month == this.props.data[i].month) {
-	            recordAlreadyExists = true;
-	
-	            // Eventually, check to see if records need updating here.
-	          }
-	        }
-	
-	        if (recordAlreadyExists == false) {
-	          var newData = {
-	            events: data.events,
-	            calYear: year,
-	            calMonth: month
-	          };
-	          this.props.loadDataIntoStateMachine(newData);
-	        }
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(apiURL, status, err.toString());
-	        console.warn(xhr.responseText);
-	      }.bind(this)
-	    });
-	  },
 	  componentDidMount: function componentDidMount() {
-	    // Fetch data from FÉÉCUM servers
-	    this.loadEventsFromServer();
-	
-	    // Check for new events every 10 seconds
-	    // Currently unsupported by StateMachineComponents.js
-	    setInterval(this.loadEventsFromServer, 10000);
-	  },
-	  componentDidUpdate: function componentDidUpdate() {
-	    // Fetch data from FÉÉCUM servers
-	    this.loadEventsFromServer();
+	    _DataLoader2.default.loadApplicationState(this.props.data);
+	    _DataLoader2.default.loadEvents(this.props.year, this.props.month, this.props.loadDataIntoStateMachine);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
-	    // Cancel any outstanding requests before the component is unmounted.
-	    this.serverRequest.abort();
+	    _DataLoader2.default.abortConnection();
 	  },
 	  render: function render() {
 	    var year = this.props.year;
 	    var month = this.props.month;
 	
 	    // Calculate how many weeks in the currently displayed month
-	    var monthName = monthNumber(month - 1);
+	    var monthName = monthNumber(month - 1).capitalizeFirstLetter();
 	    var firstDay = new Date(year, month - 1, 1);
 	    var weeksInMonth = firstDay.countWeeksOfMonth();
 	    var indexOfFirstWeek = firstDay.getWeekNumber();
@@ -33273,53 +33270,62 @@
 	    }
 	
 	    return _react2.default.createElement(
-	      'time',
-	      { dateTime: year + "-" + leadingZeros(month), className: "month " + displayClass },
+	      'div',
+	      null,
 	      _react2.default.createElement(
 	        'span',
-	        { className: 'month-label' },
-	        monthName
+	        { className: 'year-label' },
+	        this.props.year
 	      ),
 	      _react2.default.createElement(
-	        'div',
-	        { className: 'weekdays-labels' },
+	        'time',
+	        { dateTime: year + "-" + leadingZeros(month), className: "month " + displayClass },
 	        _react2.default.createElement(
 	          'span',
-	          { className: 'weekend-label' },
-	          'Dim'
+	          { className: 'month-label' },
+	          monthName
 	        ),
 	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Lun'
+	          'div',
+	          { className: 'weekdays-labels' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekend-label' },
+	            'Dim'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Lun'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Mar'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Mer'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Jeu'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekday-label' },
+	            'Ven'
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'weekend-label' },
+	            'Sam'
+	          )
 	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Mar'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Mer'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Jeu'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekday-label' },
-	          'Ven'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'weekend-label' },
-	          'Sam'
-	        )
-	      ),
-	      calendarWeeks
+	        calendarWeeks
+	      )
 	    );
 	  }
 	});
@@ -33555,13 +33561,6 @@
 	    // Add class if day has events
 	    dayClass += eventsForThisDate.length > 0 ? " has-events" : "";
 	
-	    console.log("this.props.year == " + this.props.year);
-	    console.log("today.getFullYear() == " + today.getFullYear());
-	    console.log(today.getFullYear() == this.props.year);
-	    console.log(today.getMonth() == this.props.month - 1);
-	    console.log(today.getDate() == this.props.day);
-	    console.log(".");
-	
 	    // Add class if day is today
 	    dayClass += today.getFullYear() == this.props.year && today.getMonth() == this.props.month - 1 && today.getDate() == this.props.day ? " today" : "";
 	
@@ -33648,8 +33647,8 @@
 	
 	
 	  addToCalendar: function addToCalendar() {
-	    var firstReminder = arguments.length <= 0 || arguments[0] === undefined ? 60 : arguments[0];
-	    var secondReminder = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+	    var firstReminder = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 60;
+	    var secondReminder = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 	
 	
 	    event = _DeviceCalendar2.default.constructEvent(this.props.title, this.props.tStart, this.props.tEnd, this.props.description);
@@ -33747,8 +33746,8 @@
 	var DeviceCalendar = {
 	
 	  constructEvent: function constructEvent(title, tStart, tEnd, description) {
-	    var location = arguments.length <= 4 || arguments[4] === undefined ? "FÉÉCUM" : arguments[4];
-	    var url = arguments.length <= 5 || arguments[5] === undefined ? "http://www.feecum.ca" : arguments[5];
+	    var location = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "FÉÉCUM";
+	    var url = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "http://www.feecum.ca";
 	
 	
 	    return {
@@ -33809,8 +33808,8 @@
 	
 	  add: function add(event) // Reminders are in units of minutes
 	  {
-	    var firstReminder = arguments.length <= 1 || arguments[1] === undefined ? 60 : arguments[1];
-	    var secondReminder = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	    var firstReminder = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 60;
+	    var secondReminder = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 	
 	
 	    var title = event.title;
@@ -33879,8 +33878,167 @@
 /***/ },
 /* 511 */
 /*!******************************!*\
-  !*** ./src/js/ViewEvent.jsx ***!
+  !*** ./src/js/DataLoader.js ***!
   \******************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var DataLoader = {
+	
+	  connectionState: function connectionState() {
+	    // This uses the cordova-plugin-network-information plugin.
+	    var networkState = navigator.connection.type;
+	
+	    var states = {};
+	    states[Connection.UNKNOWN] = 'Unknown connection';
+	    states[Connection.ETHERNET] = 'Ethernet connection';
+	    states[Connection.WIFI] = 'WiFi connection';
+	    states[Connection.CELL_2G] = 'Cell 2G connection';
+	    states[Connection.CELL_3G] = 'Cell 3G connection';
+	    states[Connection.CELL_4G] = 'Cell 4G connection';
+	    states[Connection.CELL] = 'Cell generic connection';
+	    states[Connection.NONE] = 'No network connection';
+	
+	    return states[networkState];
+	  },
+	
+	  loadEvents: function loadEvents(year, month, loadDataIntoStateMachine) {
+	    var loadedEvents = [];
+	    var remoteEvents = [];
+	    var deviceEvents = this.loadEventsFromDevice(year, month);
+	
+	    // Keep scope
+	    this.loadDataIntoStateMachine = loadDataIntoStateMachine;
+	
+	    if (this.needsUpdating(year, month)) {
+	      switch (this.connectionState()) {
+	        case 'No network connection':
+	          this.registerEvents(deviceEvents, year, month);
+	          console.warn("No network connection");
+	          break;
+	        case 'Unknown connection':
+	          this.loadEventsFromServer(year, month);
+	          console.warn("Connection status unknown");
+	          break;
+	        default:
+	          this.loadEventsFromServer(year, month);
+	      }
+	    } else {
+	      this.registerEvents(deviceEvents, year, month);
+	    }
+	  },
+	
+	  loadEventsFromServer: function loadEventsFromServer(year, month) {
+	    var apiURL = "http://feecum.ca/dev/backend.php?year=" + year + "&month=" + parseInt(month);
+	
+	    this.serverRequest = $.ajax({
+	      url: apiURL,
+	      dataType: 'json',
+	      cache: false,
+	      async: true,
+	      success: function (data) {
+	        this.eraseEventsFromDevice(year, month);
+	        this.registerEvents(data.events, year, month);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(apiURL, status, err.toString());
+	        console.warn(xhr.responseText);
+	      }.bind(this)
+	    });
+	  },
+	
+	  abortConnection: function abortConnection() {
+	    if ("serverRequest" in this) {
+	      this.serverRequest.abort();
+	    }
+	  },
+	
+	  loadEventsFromDevice: function loadEventsFromDevice(year, month) {
+	    var storage = window.localStorage;
+	    var key = year + "-" + leadingZeros(month);
+	
+	    return JSON.parse(storage.getItem(key));
+	  },
+	
+	  needsUpdating: function needsUpdating(year, month) {
+	    var storage = window.localStorage;
+	    var lastUpdatedKey = year + "-" + leadingZeros(month) + "-" + "lastUpdated";
+	    var timestamp = Math.floor(+new Date() / 1000);
+	
+	    // Check if app has cached data.
+	    var appHasCachedData = storage.getItem(lastUpdatedKey) != null;
+	
+	    // Check if data is less than an hour old.
+	    var appHasRecentData = timestamp - storage.getItem(lastUpdatedKey) <= 216000;
+	
+	    // App needs updating if there is no data or if data is old.
+	    return !appHasCachedData || !appHasRecentData;
+	  },
+	
+	  registerEvents: function registerEvents(monthlyEvents, year, month) {
+	    var data = {
+	      events: monthlyEvents,
+	      calYear: year,
+	      calMonth: month
+	    };
+	
+	    this.eraseEventsFromDevice(year, month);
+	    this.writeEventsToDevice(data);
+	
+	    if (this.applicationStateNeedsUpdating(year, month)) {
+	      this.loadDataIntoStateMachine(data);
+	    }
+	  },
+	
+	  applicationStateNeedsUpdating: function applicationStateNeedsUpdating(year, month) {
+	    if (this.applicationState.length > 0) {
+	      for (var i = 0, len = this.applicationState.length; i < len; i++) {
+	        if (this.applicationState[i].year != year || this.applicationState[i].month != month) {
+	          return true;
+	        }
+	      }
+	    } else {
+	      return true;
+	    }
+	    return false;
+	  },
+	
+	  loadApplicationState: function loadApplicationState(data) {
+	    this.applicationState = data;
+	  },
+	
+	  writeEventsToDevice: function writeEventsToDevice(data) {
+	    var storage = window.localStorage;
+	    var key = data.calYear + "-" + leadingZeros(data.calMonth);
+	    var lastUpdatedKey = key + "-" + "lastUpdated";
+	    var value = JSON.stringify(data.events);
+	    var timestamp = Math.floor(+new Date() / 1000);
+	
+	    storage.setItem(key, value);
+	    storage.setItem(lastUpdatedKey, timestamp);
+	  },
+	
+	  eraseEventsFromDevice: function eraseEventsFromDevice(year, month) {
+	    var storage = window.localStorage;
+	    var key = year + "-" + leadingZeros(month);
+	    var lastUpdatedKey = key + "-" + "lastUpdated";
+	
+	    storage.removeItem(key);
+	    storage.removeItem(lastUpdatedKey);
+	  }
+	};
+	
+	exports.default = DataLoader;
+
+/***/ },
+/* 512 */
+/*!**********************************************!*\
+  !*** ./src/js/ContainerCalendarUpcoming.jsx ***!
+  \**********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33889,43 +34047,171 @@
 	  value: true
 	});
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _react = __webpack_require__(/*! react */ 299);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 331);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 469);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
+	
+	var _ViewCalendarUpcoming = __webpack_require__(/*! ./ViewCalendarUpcoming.jsx */ 513);
+	
+	var _ViewCalendarUpcoming2 = _interopRequireDefault(_ViewCalendarUpcoming);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// This generates ContainerApplication, which passes the store's state onto Application, its child component.
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    data: state.data
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    loadDataIntoStateMachine: function loadDataIntoStateMachine(data) {
+	      dispatch((0, _StateMachineDefinitions.loadData)(data));
+	    }
+	  };
+	};
+	
+	var ContainerCalendarUpcoming = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_ViewCalendarUpcoming2.default);
+	
+	exports.default = ContainerCalendarUpcoming;
+
+/***/ },
+/* 513 */
+/*!*****************************************!*\
+  !*** ./src/js/ViewCalendarUpcoming.jsx ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	
 	var _react = __webpack_require__(/*! react */ 299);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _ViewCalendarEvent = __webpack_require__(/*! ./ViewCalendarEvent.jsx */ 509);
+	
+	var _ViewCalendarEvent2 = _interopRequireDefault(_ViewCalendarEvent);
+	
+	var _StateMachineDefinitions = __webpack_require__(/*! ./StateMachineDefinitions.js */ 500);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var ViewCalendarUpcoming = _react2.default.createClass({
+	  displayName: 'ViewCalendarUpcoming',
 	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	  getUpcomingEvents: function getUpcomingEvents(numberOfEventsToGet) {
+	    var year = this.props.year;
+	    var month = this.props.month;
+	    var day = this.props.day;
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	    // Don't forget month is zero-indexed for Date().
+	    var thisDate = new Date(year, month - 1, day);
 	
-	var ViewEvent = function (_React$Component) {
-	  _inherits(ViewEvent, _React$Component);
+	    var data = this.props.data;
+	    var eventsForThisMonthAndTheNext = [];
+	    var upcomingEvents = [];
 	
-	  function ViewEvent() {
-	    _classCallCheck(this, ViewEvent);
+	    // Look in the state for data for the currently displayed month
+	    if (data.length > 0) {
+	      for (var i = 0, length = data.length; i < length; i++) {
+	        if (data[i].year == year && (data[i].month == month || data[i].month == month + 1)) {
+	          eventsForThisMonthAndTheNext = eventsForThisMonthAndTheNext.concat(data[i].events);
+	        }
+	      }
+	    }
 	
-	    return _possibleConstructorReturn(this, (ViewEvent.__proto__ || Object.getPrototypeOf(ViewEvent)).apply(this, arguments));
+	    if (eventsForThisMonthAndTheNext.length > 0) {
+	      $.each(eventsForThisMonthAndTheNext, function (i, event) {
+	        // See calendar-functions.js
+	        var eventYear = event.t_start.getYear();
+	        var eventMonth = event.t_start.getMonth();
+	        var eventDay = event.t_start.getDay();
+	
+	        // Don't forget month is zero-indexed for Date().
+	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
+	
+	        if (eventDate.getTime() >= thisDate.getTime() && upcomingEvents.length < numberOfEventsToGet) {
+	          upcomingEvents.push(event);
+	        }
+	      });
+	    }
+	
+	    return upcomingEvents;
+	  },
+	
+	  render: function render() {
+	    // Return all events for this day
+	    var numberOfEventsToGet = 5;
+	    var upcomingEvents = this.getUpcomingEvents(numberOfEventsToGet);
+	    var viewUpcomingEvents = [];
+	
+	    // Don't forget month is zero-indexed for Date().
+	    var today = new Date();
+	    today.setHours(0, 0, 0, 0);
+	
+	    var dateIndex = today;
+	
+	    if (upcomingEvents.length > 0) {
+	      for (var i = 0, len = upcomingEvents.length; i < len; i++) {
+	        var event = upcomingEvents[i];
+	
+	        // See calendar-functions.js
+	        var eventYear = event.t_start.getYear();
+	        var eventMonth = event.t_start.getMonth();
+	        var eventDay = event.t_start.getDay();
+	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
+	        eventDate.setHours(0, 0, 0, 0);
+	
+	        if (eventDate > dateIndex) {
+	          var weekDay = dayNumber(eventDate.getDay()).capitalizeFirstLetter();
+	          var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth() - 1) + " " + eventDate.getFullYear();
+	
+	          viewUpcomingEvents.push(_react2.default.createElement(
+	            'span',
+	            { key: i + numberOfEventsToGet, className: 'subtitle' },
+	            subtitle
+	          ));
+	
+	          dateIndex = eventDate;
+	        }
+	
+	        viewUpcomingEvents.push(_react2.default.createElement(_ViewCalendarEvent2.default, {
+	          key: i,
+	          id: event.id,
+	          category: event.category,
+	          title: event.summary,
+	          tStart: event.t_start,
+	          tEnd: event.t_end,
+	          description: event.description
+	        }));
+	      }
+	    }
+	
+	    return _react2.default.createElement(
+	      'div',
+	      { id: 'dayView' },
+	      viewUpcomingEvents
+	    );
 	  }
 	
-	  _createClass(ViewEvent, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement('div', null);
-	    }
-	  }]);
+	});
 	
-	  return ViewEvent;
-	}(_react2.default.Component);
-	
-	exports.default = ViewEvent;
+	exports.default = ViewCalendarUpcoming;
 
 /***/ },
-/* 512 */
+/* 514 */
 /*!*********************************!*\
   !*** ./src/js/ViewSettings.jsx ***!
   \*********************************/
@@ -33973,7 +34259,7 @@
 	exports.default = ViewSettings;
 
 /***/ },
-/* 513 */
+/* 515 */
 /*!*********************************!*\
   !*** ./src/js/ViewControls.jsx ***!
   \*********************************/
@@ -34051,7 +34337,7 @@
 	          titleBar.push(_react2.default.createElement(
 	            'div',
 	            { key: '2', id: 'ctrl-title-bar' },
-	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'FÉÉCUM' })
+	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'F\xC9\xC9CUM' })
 	          ));
 	          rightButton.push(_react2.default.createElement(
 	            'div',
@@ -34069,29 +34355,21 @@
 	            { key: '1', id: 'ctrl-left-button' },
 	            _react2.default.createElement(
 	              'span',
-	              { onClick: exitDayMode },
-	              "◀︎ " + monthNumber(previousMonthNumber(this.props.month) - 1).substring(0, 3)
+	              { className: 'menu-button-back', onClick: exitDayMode },
+	              _react2.default.createElement('img', { src: 'img/controls_arrow_left.png', alt: 'Back' })
 	            )
 	          ));
 	          titleBar.push(_react2.default.createElement(
 	            'div',
 	            { key: '2', id: 'ctrl-title-bar' },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'FÉÉCUM'
-	            )
+	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'F\xC9\xC9CUM' })
 	          ));
 	          break;
 	        default:
 	          titleBar.push(_react2.default.createElement(
 	            'div',
 	            { key: '2', id: 'ctrl-title-bar' },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'FÉÉCUM'
-	            )
+	            _react2.default.createElement('img', { src: 'img/FEECUM_header.png', alt: 'F\xC9\xC9CUM' })
 	          ));
 	      }
 	
@@ -34111,7 +34389,7 @@
 	exports.default = ViewControls;
 
 /***/ },
-/* 514 */
+/* 516 */
 /*!**************************************!*\
   !*** ./~/fastclick/lib/fastclick.js ***!
   \**************************************/
