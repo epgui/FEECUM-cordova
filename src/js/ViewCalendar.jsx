@@ -10,7 +10,7 @@ var ViewCalendar = React.createClass(
   {
     this.pannable = document.getElementById("spring-calendar");
     this.setupSpring();
-  	this.setupPan();
+    this.setupPan();
   },
 
   componentDidUpdate: function()
@@ -39,13 +39,6 @@ var ViewCalendar = React.createClass(
   {
     this.viewportWidth = this.getDeviceWidth();
     this.changePage = null;
-
-    // var tabWidthRunningSum  = [];
-    // var calendarMonths      = [];
-    // var calendarMonthsIndex = 0;
-    // var panVelocity         = 0;
-    // var panDistance         = 0;
-    // var isDragging          = false;
 
     var springSystem = new rebound.SpringSystem();
     this.spring = springSystem.createSpring(100, 15);

@@ -1,2 +1,4 @@
 .DS_Store
 platforms/*/
+www/js/bundle.js
+www/js/bundle.js.map
