@@ -42,7 +42,11 @@ body {
 
 #views { bottom: 0; left: 0; padding: 55px 0 0; position: absolute; right: 0; top: 0; z-index: 1; }
 
-#view-calendar { overflow-x: scroll; position: relative; width: 100%; }
+#view-calendar { overflow: hidden; position: relative; width: 100%; }
+#view-calendar #spring-calendar { position: relative; }
+#view-calendar div.previous-month { bottom: 0; left: -100%; position: absolute; top: 0; width: 100%; }
+#view-calendar div.current-month { width: 100%; }
+#view-calendar div.next-month { bottom: 0; left: 100%; position: absolute; top: 0; width: 100%; }
 #view-calendar time.year { display: block; margin: 0; padding: 0; width: 100%; }
 #view-calendar .year-label { background: #F8B629; color: #BF8B1A; display: block; font-size: 20px; height: 24px; line-height: 24px; margin: 0; padding: 22px 12px 5px; }
 #view-calendar time.month { display: block; margin: 0; padding: 0; width: 100%; }

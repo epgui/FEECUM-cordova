@@ -48,7 +48,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! babel-polyfill */1);
-	module.exports = __webpack_require__(/*! /Users/GP/Developer/FEECUM-cordova/src/js/index.jsx */298);
+	module.exports = __webpack_require__(/*! /Users/Guillaume/Developer/FEECUM-cordova/src/js/index.jsx */298);
 
 
 /***/ },
@@ -33057,45 +33057,82 @@
 	var ViewCalendar = _react2.default.createClass({
 	  displayName: 'ViewCalendar',
 	
-	  pan: function pan(event) {
-	    var elementToPan = document.getElementById("view-calendar");
-	
-	    elementToPan.style.left = event.deltaX + "px";
-	    event.srcEvent.preventDefault();
+	  componentDidMount: function componentDidMount() {
+	    this.pannable = document.getElementById("spring-calendar");
+	    this.setupSpring();
+	    this.setupPan();
 	  },
 	
-	  componentDidMount: function componentDidMount() {
-	    this.touchControl = new Hammer.Manager(document.getElementById("view-calendar"));
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.removeSpring();
+	    this.removePan();
+	  },
 	
-<<<<<<< HEAD
+	  getDeviceWidth: function getDeviceWidth() {
+	    return Math.max(document.documentElement["clientWidth"], document.body["scrollWidth"], document.documentElement["scrollWidth"], document.body["offsetWidth"], document.documentElement["offsetWidth"]);
+	  },
+	
+	  setupSpring: function setupSpring() {
+	    this.viewportWidth = this.getDeviceWidth();
+	
+	    console.log(this.viewportWidth);
+	
+	    // var tabWidthRunningSum  = [];
+	    // var calendarMonths      = [];
+	    // var calendarMonthsIndex = 0;
+	    // var panVelocity         = 0;
+	    // var panDistance         = 0;
+	    // var isDragging          = false;
+	
+	    var springSystem = new rebound.SpringSystem();
+	    this.spring = springSystem.createSpring(100, 15);
+	
+	    this.spring.addListener({
+	      onSpringUpdate: function (spring) {
+	        var val = spring.getCurrentValue();
+	        val = rebound.MathUtil.mapValueInRange(val, 0, 1, 0, this.viewportWidth);
+	        this.slideCalendar(val);
+	      }.bind(this)
+	    });
+	  },
+	
+	  slideCalendar: function slideCalendar(val) {
+	    console.log("on fire baby! val = " + val);
+	    this.pannable.style.left = val + "px";
+	  },
+	
+	  removeSpring: function removeSpring() {
+	    this.spring.destroy();
+	  },
+	
+	  setupPan: function setupPan() {
+	    this.touchControl = new Hammer.Manager(this.pannable);
+	
 	    var panOptions = {
-=======
-	    panOptions = {
->>>>>>> 29a5fb46ce44c4db2606b9dc3a3fb246ed426d2b
 	      event: 'pan',
 	      pointers: 0,
 	      threshold: 0,
 	      direction: Hammer.DIRECTION_HORIZONTAL
 	    };
-<<<<<<< HEAD
 	
 	    this.touchControl.add(new Hammer.Pan(panOptions));
 	    this.touchControl.get('pan').set({ enable: true });
 	    this.touchControl.on("panleft panright", this.pan);
-=======
-	
-	    this.touchControl.add(new Hammer.Pan(panOptions));
-	    this.touchControl.get('pan').set({ enable: true });
-	
-	    this.touchControl.on("panleft panright", function (ev) {
-	      console.log(ev.type + " gesture detected.");
-	    });
->>>>>>> 29a5fb46ce44c4db2606b9dc3a3fb246ed426d2b
+	    this.touchControl.on("panend pancancel", this.panSpring);
 	  },
 	
-	  componentWillUnmount: function componentWillUnmount() {
-	    console.log("unmounted");
+	  removePan: function removePan() {
 	    this.touchControl.off('pan', this.pan);
+	  },
+	
+	  pan: function pan(event) {
+	    this.spring.setCurrentValue(event.deltaX / this.viewportWidth).setAtRest();
+	    event.srcEvent.preventDefault();
+	  },
+	
+	  panSpring: function panSpring(event) {
+	    // currentPosition = this.pannable.offsetLeft;
+	    this.spring.setEndValue(0);
 	  },
 	
 	  render: function render() {
@@ -33110,9 +33147,24 @@
 	    if (this.props.viewMode == 'calendar-month') {
 	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
 	        key: 1,
+	        year: previousMonthYearNumber(year, month),
+	        month: previousMonthNumber(month),
+	        viewMode: this.props.viewMode,
+	        displayMode: "previous-month"
+	      }));
+	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
+	        key: 2,
 	        year: year,
 	        month: month,
-	        viewMode: this.props.viewMode
+	        viewMode: this.props.viewMode,
+	        displayMode: "current-month"
+	      }));
+	      calendarPages.push(_react2.default.createElement(_ContainerCalendarMonth2.default, {
+	        key: 3,
+	        year: nextMonthYearNumber(year, month),
+	        month: nextMonthNumber(month),
+	        viewMode: this.props.viewMode,
+	        displayMode: "next-month"
 	      }));
 	
 	      var title = "Prochains évènements";
@@ -33157,9 +33209,10 @@
 	        { id: 'view-calendar' },
 	        _react2.default.createElement(
 	          'time',
-	          { dateTime: year, className: 'year' },
+	          { id: 'spring-calendar', dateTime: year, className: 'year' },
 	          calendarPages
-	        )
+	        ),
+	        _react2.default.createElement('script', { type: 'text/javascript', src: 'js/calendarMotion.js' })
 	      ),
 	      _react2.default.createElement(
 	        'div',
@@ -33265,12 +33318,11 @@
 	    // Calculate how many weeks in the currently displayed month
 	    var monthName = monthNumber(month - 1).capitalizeFirstLetter();
 	    var firstDay = new Date(year, month - 1, 1);
-	    var weeksInMonth = firstDay.countWeeksOfMonth();
 	    var indexOfFirstWeek = firstDay.getWeekNumber();
 	    var calendarWeeks = [];
 	    var displayClass = "";
 	
-	    for (var i = 0; i < weeksInMonth; i++) {
+	    for (var i = 0; i < 6; i++) {
 	      calendarWeeks.push(_react2.default.createElement(_ViewCalendarWeek2.default, {
 	        key: i,
 	        year: year,
@@ -33286,7 +33338,7 @@
 	
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      { className: this.props.displayMode },
 	      _react2.default.createElement(
 	        'span',
 	        { className: 'year-label' },
@@ -33398,9 +33450,13 @@
 	          'class': "day previous-month " + weekdayClass[i]
 	        }));
 	      }
-	      // For the last calendar week of the month
-	      else if (this.props.week - indexOfFirstWeek + 1 == weeksInMonth && i > indexOfLastDay) {
-	          dayNumber = i - indexOfLastDay;
+	      // For the last calendar weeks of the month
+	      else if (this.props.week - indexOfFirstWeek + 1 == weeksInMonth && i > indexOfLastDay || this.props.week - indexOfFirstWeek + 1 > weeksInMonth) {
+	          if (this.props.week - indexOfFirstWeek + 1 == weeksInMonth) {
+	            dayNumber = i - indexOfLastDay;
+	          } else {
+	            dayNumber = i - indexOfLastDay + 7;
+	          }
 	
 	          weekDays.push(_react2.default.createElement(_ContainerCalendarDay2.default, {
 	            key: i,
@@ -34174,6 +34230,7 @@
 	
 	    // Don't forget month is zero-indexed for Date().
 	    var today = new Date();
+	    today.setHours(0, 0, 0, 0);
 	
 	    var dateIndex = today;
 	
@@ -34185,14 +34242,10 @@
 	        var eventYear = event.t_start.getYear();
 	        var eventMonth = event.t_start.getMonth();
 	        var eventDay = event.t_start.getDay();
-	        var eventHours = event.t_start.getHours();
-	        var eventMinutes = event.t_start.getMinutes();
-	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay, eventHours, eventMinutes, 0, 0);
+	        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
+	        eventDate.setHours(0, 0, 0, 0);
 	
-	        console.log("eventDate: " + eventDate);
-	        console.log("dateIndex: " + dateIndex);
-	
-	        if (eventDate.getTime() > dateIndex.getTime()) {
+	        if (eventDate > dateIndex) {
 	          var weekDay = dayNumber(eventDate.getDay()).capitalizeFirstLetter();
 	          var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth() - 1) + " " + eventDate.getFullYear();
 	

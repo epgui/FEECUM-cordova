@@ -21,12 +21,11 @@ var ViewCalendarMonth = React.createClass(
     // Calculate how many weeks in the currently displayed month
     var monthName        = monthNumber(month - 1).capitalizeFirstLetter();
     var firstDay         = new Date(year, month - 1, 1);
-    var weeksInMonth     = firstDay.countWeeksOfMonth();
     var indexOfFirstWeek = firstDay.getWeekNumber();
     var calendarWeeks    = [];
     var displayClass     = "";
 
-    for (var i = 0; i < weeksInMonth; i++)
+    for (var i = 0; i < 6; i++)
     {
       calendarWeeks.push(<ViewCalendarWeek
                            key={i}
@@ -43,7 +42,7 @@ var ViewCalendarMonth = React.createClass(
     }
 
     return (
-      <div>
+      <div className={this.props.displayMode}>
         <span className="year-label">{this.props.year}</span>
         <time dateTime={year + "-" + leadingZeros(month)} className={"month " + displayClass}>
           <span className="month-label">{monthName}</span>

@@ -31,10 +31,18 @@ var ViewCalendarWeek = React.createClass(
                         class={"day previous-month " + weekdayClass[i]}
                       />);
       }
-      // For the last calendar week of the month
-      else if ((this.props.week - indexOfFirstWeek + 1) == weeksInMonth && i > indexOfLastDay)
+      // For the last calendar weeks of the month
+      else if (((this.props.week - indexOfFirstWeek + 1) == weeksInMonth && i > indexOfLastDay) ||
+               ((this.props.week - indexOfFirstWeek + 1) > weeksInMonth))
       {
-        dayNumber = i - indexOfLastDay;
+        if ((this.props.week - indexOfFirstWeek + 1) == weeksInMonth)
+        {
+          dayNumber = i - indexOfLastDay;
+        }
+        else
+        {
+          dayNumber = i - indexOfLastDay + 7;
+        }
 
         weekDays.push(<ContainerCalendarDay
                         key={i}

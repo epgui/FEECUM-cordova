@@ -6,17 +6,68 @@ import { VIEW_STATE }            from './StateMachineDefinitions.js';
 
 var ViewCalendar = React.createClass(
 {
-  pan: function(event)
-  {
-    var elementToPan = document.getElementById("view-calendar");
-
-    elementToPan.style.left = event.deltaX + "px";
-    event.srcEvent.preventDefault();
-  },
-
   componentDidMount: function()
   {
-    this.touchControl = new Hammer.Manager(document.getElementById("view-calendar"));
+    this.pannable = document.getElementById("spring-calendar");
+    this.setupSpring();
+  	this.setupPan();
+  },
+
+  componentWillUnmount: function()
+  {
+    this.removeSpring();
+    this.removePan();
+  },
+
+  getDeviceWidth: function()
+  {
+    return Math.max(document.documentElement["clientWidth"],
+                    document.body["scrollWidth"],
+                    document.documentElement["scrollWidth"],
+                    document.body["offsetWidth"],
+                    document.documentElement["offsetWidth"]);
+  },
+
+  setupSpring: function()
+  {
+    this.viewportWidth = this.getDeviceWidth();
+
+    console.log(this.viewportWidth);
+
+    // var tabWidthRunningSum  = [];
+    // var calendarMonths      = [];
+    // var calendarMonthsIndex = 0;
+    // var panVelocity         = 0;
+    // var panDistance         = 0;
+    // var isDragging          = false;
+
+    var springSystem = new rebound.SpringSystem();
+    this.spring = springSystem.createSpring(100, 15);
+
+    this.spring.addListener({
+      onSpringUpdate: function (spring)
+      {
+        var val = spring.getCurrentValue();
+        val = rebound.MathUtil.mapValueInRange(val, 0, 1, 0, this.viewportWidth);
+        this.slideCalendar(val);
+      }.bind(this)
+    });
+  },
+
+  slideCalendar: function(val)
+  {
+    console.log("on fire baby! val = " + val);
+    this.pannable.style.left = val + "px";
+  },
+
+  removeSpring: function()
+  {
+    this.spring.destroy();
+  },
+
+  setupPan: function()
+  {
+    this.touchControl = new Hammer.Manager(this.pannable);
 
     var panOptions = {
       event: 'pan',
@@ -28,12 +79,24 @@ var ViewCalendar = React.createClass(
     this.touchControl.add(new Hammer.Pan(panOptions));
     this.touchControl.get('pan').set({ enable: true });
     this.touchControl.on("panleft panright", this.pan);
+    this.touchControl.on("panend pancancel", this.panSpring)
   },
 
-  componentWillUnmount: function()
+  removePan: function()
   {
-    console.log("unmounted");
     this.touchControl.off('pan', this.pan);
+  },
+
+  pan: function(event)
+  {
+    this.spring.setCurrentValue(event.deltaX / this.viewportWidth).setAtRest();
+    event.srcEvent.preventDefault();
+  },
+
+  panSpring: function(event)
+  {
+    // currentPosition = this.pannable.offsetLeft;
+    this.spring.setEndValue(0);
   },
 
   render: function()
@@ -50,9 +113,24 @@ var ViewCalendar = React.createClass(
     {
       calendarPages.push(<ContainerCalendarMonth
                            key={1}
+                           year={previousMonthYearNumber(year, month)}
+                           month={previousMonthNumber(month)}
+                           viewMode={this.props.viewMode}
+                           displayMode={"previous-month"}
+                         />);
+      calendarPages.push(<ContainerCalendarMonth
+                           key={2}
                            year={year}
                            month={month}
                            viewMode={this.props.viewMode}
+                           displayMode={"current-month"}
+                         />);
+      calendarPages.push(<ContainerCalendarMonth
+                           key={3}
+                           year={nextMonthYearNumber(year, month)}
+                           month={nextMonthNumber(month)}
+                           viewMode={this.props.viewMode}
+                           displayMode={"next-month"}
                          />);
 
       var title    = "Prochains évènements";
@@ -85,9 +163,10 @@ var ViewCalendar = React.createClass(
     return (
       <div id="view-calendar-and-upcoming-events">
         <div id="view-calendar">
-          <time dateTime={year} className="year">
+          <time id="spring-calendar" dateTime={year} className="year">
             {calendarPages}
           </time>
+          <script type="text/javascript" src="js/calendarMotion.js" />
         </div>
         <div id="view-upcoming-events">
           {upcomingEvents}
