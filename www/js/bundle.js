@@ -32971,7 +32971,8 @@
 	            year: this.props.setTime.calYear,
 	            month: this.props.setTime.calMonth,
 	            day: this.props.setTime.viewDay,
-	            viewMode: this.props.view
+	            viewMode: this.props.view,
+	            switchPage: this.props.switchPage
 	          }));
 	          break;
 	        case _StateMachineDefinitions.VIEW_STATE.CALENDAR_DAY:
@@ -33063,6 +33064,12 @@
 	    this.setupPan();
 	  },
 	
+	  componentDidUpdate: function componentDidUpdate() {
+	    this.changePage = null;
+	    this.pannable.style.left = "0px";
+	    this.spring.setCurrentValue(0).setAtRest();
+	  },
+	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.removeSpring();
 	    this.removePan();
@@ -33074,8 +33081,7 @@
 	
 	  setupSpring: function setupSpring() {
 	    this.viewportWidth = this.getDeviceWidth();
-	
-	    console.log(this.viewportWidth);
+	    this.changePage = null;
 	
 	    // var tabWidthRunningSum  = [];
 	    // var calendarMonths      = [];
@@ -33086,18 +33092,35 @@
 	
 	    var springSystem = new rebound.SpringSystem();
 	    this.spring = springSystem.createSpring(100, 15);
+	    this.spring.setEndValue(0);
 	
 	    this.spring.addListener({
 	      onSpringUpdate: function (spring) {
 	        var val = spring.getCurrentValue();
 	        val = rebound.MathUtil.mapValueInRange(val, 0, 1, 0, this.viewportWidth);
 	        this.slideCalendar(val);
+	      }.bind(this),
+	
+	      onSpringAtRest: function () {
+	        switch (this.changePage) {
+	          case "previous":
+	            var previousMonthYear = previousMonthYearNumber(this.props.year, this.props.month);
+	            var previousMonth = previousMonthNumber(this.props.month);
+	            this.props.switchPage(previousMonthYear, previousMonth);
+	            break;
+	          case "next":
+	            var nextMonthYear = nextMonthYearNumber(this.props.year, this.props.month);
+	            var nextMonth = nextMonthNumber(this.props.month);
+	            this.props.switchPage(nextMonthYear, nextMonth);
+	            break;
+	          default:
+	            break;
+	        }
 	      }.bind(this)
 	    });
 	  },
 	
 	  slideCalendar: function slideCalendar(val) {
-	    console.log("on fire baby! val = " + val);
 	    this.pannable.style.left = val + "px";
 	  },
 	
@@ -33126,13 +33149,28 @@
 	  },
 	
 	  pan: function pan(event) {
-	    this.spring.setCurrentValue(event.deltaX / this.viewportWidth).setAtRest();
+	    var panDistance = event.deltaX / this.viewportWidth;
+	    this.spring.setCurrentValue(panDistance).setAtRest();
+	    this.panDistance = this.pannable.style.left.slice(0, -2);
 	    event.srcEvent.preventDefault();
 	  },
 	
 	  panSpring: function panSpring(event) {
-	    // currentPosition = this.pannable.offsetLeft;
-	    this.spring.setEndValue(0);
+	    if (Math.abs(this.panDistance) / this.viewportWidth < 0.5) {
+	      this.spring.setEndValue(0);
+	      return false;
+	    } else {
+	      if (this.panDistance > 0) {
+	        console.log("going left");
+	        this.spring.setEndValue(1);
+	        this.changePage = "previous";
+	        return false;
+	      } else {
+	        this.spring.setEndValue(-1);
+	        this.changePage = "next";
+	        return false;
+	      }
+	    }
 	  },
 	
 	  render: function render() {

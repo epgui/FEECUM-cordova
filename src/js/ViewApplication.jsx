@@ -21,6 +21,7 @@ render()
                      month={this.props.setTime.calMonth}
                      day={this.props.setTime.viewDay}
                      viewMode={this.props.view}
+                     switchPage={this.props.switchPage}
                    />);
         break;
       case VIEW_STATE.CALENDAR_DAY:
