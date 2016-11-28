@@ -6,6 +6,12 @@ import { VIEW_STATE }            from './StateMachineDefinitions.js';
 
 var ViewCalendar = React.createClass(
 {
+  componentWillMount: function()
+  {
+    this.earliestMonthOnRecord = { "year" : this.props.year, "month" : this.props.month };
+    this.latestMonthOnRecord = { "year" : this.props.year, "month" : this.props.month };
+  },
+
   componentDidMount: function()
   {
     this.pannable = document.getElementById("spring-calendar");
@@ -98,7 +104,7 @@ var ViewCalendar = React.createClass(
     this.touchControl.add(new Hammer.Pan(panOptions));
     this.touchControl.get('pan').set({ enable: true });
     this.touchControl.on("panleft panright", this.pan);
-    this.touchControl.on("panend pancancel", this.panSpring)
+    this.touchControl.on("panend pancancel", this.panSpring);
   },
 
   removePan: function()
@@ -138,6 +144,52 @@ var ViewCalendar = React.createClass(
     }
   },
 
+  getDisplayMode: function(year, month)
+  {
+    var calYear           = this.props.year;
+    var previousMonthYear = previousMonthYearNumber(calYear, calMonth);
+    var nextMonthYear     = nextMonthYearNumber(calYear, calMonth);
+    var calMonth          = this.props.month;
+    var previousMonth     = previousMonthNumber(calMonth);
+    var nextMonth         = nextMonthNumber(calMonth);
+
+    if ( (year == calYear) && (month == calMonth) )
+    {
+      return "current-month";
+    }
+    else if ( (year == previousMonthYear) && (month == previousMonth) )
+    {
+      return "previous-month";
+    }
+    else if ( (year == nextMonthYear) && (month == nextMonth) )
+    {
+      return "next-month";
+    }
+    else
+    {
+      return "hidden";
+    }
+  },
+
+  needToLoadEarlierMonth: function(year, month)
+  {
+    return ( (this.isDisplayed(year, month)) &&
+             (year == this.earliestMonthOnRecord.year) &&
+             (month == this.earliestMonthOnRecord.month) ) ? true : false;
+  },
+
+  needToLoadLaterMonth: function(year, month)
+  {
+    return ( (this.isDisplayed(year, month)) &&
+             (year == this.latestMonthOnRecord.year) &&
+             (month == this.latestMonthOnRecord.month) ) ? true : false;
+  },
+
+  isDisplayed: function(year, month)
+  {
+    return ((year == this.props.year) && (month == this.props.month)) ? true : false;
+  },
+
   render: function()
   {
     var year  = this.props.year;
@@ -150,53 +202,109 @@ var ViewCalendar = React.createClass(
 
     if (this.props.viewMode == 'calendar-month')
     {
-      calendarPages.push(<ContainerCalendarMonth
-                           key={1}
-                           year={previousMonthYearNumber(year, month)}
-                           month={previousMonthNumber(month)}
-                           viewMode={this.props.viewMode}
-                           displayMode={"previous-month"}
-                         />);
-      calendarPages.push(<ContainerCalendarMonth
-                           key={2}
-                           year={year}
-                           month={month}
-                           viewMode={this.props.viewMode}
-                           displayMode={"current-month"}
-                         />);
-      calendarPages.push(<ContainerCalendarMonth
-                           key={3}
-                           year={nextMonthYearNumber(year, month)}
-                           month={nextMonthNumber(month)}
-                           viewMode={this.props.viewMode}
-                           displayMode={"next-month"}
-                         />);
+      if (this.props.data.length < 3)
+      {
+        var previousKey = "" + previousMonthYearNumber(year, month) + leadingZeros(previousMonthNumber(month));
+        var currentKey  = "" + year + leadingZeros(month);
+        var nextKey     = "" + nextMonthYearNumber(year, month) + leadingZeros(nextMonthNumber(month));
+        calendarPages.push([
+          <ContainerCalendarMonth key={previousKey} year={previousMonthYearNumber(year)} month={leadingZeros(previousMonthNumber(month))} viewMode={this.props.viewMode} displayMode={'previous-month'} />,
+          <ContainerCalendarMonth key={currentKey} year={year} month={month} viewMode={this.props.viewMode} displayMode={'current-month'} />,
+          <ContainerCalendarMonth key={nextKey} year={nextMonthYearNumber(year)} month={leadingZeros(nextMonthNumber(month))} viewMode={this.props.viewMode} displayMode={'next-month'} />
+        ]);
+        this.earliestMonthOnRecord.year  = previousMonthYearNumber(year, month);
+        this.earliestMonthOnRecord.month = previousMonthNumber(month);
+        this.latestMonthOnRecord.year    = nextMonthYearNumber(year, month);
+        this.latestMonthOnRecord.month   = nextMonthNumber(month);
+      }
+      else
+      {
+        var renderEarlierPage = false;
+        var renderLaterPage = false;
 
-      var title    = "Prochains évènements";
-      var subtitle = "Plus tard aujourd'hui";
+        for (var i = 0; i < this.props.data.length; i++)
+        {
+          var keyYear  = this.props.data[i].year;
+          var keyMonth = leadingZeros(this.props.data[i].month);
+          var key      = "" + keyYear + keyMonth;
+          var displayMode = this.getDisplayMode(keyYear, keyMonth);
 
-      upcomingEvents.push(<span key={1} className="title">{title}</span>);
-      upcomingEvents.push(<span key={2} className="subtitle">{subtitle}</span>);
+          calendarPages.push(
+            <ContainerCalendarMonth key={key} year={keyYear} month={keyMonth} viewMode={this.props.viewMode} displayMode={displayMode} />
+          );
 
-      upcomingEvents.push(<ContainerCalendarUpcoming
-                            key={3}
-                            year={year}
-                            month={month}
-                            day={leadingZeros(today)}
-                            viewMode={VIEW_STATE.CALENDAR_DAY}
-                            class="day"
-                          />);
+          if (this.needToLoadEarlierMonth(keyYear, keyMonth))
+          {
+            renderEarlierPage = {
+              "year" : previousMonthYearNumber(keyYear, keyMonth),
+              "month" : leadingZeros(previousMonthNumber(keyMonth)),
+              "displayMode" : "previous-month"
+            };
+          }
+          if (this.needToLoadLaterMonth(keyYear, keyMonth))
+          {
+            renderLaterPage = {
+              "year" : nextMonthYearNumber(keyYear, keyMonth),
+              "month" : leadingZeros(nextMonthNumber(keyMonth)),
+              "displayMode" : "next-month"
+            };
+          }
+        }
+
+        if (renderEarlierPage != false)
+        {
+          this.earliestMonthOnRecord.year  = renderEarlierPage.year;
+          this.earliestMonthOnRecord.month = renderEarlierPage.month;
+          calendarPages.push(
+            <ContainerCalendarMonth
+              key={"" + renderEarlierPage.year + renderEarlierPage.month}
+              year={renderEarlierPage.year}
+              month={renderEarlierPage.month}
+              viewMode={this.props.viewMode}
+              displayMode={renderEarlierPage.displayMode}
+            />
+          );
+        }
+
+        if (renderLaterPage != false)
+        {
+          this.latestMonthOnRecord.year  = renderLaterPage.year;
+          this.latestMonthOnRecord.month = renderLaterPage.month;
+          calendarPages.push(
+            <ContainerCalendarMonth
+              key={"" + renderLaterPage.year + renderLaterPage.month}
+              year={renderLaterPage.year}
+              month={renderLaterPage.month}
+              viewMode={this.props.viewMode}
+              displayMode={renderLaterPage.displayMode}
+            />
+          );
+        }
+      }
+
+      upcomingEvents.push(
+        <ContainerCalendarUpcoming
+          key={3}
+          year={year}
+          month={month}
+          day={leadingZeros(today)}
+          viewMode={VIEW_STATE.CALENDAR_DAY}
+          class="day"
+        />
+      );
     }
     if (this.props.viewMode == 'calendar-day')
     {
-      calendarPages.push(<ContainerCalendarDay
-                           key={1}
-                           year={this.props.year}
-                           month={leadingZeros(this.props.month)}
-                           day={leadingZeros(this.props.day)}
-                           viewMode={this.props.viewMode}
-                           class="day"
-                         />);
+      calendarPages.push(
+        <ContainerCalendarDay
+          key={1}
+          year={this.props.year}
+          month={leadingZeros(this.props.month)}
+          day={leadingZeros(this.props.day)}
+          viewMode={this.props.viewMode}
+          class="day"
+        />
+      );
     }
 
     return (

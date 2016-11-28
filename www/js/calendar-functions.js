@@ -1,5 +1,6 @@
-function monthNumber(month)
+function monthNumber(monthNumber)
 {
+  var month = Number(monthNumber);
   switch(month)
   {
     case "Janvier":   return 0;
@@ -30,8 +31,9 @@ function monthNumber(month)
   }
 }
 
-function dayNumber(day)
+function dayNumber(dayNumber)
 {
+  var day = Number(dayNumber);
   switch(day)
   {
     case 0: return "dimanche";
@@ -51,55 +53,33 @@ String.prototype.capitalizeFirstLetter = function()
 
 function leadingZeros(number)
 {
-  return ('0' + parseInt(number)).slice(-2);
+  return ('0' + Number(number)).slice(-2);
 }
 
 function previousMonthNumber(monthNumber)
 {
-  if (monthNumber - 1 == 0)
-  {
-    return 12;
-  }
-  else
-  {
-    return monthNumber - 1;
-  }
+  var month = Number(monthNumber);
+  return (month == 1) ? 12 : month - 1;
 }
 
 function nextMonthNumber(monthNumber)
 {
-  if (monthNumber + 1 == 13)
-  {
-    return 1;
-  }
-  else
-  {
-    return monthNumber + 1;
-  }
+  var month = Number(monthNumber);
+  return (month == 12) ? 1 : month + 1;
 }
 
 function previousMonthYearNumber(yearNumber, monthNumber)
 {
-  if (previousMonthNumber(monthNumber) == 12)
-  {
-    return yearNumber - 1;
-  }
-  else
-  {
-    return yearNumber;
-  }
+  var month = Number(monthNumber);
+  var year  = Number(yearNumber);
+  return (previousMonthNumber(month) == 12) ? year - 1 : year;
 }
 
 function nextMonthYearNumber(yearNumber, monthNumber)
 {
-  if (nextMonthNumber(monthNumber) == 1)
-  {
-    return yearNumber + 1;
-  }
-  else
-  {
-    return yearNumber;
-  }
+  var month = Number(monthNumber);
+  var year  = Number(yearNumber);
+  return (nextMonthNumber(month) == 1) ? year + 1 : year;
 }
 
 Date.prototype.countWeeksOfMonth = function()

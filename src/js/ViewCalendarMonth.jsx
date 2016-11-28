@@ -4,20 +4,28 @@ import DataLoader       from './DataLoader.js';
 
 var ViewCalendarMonth = React.createClass(
 {
-  componentDidMount: function()
+  componentWillMount: function()
   {
-    DataLoader.loadApplicationState(this.props.data);
-    DataLoader.loadEvents(this.props.year, this.props.month, this.props.loadDataIntoStateMachine);
+    this.loadEvents();
   },
+
   componentWillUnmount: function()
   {
-    DataLoader.abortConnection();
+    this.dataLoader.abortConnection();
   },
+
+  loadEvents: function()
+  {
+    this.dataLoader = new DataLoader();
+    this.dataLoader.loadApplicationState(this.props.data);
+    this.dataLoader.loadEvents(this.props.year, this.props.month, this.props.loadDataIntoStateMachine);
+  },
+
   render: function()
   {
     var year  = this.props.year;
     var month = this.props.month;
-
+    
     // Calculate how many weeks in the currently displayed month
     var monthName        = monthNumber(month - 1).capitalizeFirstLetter();
     var firstDay         = new Date(year, month - 1, 1);

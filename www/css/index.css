@@ -83,6 +83,7 @@ body {
 #dayView .button.add-event { background: transparent url("../img/add_to_calendar_icon.png") no-repeat 5px center; float: right; margin-right: 10px; width: 100px; }
 #dayView .button.remove-event { background: transparent url("../img/remove_from_calendar_icon.png") no-repeat 5px center; float: right; margin-right: 10px; width: 100px; }
 
+.hidden { display: none; }
 
 .button { color: #2196F3; text-decoration: none; text-align: center; display: block; border-radius: 2px; line-height: 36px; box-sizing: border-box; -webkit-appearance: none; -moz-appearance: none; -ms-appearance: none; appearance: none; background: 0 0; padding: 0 10px 0 20px; margin: 0; height: 36px; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; text-transform: uppercase; font-family: 'HelveticaNeue'; cursor: pointer; min-width: 64px; position: relative; overflow: hidden; outline: 0; border: none; -webkit-transition-duration: .3s; transition-duration: .3s; -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0); -webkit-user-select: none; -webkit-box-flex: 1; -ms-flex: 1; }
 .button.red { color: #F3214D; }

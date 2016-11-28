@@ -6,12 +6,10 @@ var ViewCalendarUpcoming = React.createClass(
 {
   getUpcomingEvents: function(numberOfEventsToGet)
   {
-    var year  = this.props.year;
-    var month = this.props.month;
-    var day   = this.props.day
-
-    // Don't forget month is zero-indexed for Date().
-    var thisDate = new Date(year, month - 1, day);
+    var currentTime = new Date();
+    var year  = currentTime.getFullYear();
+    var month = currentTime.getMonth();
+    var day   = currentTime.getDate();
 
     var data = this.props.data;
     var eventsForThisMonthAndTheNext = [];
@@ -22,10 +20,9 @@ var ViewCalendarUpcoming = React.createClass(
     {
       for (var i = 0, length = data.length; i < length; i++)
       {
-        if ( (data[i].year == year) && ((data[i].month == month) || (data[i].month == month + 1)) )
-        {
-          eventsForThisMonthAndTheNext = eventsForThisMonthAndTheNext.concat(data[i].events);
-        }
+        eventsForThisMonthAndTheNext = ( ((data[i].month == month) || (data[i].month == month + 1)) &&
+                                         (data[i].year == year) &&
+                                         (data[i].events != null)) ? eventsForThisMonthAndTheNext.concat(data[i].events) : eventsForThisMonthAndTheNext;
       }
     }
 
@@ -41,7 +38,7 @@ var ViewCalendarUpcoming = React.createClass(
         // Don't forget month is zero-indexed for Date().
         var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
 
-        if ((eventDate.getTime() >= thisDate.getTime()) && (upcomingEvents.length < numberOfEventsToGet))
+        if ((eventDate.getTime() >= currentTime.getTime()) && (upcomingEvents.length < numberOfEventsToGet))
         {
           upcomingEvents.push(event);
         }
@@ -57,12 +54,15 @@ var ViewCalendarUpcoming = React.createClass(
     var numberOfEventsToGet = 5;
     var upcomingEvents      = this.getUpcomingEvents(numberOfEventsToGet);
     var viewUpcomingEvents  = [];
+    var hasEventsToday      = false;
 
     // Don't forget month is zero-indexed for Date().
     var today = new Date();
     today.setHours(0, 0, 0, 0);
 
     var dateIndex = today;
+
+    console.log("today = " + today);
 
     if (upcomingEvents.length > 0)
     {
@@ -71,16 +71,23 @@ var ViewCalendarUpcoming = React.createClass(
         var event = upcomingEvents[i];
 
         // See calendar-functions.js
-        var eventYear  = event.t_start.getYear();
-        var eventMonth = event.t_start.getMonth();
-        var eventDay   = event.t_start.getDay();
-        var eventDate = new Date(eventYear, eventMonth - 1, eventDay);
-        eventDate.setHours(0, 0, 0, 0);
+        var eventYear    = event.t_start.getYear();
+        var eventMonth   = event.t_start.getMonth();
+        var eventDay     = event.t_start.getDay();
+        var eventHours   = event.t_start.getHours();
+        var eventMinutes = event.t_start.getMinutes();
+        var eventDate    = new Date(eventYear, eventMonth - 1, eventDay, eventHours, eventMinutes);
 
-        if (eventDate > dateIndex)
+        console.log("eventDate = " + eventDate);
+
+        if (eventDate == today)
+        {
+          hasEventsToday = true;
+        }
+        else if (eventDate > dateIndex)
         {
           var weekDay  = dayNumber(eventDate.getDay()).capitalizeFirstLetter();
-          var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth() - 1) + " " + eventDate.getFullYear();
+          var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth()) + " " + eventDate.getFullYear();
 
           viewUpcomingEvents.push(<span key={i+numberOfEventsToGet} className="subtitle">{subtitle}</span>);
 
@@ -99,9 +106,24 @@ var ViewCalendarUpcoming = React.createClass(
       }
     }
 
+    if (hasEventsToday)
+    {
+      console.log("hasEventsToday!");
+      subtitle = <span key={2} className="subtitle">{"Plus tard aujourd'hui"}</span>;
+    }
+    else
+    {
+      subtitle = viewUpcomingEvents[0];
+      viewUpcomingEvents.shift();
+    }
+
     return (
-      <div id="dayView">
-        {viewUpcomingEvents}
+      <div>
+        <span key={10} className="title">{"Prochains évènements"}</span>
+        {subtitle}
+        <div key={11} id="dayView">
+          {viewUpcomingEvents}
+        </div>
       </div>
     );
 

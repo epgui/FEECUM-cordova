@@ -1,24 +1,38 @@
-var DataLoader = {
-
-  connectionState: function()
+var DataLoader = function()
+{
+  this.connectionState = function()
   {
     // This uses the cordova-plugin-network-information plugin.
-    var networkState = navigator.connection.type;
+    if ("connection" in navigator)
+    {
+      if ("type" in navigator.connection)
+      {
+        var networkState = navigator.connection.type;
 
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.CELL]     = 'Cell generic connection';
-    states[Connection.NONE]     = 'No network connection';
+        var states = {};
+        states[Connection.UNKNOWN]  = 'Unknown connection';
+        states[Connection.ETHERNET] = 'Ethernet connection';
+        states[Connection.WIFI]     = 'WiFi connection';
+        states[Connection.CELL_2G]  = 'Cell 2G connection';
+        states[Connection.CELL_3G]  = 'Cell 3G connection';
+        states[Connection.CELL_4G]  = 'Cell 4G connection';
+        states[Connection.CELL]     = 'Cell generic connection';
+        states[Connection.NONE]     = 'No network connection';
 
-    return states[networkState];
-  },
+        return states[networkState];
+      }
+      else
+      {
+        return 'Unknown connection';
+      }
+    }
+    else
+    {
+      return 'Unknown connection';
+    }
+  };
 
-  loadEvents: function(year, month, loadDataIntoStateMachine)
+  this.loadEvents = function(year, month, loadDataIntoStateMachine)
   {
     var loadedEvents = [];
     var remoteEvents = [];
@@ -47,9 +61,9 @@ var DataLoader = {
     {
       this.registerEvents(deviceEvents, year, month);
     }
-  },
+  };
 
-  loadEventsFromServer: function(year, month)
+  this.loadEventsFromServer = function(year, month)
   {
     var apiURL = "http://feecum.ca/dev/backend.php?year=" + year + "&month=" + parseInt(month);
 
@@ -60,7 +74,6 @@ var DataLoader = {
       cache: false,
       async: true,
       success: function(data) {
-        this.eraseEventsFromDevice(year, month);
         this.registerEvents(data.events, year, month);
       }.bind(this),
       error: function(xhr, status, err) {
@@ -68,25 +81,25 @@ var DataLoader = {
         console.warn(xhr.responseText);
       }.bind(this)
     });
-  },
+  };
 
-  abortConnection: function()
+  this.abortConnection = function()
   {
     if ("serverRequest" in this)
     {
       this.serverRequest.abort();
     }
-  },
+  };
 
-  loadEventsFromDevice: function(year, month)
+  this.loadEventsFromDevice = function(year, month)
   {
     var storage = window.localStorage;
     var key = year + "-" + leadingZeros(month);
 
     return JSON.parse(storage.getItem(key));
-  },
+  };
 
-  needsUpdating: function(year, month)
+  this.needsUpdating = function(year, month)
   {
     var storage        = window.localStorage;
     var lastUpdatedKey = year + "-" + leadingZeros(month) + "-" + "lastUpdated";
@@ -100,9 +113,9 @@ var DataLoader = {
 
     // App needs updating if there is no data or if data is old.
     return (!appHasCachedData || !appHasRecentData);
-  },
+  };
 
-  registerEvents: function(monthlyEvents, year, month)
+  this.registerEvents = function(monthlyEvents, year, month)
   {
     var data = {
       events: monthlyEvents,
@@ -117,17 +130,17 @@ var DataLoader = {
     {
       this.loadDataIntoStateMachine(data);
     }
-  },
+  };
 
-  applicationStateNeedsUpdating: function(year, month)
+  this.applicationStateNeedsUpdating = function(year, month)
   {
     if (this.applicationState.length > 0)
     {
       for (var i = 0, len = this.applicationState.length; i < len; i++)
       {
-        if ((this.applicationState[i].year != year) || (this.applicationState[i].month != month))
+        if ((this.applicationState[i].year == year) && (this.applicationState[i].month == month))
         {
-          return true;
+          return false;
         }
       }
     }
@@ -135,15 +148,16 @@ var DataLoader = {
     {
       return true;
     }
-    return false;
-  },
 
-  loadApplicationState: function(data)
+    return true;
+  };
+
+  this.loadApplicationState = function(data)
   {
     this.applicationState = data;
-  },
+  };
 
-  writeEventsToDevice: function(data)
+  this.writeEventsToDevice = function(data)
   {
     var storage        = window.localStorage;
     var key            = data.calYear + "-" + leadingZeros(data.calMonth);
@@ -153,9 +167,9 @@ var DataLoader = {
 
     storage.setItem(key, value);
     storage.setItem(lastUpdatedKey, timestamp);
-  },
+  };
 
-  eraseEventsFromDevice: function(year, month)
+  this.eraseEventsFromDevice = function(year, month)
   {
     var storage        = window.localStorage;
     var key            = year + "-" + leadingZeros(month);
@@ -163,7 +177,7 @@ var DataLoader = {
 
     storage.removeItem(key);
     storage.removeItem(lastUpdatedKey);
-  }
+  };
 };
 
 export default DataLoader;

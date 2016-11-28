@@ -30,7 +30,7 @@ var ViewCalendarDay = React.createClass(
       }
     }
 
-    if (eventsForThisMonth.length > 0)
+    if (eventsForThisMonth != null)
     {
       $.each(eventsForThisMonth, function(i, event)
       {

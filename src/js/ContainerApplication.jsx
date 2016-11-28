@@ -10,12 +10,13 @@ import ViewApplication                       from './ViewApplication.jsx';
 const mapStateToProps = function(state)
 {
   return {
-    error:   state.error,
-    view:    state.view,
+    error:      state.error,
+    view:       state.view,
+    data:       state.data,
     setTime: {
       calYear:  state.setTime.calYear,
       calMonth: state.setTime.calMonth,
-      viewDay: state.setTime.viewDay
+      viewDay:  state.setTime.viewDay
     }
   };
 }
