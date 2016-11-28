@@ -5,7 +5,7 @@ Qu'est-ce que l'application mobile de la FÉÉCUM?
 
 L'application mobile de la FÉÉCUM sera bientôt disponible pour les plateformes mobiles iOS et Android. Elle vous permettra d'accéder directement au calendrier d'événements de la FÉÉCUM, et vous donnera la possibilité de sauvegarder des événements à votre calendrier de téléphone: oublier un événement important sera bientôt chose du passé, avec toutes les fonctionnalités de votre téléphone mobile intégré (rappels avant l'événement, push notifications, alarmes, etc.).
 
-![Le calendrier de la FÉÉCUM... maintenant à portée de la main.](calendrier-maintenant.png "Le calendrier de la FÉÉCUM... maintenant à portée de la main.")
+![Le calendrier de la FÉÉCUM... maintenant à portée de la main.](calendrier-maintenant.jpg "Le calendrier de la FÉÉCUM... maintenant à portée de la main.")
 
 Pour plus d'information sur l'application mobile de la FÉÉCUM, veuillez lire
 **[cet article paru dans Le Front le 29 mars 2016](http://lefront.ca/app-feecum-vie-etudiante-a-portee-de-main/)**.
