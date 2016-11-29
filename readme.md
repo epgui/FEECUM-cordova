@@ -9,7 +9,7 @@ L'application mobile de la FÉÉCUM sera bientôt disponible pour les plateforme
 
 ![Un app pour tous.](un-pour-tous.jpg "Un app pour tous.")
 
-![Un app libre et moderne.](open-source-moderne.jpg "Un app libre et moderne.")
+![Un app libre et moderne.](libre-moderne.jpg "Un app libre et moderne.")
 
 Pour plus d'information sur l'application mobile de la FÉÉCUM, veuillez lire
 **[cet article paru dans Le Front le 29 mars 2016](http://lefront.ca/app-feecum-vie-etudiante-a-portee-de-main/)**.
