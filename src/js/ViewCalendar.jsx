@@ -147,11 +147,14 @@ var ViewCalendar = React.createClass(
   getDisplayMode: function(year, month)
   {
     var calYear           = this.props.year;
+    var calMonth          = this.props.month;
     var previousMonthYear = previousMonthYearNumber(calYear, calMonth);
     var nextMonthYear     = nextMonthYearNumber(calYear, calMonth);
-    var calMonth          = this.props.month;
     var previousMonth     = previousMonthNumber(calMonth);
     var nextMonth         = nextMonthNumber(calMonth);
+
+    console.log("year = " + year);
+    console.log("month = " + month);
 
     if ( (year == calYear) && (month == calMonth) )
     {

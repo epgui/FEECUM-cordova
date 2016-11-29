@@ -13,7 +13,7 @@ var ViewCalendarUpcoming = React.createClass(
 
     var data = this.props.data;
     var eventsForThisMonthAndTheNext = [];
-    var upcomingEvents  = [];
+    var upcomingEvents = [];
 
     // Look in the state for data for the currently displayed month
     if (data.length > 0)
@@ -62,8 +62,6 @@ var ViewCalendarUpcoming = React.createClass(
 
     var dateIndex = today;
 
-    console.log("today = " + today);
-
     if (upcomingEvents.length > 0)
     {
       for (var i = 0, len = upcomingEvents.length; i < len; i++)
@@ -77,8 +75,6 @@ var ViewCalendarUpcoming = React.createClass(
         var eventHours   = event.t_start.getHours();
         var eventMinutes = event.t_start.getMinutes();
         var eventDate    = new Date(eventYear, eventMonth - 1, eventDay, eventHours, eventMinutes);
-
-        console.log("eventDate = " + eventDate);
 
         if (eventDate == today)
         {
@@ -108,7 +104,6 @@ var ViewCalendarUpcoming = React.createClass(
 
     if (hasEventsToday)
     {
-      console.log("hasEventsToday!");
       subtitle = <span key={2} className="subtitle">{"Plus tard aujourd'hui"}</span>;
     }
     else
