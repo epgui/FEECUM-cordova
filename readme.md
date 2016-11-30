@@ -222,6 +222,34 @@ $ cordova build ios
 $ cordova run ios --emulator
 ```
 
+To find out what simulator images are available:
+
+```
+$ cordova emulate ios --list
+
+Available iOS Virtual Devices:
+    iPhone-4s, 9.3
+    iPhone-5, 9.3
+    iPhone-5s, 9.3
+    iPhone-6, 9.3
+    iPhone-6-Plus, 9.3
+    iPhone-6s, 9.3
+    iPhone-6s-Plus, 9.3
+    iPad-2, 9.3
+    iPad-Retina, 9.3
+    iPad-Air, 9.3
+    iPad-Air-2, 9.3
+    iPad-Pro, 9.3
+```
+
+Then use one of the simulator names in the `--target` parameter:
+
+```
+cordova emulate ios --target="iPhone-4s, 9.3"
+cordova emulate ios --target="iPad-Air-2, 9.3"
+cordova emulate ios --target="iPhone-6s, 9.3"
+cordova emulate ios --target="iPhone-6-Plus, 9.3"
+```
 
 ![](readme-hr.png)
 

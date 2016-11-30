@@ -20,13 +20,12 @@ var ViewCalendarEvent = React.createClass(
 
   findEvent: function()
   {
-
     event = DeviceCalendar.constructEvent(this.props.title,
                                           this.props.tStart,
                                           this.props.tEnd,
                                           this.props.description);
-    DeviceCalendar.find(event);
 
+    return DeviceCalendar.find(event) ? true : false;
   },
 
 
@@ -66,18 +65,36 @@ var ViewCalendarEvent = React.createClass(
     var eventEndTime   = this.props.tEnd.getHours()   + "h" + leadingZeros(this.props.tEnd.getMinutes());
 
     var addToCalendar = () => this.addToCalendar();
+    var deleteEvent = () => this.deleteEvent();
 
-    return(
-      <li className="event-container" id={"eventID-" + this.props.id}>
-        <span className="event-time">
-          <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
-        </span>
-        <span className="event-title">{this.props.title}</span>
-        <span className="event-category">{this.props.category}</span>
-        <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
-        <span className="button add-event" onClick={addToCalendar}>Ajouter</span>
-      </li>
-    );
+    if (this.findEvent())
+    {
+      return(
+        <li className="event-container" id={"eventID-" + this.props.id}>
+          <span className="event-time">
+            <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
+          </span>
+          <span className="event-title">{this.props.title}</span>
+          <span className="event-category">{this.props.category}</span>
+          <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
+          <span className="button remove-event" onClick={deleteEvent}>Retirer</span>
+        </li>
+      );
+    }
+    else
+    {
+      return(
+        <li className="event-container" id={"eventID-" + this.props.id}>
+          <span className="event-time">
+            <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
+          </span>
+          <span className="event-title">{this.props.title}</span>
+          <span className="event-category">{this.props.category}</span>
+          <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
+          <span className="button add-event" onClick={addToCalendar}>Ajouter</span>
+        </li>
+      );
+    }
   }
 });
 
