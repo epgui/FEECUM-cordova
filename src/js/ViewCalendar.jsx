@@ -8,8 +8,25 @@ var ViewCalendar = React.createClass(
 {
   componentWillMount: function()
   {
-    this.earliestMonthOnRecord = { "year" : this.props.year, "month" : this.props.month };
-    this.latestMonthOnRecord = { "year" : this.props.year, "month" : this.props.month };
+    this.storage = window.localStorage;
+    if (this.storage.getItem("earliestMonthOnRecord") != null)
+    {
+      this.earliestMonthOnRecord = JSON.parse(this.storage.getItem("earliestMonthOnRecord"));
+    }
+    else
+    {
+      this.earliestMonthOnRecord = { "year" : this.props.year, "month" : this.props.month };
+      this.storage.setItem("earliestMonthOnRecord", this.earliestMonthOnRecord);
+    }
+    if (this.storage.getItem("latestMonthOnRecord") != null)
+    {
+      this.latestMonthOnRecord = JSON.parse(this.storage.getItem("latestMonthOnRecord"));
+    }
+    else
+    {
+      this.latestMonthOnRecord = { "year" : this.props.year, "month" : this.props.month };
+      this.storage.setItem("latestMonthOnRecord", this.latestMonthOnRecord);
+    }
   },
 
   componentDidMount: function()
@@ -153,9 +170,6 @@ var ViewCalendar = React.createClass(
     var previousMonth     = previousMonthNumber(calMonth);
     var nextMonth         = nextMonthNumber(calMonth);
 
-    console.log("year = " + year);
-    console.log("month = " + month);
-
     if ( (year == calYear) && (month == calMonth) )
     {
       return "current-month";
@@ -219,6 +233,8 @@ var ViewCalendar = React.createClass(
         this.earliestMonthOnRecord.month = previousMonthNumber(month);
         this.latestMonthOnRecord.year    = nextMonthYearNumber(year, month);
         this.latestMonthOnRecord.month   = nextMonthNumber(month);
+        this.storage.setItem("earliestMonthOnRecord", JSON.stringify(this.earliestMonthOnRecord));
+        this.storage.setItem("latestMonthOnRecord", JSON.stringify(this.latestMonthOnRecord));
       }
       else
       {
@@ -258,6 +274,8 @@ var ViewCalendar = React.createClass(
         {
           this.earliestMonthOnRecord.year  = renderEarlierPage.year;
           this.earliestMonthOnRecord.month = renderEarlierPage.month;
+          this.storage.setItem("earliestMonthOnRecord", JSON.stringify(this.earliestMonthOnRecord));
+
           calendarPages.push(
             <ContainerCalendarMonth
               key={"" + renderEarlierPage.year + renderEarlierPage.month}
@@ -273,6 +291,8 @@ var ViewCalendar = React.createClass(
         {
           this.latestMonthOnRecord.year  = renderLaterPage.year;
           this.latestMonthOnRecord.month = renderLaterPage.month;
+          this.storage.setItem("latestMonthOnRecord", JSON.stringify(this.latestMonthOnRecord));
+
           calendarPages.push(
             <ContainerCalendarMonth
               key={"" + renderLaterPage.year + renderLaterPage.month}
