@@ -245,10 +245,10 @@ Available iOS Virtual Devices:
 Then use one of the simulator names in the `--target` parameter:
 
 ```
-cordova emulate ios --target="iPhone-4s, 9.3"
-cordova emulate ios --target="iPad-Air-2, 9.3"
-cordova emulate ios --target="iPhone-6s, 9.3"
-cordova emulate ios --target="iPhone-6-Plus, 9.3"
+$ cordova emulate ios --target="iPhone-4s, 9.3"
+$ cordova emulate ios --target="iPad-Air-2, 9.3"
+$ cordova emulate ios --target="iPhone-6s, 9.3"
+$ cordova emulate ios --target="iPhone-6-Plus, 9.3"
 ```
 
 ![](readme-hr.png)
