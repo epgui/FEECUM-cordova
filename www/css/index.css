@@ -75,7 +75,7 @@ body {
 #view-upcoming-events #dayView .subtitle { background: #FFF; border-top: 15px solid #CCC; padding: 10px 10px 10px; }
 
 #dayView { background-color: #E4E4E4; background-image: linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%); background-image: -webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%); background-image: -ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #A7A7A7), color-stop(0.51, #E4E4E4)); background-attachment: fixed; padding: 0; }
-#dayView li.event-container { background: #FFF; border-bottom: 1px solid #EEE; border-left; 0; border-right: 0; border-top: 1px solid #CCC; display: block; list-style-type: none; margin: 0; overflow: hidden; padding: 0 0 10px; }
+#dayView li.event-container { background: #FFF; border-bottom: 1px solid #EEE; border-left: 0; border-right: 0; border-top: 1px solid #CCC; display: block; list-style-type: none; margin: 0; overflow: hidden; padding: 0 0 10px; }
 #dayView .event-time { background: #EEE; border: 0; border-radius: 0; color: #888; display: block; font-size: 14px; margin: 0 0 20px; padding: 10px; }
 #dayView .event-title { display: block; font-size: 20px; margin: 5px 0; padding: 0 10px; }
 #dayView .event-category { border: 0; color: #999; display: block; font-style: italic; padding: 0 10px 10px; }

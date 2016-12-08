@@ -21,7 +21,9 @@
   "scripts": {
     "dev": "webpack -d --watch",
     "build": "webpack -p",
-    "browser": "webpack -d && cordova run browser"
+    "browser": "webpack -d && cordova run browser",
+    "ios": "webpack -d && cordova build ios && cordova run ios --emulator",
+    "android": "webpack -d && cordova build android && cordova run android --emulator"
   },
   "author": "",
   "license": "ISC",

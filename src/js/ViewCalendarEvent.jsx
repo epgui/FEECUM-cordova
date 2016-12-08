@@ -25,7 +25,8 @@ var ViewCalendarEvent = React.createClass(
                                           this.props.tEnd,
                                           this.props.description);
 
-    return DeviceCalendar.find(event) ? true : false;
+    console.log("attempting to find event.");
+    return DeviceCalendar.find(event);
   },
 
 
@@ -78,6 +79,7 @@ var ViewCalendarEvent = React.createClass(
           <span className="event-category">{this.props.category}</span>
           <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
           <span className="button remove-event" onClick={deleteEvent}>Retirer</span>
+          <p>A {JSON.stringify(this.findEvent())}</p>
         </li>
       );
     }
@@ -92,6 +94,7 @@ var ViewCalendarEvent = React.createClass(
           <span className="event-category">{this.props.category}</span>
           <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
           <span className="button add-event" onClick={addToCalendar}>Ajouter</span>
+          <p>B {JSON.stringify(this.findEvent())}</p>
         </li>
       );
     }

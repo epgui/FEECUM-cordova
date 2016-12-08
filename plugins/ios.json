@@ -8,6 +8,7 @@
     },
     "installed_plugins": {
         "cordova-plugin-calendar": {
+            "CALENDAR_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
         "cordova-plugin-network-information": {

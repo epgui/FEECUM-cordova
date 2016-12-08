@@ -46,14 +46,25 @@ var DeviceCalendar = {
 
   successCallback: function()
   {
-    var success = function(message) { alert("Success: " + JSON.stringify(message)); };
-    return success;
+    //var success = function(message) { alert("Success: " + JSON.stringify(message)); };
+    //return success;
+    var log = function(message) {
+      console.log("successCallback:");
+      console.log("Success: " + JSON.stringify(message));
+    };
+    return log;
   },
 
   errorCallback: function()
   {
-    var error = function(message) { alert("Error: " + message); };
-    return error;
+    //var error = function(message) { alert("Error: " + message); };
+    //return error;
+
+    var log = function(message) {
+      console.log("errorCallback:");
+      console.log("Error: " + JSON.stringify(message));
+    };
+    return log;
   },
 
   find: function(event)
@@ -66,13 +77,16 @@ var DeviceCalendar = {
     var endTime     = this.getEventEndTime(event);
 
     // find events (on iOS this includes a list of attendees (if any))
-    window.plugins.calendar.findEvent(title,
-                                      location,
-                                      description,
-                                      startTime,
-                                      endTime,
-                                      this.successCallback(),
-                                      this.errorCallback());
+
+    var foundEvent = window.plugins.calendar.findEvent(title,
+                                        location,
+                                        description,
+                                        startTime,
+                                        endTime,
+                                        this.successCallback(),
+                                        this.errorCallback());
+
+    console.log(foundEvent);
 
   },
 
