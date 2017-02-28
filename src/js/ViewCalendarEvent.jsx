@@ -13,20 +13,20 @@ var ViewCalendarEvent = React.createClass(
                                           this.props.tEnd,
                                           this.props.description);
 
-    DeviceCalendar.add(event, firstReminder, secondReminder);
+    DeviceCalendar.add(event, firstReminder, secondReminder, this.props.saveEventToRegister(this.props.id));
 
   },
 
 
-  findEvent: function()
+  findEvent: function(callback)
   {
     event = DeviceCalendar.constructEvent(this.props.title,
                                           this.props.tStart,
                                           this.props.tEnd,
                                           this.props.description);
 
-    console.log("attempting to find event.");
-    return DeviceCalendar.find(event);
+    DeviceCalendar.find(event, callback);
+
   },
 
 
@@ -37,7 +37,9 @@ var ViewCalendarEvent = React.createClass(
                                           this.props.tStart,
                                           this.props.tEnd,
                                           this.props.description);
-    DeviceCalendar.find(event);
+
+    DeviceCalendar.remove(event);
+    this.props.removeEventFromRegister(this.props.id);
 
   },
 
@@ -68,36 +70,35 @@ var ViewCalendarEvent = React.createClass(
     var addToCalendar = () => this.addToCalendar();
     var deleteEvent = () => this.deleteEvent();
 
-    if (this.findEvent())
-    {
-      return(
-        <li className="event-container" id={"eventID-" + this.props.id}>
-          <span className="event-time">
-            <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
-          </span>
-          <span className="event-title">{this.props.title}</span>
-          <span className="event-category">{this.props.category}</span>
-          <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
-          <span className="button remove-event" onClick={deleteEvent}>Retirer</span>
-          <p>A {JSON.stringify(this.findEvent())}</p>
-        </li>
-      );
+    var button = null;
+
+    if (this.props.eventSaved == true) {
+      button = <span className="button remove-event" onClick={deleteEvent}>Retirer</span>;
     }
     else
     {
-      return(
-        <li className="event-container" id={"eventID-" + this.props.id}>
-          <span className="event-time">
-            <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
-          </span>
-          <span className="event-title">{this.props.title}</span>
-          <span className="event-category">{this.props.category}</span>
-          <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
-          <span className="button add-event" onClick={addToCalendar}>Ajouter</span>
-          <p>B {JSON.stringify(this.findEvent())}</p>
-        </li>
-      );
+      button = <span className="button add-event" onClick={addToCalendar}>Ajouter</span>;
     }
+
+    /*
+    this.findEvent(function(foundEvent) {
+      if ((foundEvent.length > 0) && (this.props.eventSaved == false))
+      {
+        this.props.saveEventToRegister(this.props.id);
+      }
+    }.bind(this)); */
+
+    return(
+      <li className="event-container" id={"eventID-" + this.props.id}>
+        <span className="event-time">
+          <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
+        </span>
+        <span className="event-title">{this.props.title}</span>
+        <span className="event-category">{this.props.category}</span>
+        <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>
+        {button}
+      </li>
+    );
   }
 });
 

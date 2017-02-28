@@ -29,6 +29,7 @@ var ViewCalendarWeek = React.createClass(
                         day={leadingZeros(dayNumber)}
                         viewMode={this.props.viewMode}
                         class={"day previous-month " + weekdayClass[i]}
+                        disableClick={true}
                       />);
       }
       // For the last calendar weeks of the month
@@ -51,6 +52,7 @@ var ViewCalendarWeek = React.createClass(
                         day={leadingZeros(dayNumber)}
                         viewMode={this.props.viewMode}
                         class={"day next-month " + weekdayClass[i]}
+                        disableClick={true}
                       />);
       }
       // For all other weeks of the month

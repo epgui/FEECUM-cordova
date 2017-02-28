@@ -44,32 +44,20 @@ var DeviceCalendar = {
                     event.tEnd.minutes, 0, 0);
   },
 
-  successCallback: function()
+  successCallback: function(message)
   {
-    //var success = function(message) { alert("Success: " + JSON.stringify(message)); };
-    //return success;
-    var log = function(message) {
-      console.log("successCallback:");
-      console.log("Success: " + JSON.stringify(message));
-    };
-    return log;
+    console.log("Success: " + JSON.stringify(message));
+    return false;
   },
 
-  errorCallback: function()
+  errorCallback: function(message)
   {
-    //var error = function(message) { alert("Error: " + message); };
-    //return error;
-
-    var log = function(message) {
-      console.log("errorCallback:");
-      console.log("Error: " + JSON.stringify(message));
-    };
-    return log;
+    console.log("Error: " + JSON.stringify(message));
+    return false;
   },
 
-  find: function(event)
+  find: function(event, callback)
   {
-
     var title       = event.title;
     var description = event.description;
     var location    = event.location;
@@ -77,20 +65,16 @@ var DeviceCalendar = {
     var endTime     = this.getEventEndTime(event);
 
     // find events (on iOS this includes a list of attendees (if any))
-
-    var foundEvent = window.plugins.calendar.findEvent(title,
-                                        location,
-                                        description,
-                                        startTime,
-                                        endTime,
-                                        this.successCallback(),
-                                        this.errorCallback());
-
-    console.log(foundEvent);
-
+    window.plugins.calendar.findEvent(title,
+                                      location,
+                                      description,
+                                      startTime,
+                                      endTime,
+                                      callback,
+                                      this.errorCallback);
   },
 
-  add: function(event, firstReminder = 60, secondReminder = null) // Reminders are in units of minutes
+  add: function(event, firstReminder = 60, secondReminder = null, successCallback = this.successCallback) // Reminders are in units of minutes
   {
 
     var title       = event.title;
@@ -132,8 +116,8 @@ var DeviceCalendar = {
                                                                 startTime,
                                                                 endTime,
                                                                 options,
-                                                                this.successCallback(),
-                                                                this.errorCallback());
+                                                                successCallback,
+                                                                this.errorCallback)
 
   },
 

@@ -53,6 +53,19 @@ var ViewCalendarDay = React.createClass(
     return eventsForThisDate;
 
   },
+
+  handleClick: function(hasEvents = false)
+  {
+    var clickHandler = false;
+
+    if (hasEvents == true)
+    {
+      clickHandler = () => this.props.viewEventsForThisDay(this.props.day);
+    }
+
+    return clickHandler;
+  },
+
   render: function()
   {
     // Format dateTime for HTML
@@ -68,7 +81,8 @@ var ViewCalendarDay = React.createClass(
     var dayClass = "";
 
     // Add class if day has events
-    dayClass += (eventsForThisDate.length > 0) ? " has-events" : "";
+    var hasEventsToday = (eventsForThisDate.length > 0) ? true : false;
+    dayClass += hasEventsToday ? " has-events" : "";
 
     // Add class if day is today
     dayClass += ((today.getFullYear()  == this.props.year)  &&
@@ -78,7 +92,13 @@ var ViewCalendarDay = React.createClass(
     if (this.props.viewMode == VIEW_STATE.CALENDAR_MONTH)
     {
       // Fetch action passed down from props
-      var viewEventsForThisDate = () => this.props.viewEventsForThisDay(this.props.day);
+      var viewEventsForThisDate = () => false;
+
+      if (hasEventsToday && !this.props.disableClick)
+      {
+        viewEventsForThisDate = () => this.props.viewEventsForThisDay(this.props.day);
+      }
+
 
       return (
         <time dateTime={formattedDateTime}

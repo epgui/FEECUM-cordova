@@ -117,6 +117,11 @@ var DataLoader = function()
 
   this.registerEvents = function(monthlyEvents, year, month)
   {
+    for (var i = 0, len = monthlyEvents.length; i < len; i++)
+    {
+      monthlyEvents[i].savedToCalendar = false;
+    }
+
     var data = {
       events: monthlyEvents,
       calYear: year,

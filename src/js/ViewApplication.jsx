@@ -7,7 +7,7 @@ import { VIEW_STATE } from './StateMachineDefinitions.js';
 
 class ViewApplication extends React.Component
 {
-render()
+  render()
   {
     var views = [];
     var controls = [];
@@ -21,8 +21,11 @@ render()
                      month={this.props.setTime.calMonth}
                      day={this.props.setTime.viewDay}
                      viewMode={this.props.view}
-                     switchPage={this.props.switchPage}
                      data={this.props.data}
+                     switchPage={this.props.switchPage}
+                     savedEventsRegister={this.props.savedEventsRegister}
+                     saveEventToRegister={this.props.saveEventToRegister}
+                     removeEventFromRegister={this.props.removeEventFromRegister}
                    />);
         break;
       case VIEW_STATE.CALENDAR_DAY:

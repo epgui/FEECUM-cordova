@@ -313,6 +313,9 @@ var ViewCalendar = React.createClass(
           day={leadingZeros(today)}
           viewMode={VIEW_STATE.CALENDAR_DAY}
           class="day"
+          savedEventsRegister={this.props.savedEventsRegister}
+          saveEventToRegister={this.props.saveEventToRegister}
+          removeEventFromRegister={this.props.removeEventFromRegister}
         />
       );
     }
@@ -326,6 +329,9 @@ var ViewCalendar = React.createClass(
           day={leadingZeros(this.props.day)}
           viewMode={this.props.viewMode}
           class="day"
+          savedEventsRegister={this.props.savedEventsRegister}
+          saveEventToRegister={this.props.saveEventToRegister}
+          removeEventFromRegister={this.props.removeEventFromRegister}
         />
       );
     }

@@ -7,6 +7,7 @@ var ViewCalendarUpcoming = React.createClass(
   getUpcomingEvents: function(numberOfEventsToGet)
   {
     var currentTime = new Date();
+    //var currentTime = new Date(2017, 1, 13);
     var year  = currentTime.getFullYear();
     var month = currentTime.getMonth();
     var day   = currentTime.getDate();
@@ -58,6 +59,7 @@ var ViewCalendarUpcoming = React.createClass(
 
     // Don't forget month is zero-indexed for Date().
     var today = new Date();
+    // var today = new Date(2017, 1, 13);
     today.setHours(0, 0, 0, 0);
 
     var dateIndex = today;
@@ -90,16 +92,35 @@ var ViewCalendarUpcoming = React.createClass(
           dateIndex = eventDate;
         }
 
-        viewUpcomingEvents.push(<ViewCalendarEvent
-                              key={i}
-                              id={event.id}
-                              category={event.category}
-                              title={event.summary}
-                              tStart={event.t_start}
-                              tEnd={event.t_end}
-                              description={event.description}
-                            />);
+        // Check if event is saved to register
+        var eventSaved = false;
+        if (this.props.savedEventsRegister.indexOf(event.id) !== -1)
+        {
+          console.log(this.props.savedEventsRegister);
+          eventSaved = true;
+        }
+
+        viewUpcomingEvents.push(
+          <ViewCalendarEvent
+            key={i}
+            id={event.id}
+            category={event.category}
+            title={event.summary}
+            tStart={event.t_start}
+            tEnd={event.t_end}
+            description={event.description}
+            eventSaved={eventSaved}
+            saveEventToRegister={this.props.saveEventToRegister}
+            removeEventFromRegister={this.props.removeEventFromRegister}
+          />
+        );
       }
+    }
+    else
+    {
+      viewUpcomingEvents.push(
+        <span className="subtitle">Aucun évènement dans les prochains jours.</span>
+      );
     }
 
     if (hasEventsToday)

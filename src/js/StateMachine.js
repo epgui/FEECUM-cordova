@@ -1,5 +1,5 @@
 // Import state machine components
-import { ViewStateMachine, DataStateMachine, TimeStateMachine } from './StateMachineComponents.js';
+import { ViewStateMachine, DataStateMachine, TimeStateMachine, SavedEventsRegister } from './StateMachineComponents.js';
 // Import state machine actions
 import { LOAD_DATA, GOTO_VIEW, SET_CALENDAR_PAGE, SET_VIEW_DAY, SET_VIEW_EVENT_ID } from './StateMachineDefinitions.js';
 // Import state definitions
@@ -20,7 +20,8 @@ export const initialState = {
     viewDay: 1,
     viewEventID: null
   },
-  data: []
+  data: [],
+  savedEventsRegister: []
 };
 
 
@@ -28,9 +29,10 @@ export const initialState = {
 export function StateMachine(state = initialState, action)
 {
   return {
-    error:   false,
-    view:    ViewStateMachine(state.view, action),
-    setTime: TimeStateMachine(state.setTime, action),
-    data:    DataStateMachine(state.data, action)
+    error:               false,
+    view:                ViewStateMachine(state.view, action),
+    setTime:             TimeStateMachine(state.setTime, action),
+    data:                DataStateMachine(state.data, action),
+    savedEventsRegister: SavedEventsRegister(state.savedEventsRegister, action)
   }
 }

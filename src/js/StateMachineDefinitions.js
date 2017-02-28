@@ -13,6 +13,8 @@ export const GOTO_VIEW         = "goto-view";
 export const SET_CALENDAR_PAGE = "set-calendar-page";
 export const SET_VIEW_DAY      = "set-view-day";
 export const SET_VIEW_EVENT_ID = "set-view-event-id";
+export const SAVE_EVENT_TO_DEVICE_CALENDAR     = "save-event-to-device-calendar";
+export const REMOVE_EVENT_FROM_DEVICE_CALENDAR = "remove-event-from-device-calendar";
 
 
 // Define action creators
@@ -50,4 +52,18 @@ export function setViewEventID(viewEventID) {
     type: SET_VIEW_EVENT_ID,
     viewEventID
   };
+}
+
+export function saveEventToDeviceCalendar(eventID) {
+  return {
+    type: SAVE_EVENT_TO_DEVICE_CALENDAR,
+    eventID
+  }
+}
+
+export function removeEventFromDeviceCalendar(eventID) {
+  return {
+    type: REMOVE_EVENT_FROM_DEVICE_CALENDAR,
+    eventID
+  }
 }
