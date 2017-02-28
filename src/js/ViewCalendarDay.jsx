@@ -117,7 +117,17 @@ var ViewCalendarDay = React.createClass(
       // Fetch action passed down from props
       var exitDayMode = () => this.props.exitDayMode(this.props.day);
 
+      var eventYear    = this.props.year;
+      var eventMonth   = this.props.month;
+      var eventDay     = this.props.day;
+      var eventDate    = new Date(eventYear, eventMonth - 1, eventDay, 0, 0);
+
       var viewEventsForThisDate = [];
+
+      var weekDay  = dayNumber(eventDate.getDay()).capitalizeFirstLetter();
+      var subtitle = weekDay + " le " + eventDate.getDate() + " " + monthNumber(eventDate.getMonth()) + " " + eventDate.getFullYear();
+      viewEventsForThisDate.push(<span key={0} className="title">{"Évènements quotidiens"}</span>);
+      viewEventsForThisDate.push(<span key={1} className="subtitle">{subtitle}</span>);
 
       if (eventsForThisDate.length > 0)
       {
@@ -126,7 +136,7 @@ var ViewCalendarDay = React.createClass(
           var event = eventsForThisDate[i];
 
           viewEventsForThisDate.push(<ViewCalendarEvent
-                                       key={i}
+                                       key={i + 2}
                                        id={event.id}
                                        category={event.category}
                                        title={event.summary}

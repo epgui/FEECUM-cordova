@@ -67,6 +67,16 @@ var ViewCalendarEvent = React.createClass(
     var eventStartTime = this.props.tStart.getHours() + "h" + leadingZeros(this.props.tStart.getMinutes());
     var eventEndTime   = this.props.tEnd.getHours()   + "h" + leadingZeros(this.props.tEnd.getMinutes());
 
+    if ((eventStartTime == "0h00") && (eventEndTime == "23h59"))
+    {
+      var eventTime = <span className="event-time">{"Toute la journée"}</span>;
+    }
+    else
+    {
+      var eventTime = <span className="event-time"><span>{eventStartTime}</span>{" - "}<span>{eventEndTime}</span></span>;
+    }
+
+
     var addToCalendar = () => this.addToCalendar();
     var deleteEvent = () => this.deleteEvent();
 
@@ -90,9 +100,7 @@ var ViewCalendarEvent = React.createClass(
 
     return(
       <li className="event-container" id={"eventID-" + this.props.id}>
-        <span className="event-time">
-          <span>{eventStartTime}</span> - <span>{eventEndTime}</span>
-        </span>
+        {eventTime}
         <span className="event-title">{this.props.title}</span>
         <span className="event-category">{this.props.category}</span>
         <p className="event-description" dangerouslySetInnerHTML={this.formatHTML(this.props.description)}></p>

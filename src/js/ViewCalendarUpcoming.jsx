@@ -9,7 +9,7 @@ var ViewCalendarUpcoming = React.createClass(
     var currentTime = new Date();
     //var currentTime = new Date(2017, 1, 13);
     var year  = currentTime.getFullYear();
-    var month = currentTime.getMonth();
+    var month = currentTime.getMonth() + 1; // Month is zero-indexed here
     var day   = currentTime.getDate();
 
     var data = this.props.data;

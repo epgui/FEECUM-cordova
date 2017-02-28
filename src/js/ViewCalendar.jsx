@@ -249,7 +249,13 @@ var ViewCalendar = React.createClass(
           var displayMode = this.getDisplayMode(keyYear, keyMonth);
 
           calendarPages.push(
-            <ContainerCalendarMonth key={key} year={keyYear} month={keyMonth} viewMode={this.props.viewMode} displayMode={displayMode} />
+            <ContainerCalendarMonth
+              key={key}
+              year={keyYear}
+              month={keyMonth}
+              viewMode={this.props.viewMode}
+              displayMode={displayMode}
+            />
           );
 
           if (this.needToLoadEarlierMonth(keyYear, keyMonth))
