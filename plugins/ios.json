@@ -7,10 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-calendar": {
-            "CALENDAR_USAGE_DESCRIPTION": " ",
-            "PACKAGE_NAME": "io.cordova.hellocordova"
-        },
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
@@ -22,6 +18,10 @@
         },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-calendar": {
+            "CALENDAR_USAGE_DESCRIPTION": "L'application mobile de la FÉÉCUM vous permet d'ajouter des évènements à votre calendrier",
+            "PACKAGE_NAME": "com.feecum.calendrier"
         }
     },
     "dependent_plugins": {

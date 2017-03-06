@@ -276,7 +276,7 @@ var ViewCalendar = React.createClass(
           }
         }
 
-        if (renderEarlierPage != false)
+        if (renderEarlierPage !== false)
         {
           this.earliestMonthOnRecord.year  = renderEarlierPage.year;
           this.earliestMonthOnRecord.month = renderEarlierPage.month;
@@ -293,7 +293,7 @@ var ViewCalendar = React.createClass(
           );
         }
 
-        if (renderLaterPage != false)
+        if (renderLaterPage !== false)
         {
           this.latestMonthOnRecord.year  = renderLaterPage.year;
           this.latestMonthOnRecord.month = renderLaterPage.month;

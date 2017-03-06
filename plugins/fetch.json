@@ -7,14 +7,6 @@
         "is_top_level": false,
         "variables": {}
     },
-    "cordova-plugin-calendar": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-calendar@~4.5.3"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-network-information": {
         "source": {
             "type": "registry",
@@ -46,5 +38,15 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-calendar": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-calendar@~4.5.3"
+        },
+        "is_top_level": true,
+        "variables": {
+            "CALENDAR_USAGE_DESCRIPTION": "L'application mobile de la FÉÉCUM vous permet d'ajouter des évènements à votre calendrier"
+        }
     }
 }

@@ -25,25 +25,25 @@ class ViewControls extends React.Component
     switch (this.props.viewMode)
     {
       case VIEW_STATE.CALENDAR_MONTH:
-        leftButton.push(
+        /*leftButton.push(
           <div key="1" id="ctrl-left-button">
             <span className="menu-button-drawer">
               <img src="img/menu_icon.png" alt="Menu" />
             </span>
           </div>
-        );
+        );*/
         titleBar.push(
           <div key="2" id="ctrl-title-bar">
             <img src="img/FEECUM_header.png" alt="FÉÉCUM" />
           </div>
         );
-        rightButton.push(
+        /*rightButton.push(
           <div key="3" id="ctrl-right-button">
             <span className="settings-button">
               <img src="img/controls_cog.png" alt="Settings" />
             </span>
           </div>
-        );
+        );*/
         break;
       case VIEW_STATE.CALENDAR_DAY:
         leftButton.push(

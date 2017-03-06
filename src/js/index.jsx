@@ -10,6 +10,9 @@ window.onload = function() {
 
 function onDeviceReady() {
 
+  // Hide the splashscreen (autohide does not work on iOS)
+  navigator.splashscreen.hide();
+
   // FastClick is a simple, easy-to-use library for eliminating the 300ms delay
   // between a physical tap and the firing of a click event on mobile browsers.
   // The aim is to make your application feel less laggy and more responsive

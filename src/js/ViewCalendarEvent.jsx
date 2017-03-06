@@ -82,7 +82,7 @@ var ViewCalendarEvent = React.createClass(
 
     var button = null;
 
-    if (this.props.eventSaved == true) {
+    if (this.props.eventSaved === true) {
       button = <span className="button remove-event" onClick={deleteEvent}>Retirer</span>;
     }
     else

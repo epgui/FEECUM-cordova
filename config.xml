@@ -1,95 +1,76 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.cordova.hellocordova" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <preference name="loglevel" value="DEBUG" />
-  <preference name="AndroidLaunchMode" value="singleTop" />
-  <preference name="StatusBarOverlaysWebView" value="false" />
-  <preference name="StatusBarBackgroundColor" value="#F8B629" />
-  <preference name="StatusBarStyle" value="lightcontent" />
-  <preference name="Orientation" value="portrait" />
-  <name>FÉÉCUM</name>
-  <description>
+<widget id="com.feecum.calendrier" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="AndroidLaunchMode" value="singleTop" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#F8B629" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="Orientation" value="portrait" />
+    <name>FÉÉCUM</name>
+    <description>
     Le calendrier de la FÉÉCUM à portée de main.
   </description>
-  <author email="guigui.p@gmail.com" href="http://www.thefotogazette.com/featured/">
+    <author email="guigui.p@gmail.com" href="http://www.thefotogazette.com/featured/">
     Guillaume Pelletier
   </author>
-  <content src="index.html" />
-  <plugin name="cordova-plugin-whitelist" spec="~1.2.2" />
-  <plugin name="cordova-plugin-calendar" spec="~4.5.3" />
-  <plugin name="cordova-plugin-network-information" spec="~1.3.0" />
-  <plugin name="cordova-plugin-statusbar" spec="~2.2.0" />
-  <access origin="*" />
-  <allow-intent href="http://*/*" />
-  <allow-intent href="https://*/*" />
-  <allow-intent href="tel:*" />
-  <allow-intent href="sms:*" />
-  <allow-intent href="mailto:*" />
-  <allow-intent href="geo:*" />
-  <platform name="android">
-    <allow-intent href="market:*" />
-    <!--
-      ldpi    : 36x36 px
-      mdpi    : 48x48 px
-      hdpi    : 72x72 px
-      xhdpi   : 96x96 px
-      xxhdpi  : 144x144 px
-      xxxhdpi : 192x192 px
-    -->
-    <icon src="res/android/ldpi.png" density="ldpi" />
-    <icon src="res/android/mdpi.png" density="mdpi" />
-    <icon src="res/android/hdpi.png" density="hdpi" />
-    <icon src="res/android/xhdpi.png" density="xhdpi" />
-    <icon src="res/android/xxhdpi.png" density="xxhdpi" />
-    <icon src="res/android/xxxhdpi.png" density="xxxhdpi" />
-    <!-- Universal size splash screen -->
-    <splash src="res/android/Default@2x~universal~anyany.png" />
-  </platform>
-  <platform name="ios">
-    <allow-intent href="itms:*" />
-    <allow-intent href="itms-apps:*" />
-    <!-- iOS 8.0+ -->
-    <!-- iPhone 6 Plus  -->
-    <icon src="res/ios/icon-60@3x.png" width="180" height="180" />
-    <!-- iOS 7.0+ -->
-    <!-- iPhone / iPod Touch  -->
-    <icon src="res/ios/icon-60.png" width="60" height="60" />
-    <icon src="res/ios/icon-60@2x.png" width="120" height="120" />
-    <!-- iPad -->
-    <icon src="res/ios/icon-76.png" width="76" height="76" />
-    <icon src="res/ios/icon-76@2x.png" width="152" height="152" />
-    <!-- Spotlight Icon -->
-    <icon src="res/ios/icon-40.png" width="40" height="40" />
-    <icon src="res/ios/icon-40@2x.png" width="80" height="80" />
-    <!-- iOS 6.1 -->
-    <!-- iPhone / iPod Touch -->
-    <icon src="res/ios/icon.png" width="57" height="57" />
-    <icon src="res/ios/icon@2x.png" width="114" height="114" />
-    <!-- iPad -->
-    <icon src="res/ios/icon-72.png" width="72" height="72" />
-    <icon src="res/ios/icon-72@2x.png" width="144" height="144" />
-    <!-- iPhone Spotlight and Settings Icon -->
-    <icon src="res/ios/icon-small.png" width="29" height="29" />
-    <icon src="res/ios/icon-small@2x.png" width="58" height="58" />
-    <!-- iPad Spotlight and Settings Icon -->
-    <icon src="res/ios/icon-50.png" width="50" height="50" />
-    <icon src="res/ios/icon-50@2x.png" width="100" height="100" />
-    <!-- iPad Pro -->
-    <icon src="res/ios/icon-83.5@2x.png" width="167" height="167" />
-    <!-- Universal size splash screen -->
-    <splash src="res/ios/Default@2x~universal~anyany.png" />
-    <preference name="SplashScreenDelay" value="4000" />
-    <preference name="FadeSplashScreenDuration" value="750"/>
-  </platform>
-  <platform name="browser">
-    <!-- Universal size splash screen -->
-    <splash src="res/ios/Default@2x~universal~anyany.png" />
-    <preference name="SplashScreen" value="img/Default@2x~universal~anyany.png" />
-    <preference name="SplashScreenDelay" value="3000" /> <!-- defaults to "3000" -->
-    <preference name="SplashScreenBackgroundColor" value="#FFFFFF" /> <!-- defaults to "#464646" -->
-    <preference name="ShowSplashScreen" value="false" /> <!-- defaults to "true" -->
-    <preference name="SplashScreenWidth" value="600" /> <!-- defaults to "170" -->
-    <preference name="SplashScreenHeight" value="300" /> <!-- defaults to "200" -->
-  </platform>
-  <engine name="android" spec="~6.1.2" />
-  <engine name="ios" spec="~4.3.1" />
+    <content src="index.html" />
+    <plugin name="cordova-plugin-whitelist" spec="~1.2.2" />
+    <plugin name="cordova-plugin-network-information" spec="~1.3.0" />
+    <plugin name="cordova-plugin-statusbar" spec="~2.2.0" />
+    <plugin name="cordova-plugin-splashscreen" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="res/android/ldpi.png" />
+        <icon density="mdpi" src="res/android/mdpi.png" />
+        <icon density="hdpi" src="res/android/hdpi.png" />
+        <icon density="xhdpi" src="res/android/xhdpi.png" />
+        <icon density="xxhdpi" src="res/android/xxhdpi.png" />
+        <icon density="xxxhdpi" src="res/android/xxxhdpi.png" />
+        <splash src="res/android/Default@2x~universal~anyany.png" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <icon height="180" src="res/ios/icon-60@3x.png" width="180" />
+        <icon height="60" src="res/ios/icon-60.png" width="60" />
+        <icon height="120" src="res/ios/icon-60@2x.png" width="120" />
+        <icon height="76" src="res/ios/icon-76.png" width="76" />
+        <icon height="152" src="res/ios/icon-76@2x.png" width="152" />
+        <icon height="40" src="res/ios/icon-40.png" width="40" />
+        <icon height="80" src="res/ios/icon-40@2x.png" width="80" />
+        <icon height="57" src="res/ios/icon.png" width="57" />
+        <icon height="114" src="res/ios/icon@2x.png" width="114" />
+        <icon height="72" src="res/ios/icon-72.png" width="72" />
+        <icon height="144" src="res/ios/icon-72@2x.png" width="144" />
+        <icon height="29" src="res/ios/icon-small.png" width="29" />
+        <icon height="58" src="res/ios/icon-small@2x.png" width="58" />
+        <icon height="50" src="res/ios/icon-50.png" width="50" />
+        <icon height="100" src="res/ios/icon-50@2x.png" width="100" />
+        <icon height="167" src="res/ios/icon-83.5@2x.png" width="167" />
+        <splash src="res/ios/Default@2x~universal~anyany.png" />
+        <preference name="AutoHideSplashScreen" value="false" />
+        <preference name="SplashScreenDelay" value="10000" />
+        <preference name="FadeSplashScreenDuration" value="750" />
+    </platform>
+    <platform name="browser">
+        <splash src="res/ios/Default@2x~universal~anyany.png" />
+        <preference name="SplashScreen" value="img/Default@2x~universal~anyany.png" />
+        <preference name="SplashScreenDelay" value="3000" />
+        <preference name="SplashScreenBackgroundColor" value="#FFFFFF" />
+        <preference name="ShowSplashScreen" value="false" />
+        <preference name="SplashScreenWidth" value="600" />
+        <preference name="SplashScreenHeight" value="300" />
+    </platform>
+    <engine name="android" spec="~6.1.2" />
+    <engine name="ios" spec="~4.3.1" />
+    <plugin name="cordova-plugin-calendar" spec="~4.5.5">
+        <variable name="CALENDAR_USAGE_DESCRIPTION" value="L'application mobile de la FÉÉCUM vous permet d'ajouter des évènements à votre calendrier" />
+    </plugin>
 </widget>

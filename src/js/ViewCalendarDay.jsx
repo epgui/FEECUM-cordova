@@ -58,7 +58,7 @@ var ViewCalendarDay = React.createClass(
   {
     var clickHandler = false;
 
-    if (hasEvents == true)
+    if (hasEvents === true)
     {
       clickHandler = () => this.props.viewEventsForThisDay(this.props.day);
     }
